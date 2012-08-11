@@ -1,6 +1,10 @@
 #!/usr/bin/env python2
 # -*- coding: UTF-8 -*-
 
+import os
+from random import choice
+from pendu_ascii import asc_res
+
 class Pendu(object):
     def __init__(self, word):
         self.setword(word)
@@ -10,7 +14,7 @@ class Pendu(object):
         self.played = ["_"]*len(word)
         self.letters = set()
         self.okletters = set()
-        self.maxanswers = 6
+        self.maxanswers = 9
 
     def getword(self):
         return self._word
@@ -25,8 +29,8 @@ class Pendu(object):
         if letter in self.letters:
             res = "Lettre déjà proposée"
         else:
-            if len(self.letters) == self.maxanswers -1:
-                rep = "%s fails : c'est fini !!!!"%(len(self.letters))
+            if len(self.letters) == self.maxanswers -1 :
+                rep = asc_res[8]
                 rep += " Tu devais trouver %s"%(self.word)
                 return rep
             if letter in self.word:
@@ -43,11 +47,20 @@ class Pendu(object):
                     res += " Mot actuel: %s"%("".join(self.played))
             else:
                 self.letters.add(letter)
-                res = "Cherches encore !"
+                res = asc_res[len(self.letters) - 1]
+
         return res
 
     def solved(self):
         return not ("_" in self.played)
+
+    def create_word(self, module_path):
+        word_list = []
+        conf_file = os.path.join(module_path, "wordlist.cfg")
+        with open(conf_file) as f:
+            for line in f:
+                word_list.append(line.strip().lower())
+        return choice(word_list)
 
 if __name__ == "__main__":
     g = Pendu("pipo")

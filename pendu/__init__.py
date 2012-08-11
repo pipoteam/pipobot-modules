@@ -21,9 +21,9 @@ pendu played : affiche la liste des lettres déjà jouées"""
     @answercmd("init")
     def init(self, sender, args):
         if args == "":
-            self.bot.pendu.word = "pipo" #TODO use a dictionary…
+            self.bot.pendu.word = self.bot.pendu.create_word(self.bot.module_path["pendu"])
         else:
-            self.bot.pendu.word = args.strip()
+            self.bot.pendu.word = args.strip().lower()
         self.bot.say("Et c'est parti pour un pendu !")
 
     @answercmd("try", "guess")
@@ -31,7 +31,7 @@ pendu played : affiche la liste des lettres déjà jouées"""
         if args == "" or len(args) > 1:
             return "Il faut proposer une lettre !"
         else:
-            return self.bot.pendu.propose(args)
+            return self.bot.pendu.propose(args.lower())
 
     @answercmd("played", "histo")
     def played(self, sender, args):
