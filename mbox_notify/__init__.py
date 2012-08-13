@@ -19,8 +19,8 @@ def decode_header_str(header):
 
 class AsyncMail(AsyncModule):
     def __init__(self, bot):
-        AsyncModule.__init__(self, 
-                             bot,  
+        AsyncModule.__init__(self,
+                             bot,
                              name = "mail",
                              desc = "Displaying incoming mails",
                              delay = 0)
@@ -28,7 +28,7 @@ class AsyncMail(AsyncModule):
         f.write('')
         f.close()
 
-        self.file = open(MAILFILE) 
+        self.file = open(MAILFILE)
         self.msubject = ""
         self.mfrom=""
         self.spam = -1
