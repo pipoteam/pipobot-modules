@@ -11,10 +11,6 @@ MAX=5
 import os
 from pipobot.lib.modules import SyncModule, defaultcmd
 
-unicode_file = open(os.path.join(os.path.dirname(__file__), 'UnicodeDataLower.txt'))
-unicodes = [l.split(";")[0:2] for l in unicode_file]
-unicode_file.close()
-
 class CmdUnicode(SyncModule):
     def __init__(self, bot):
         desc = """Unicode caractère
@@ -22,6 +18,11 @@ class CmdUnicode(SyncModule):
 unicode nom
     Recherche le caractère unicode donc le nom ressemble à « nom »
 """
+        config_dir = bot.module_path["unicode"]
+        unicode_file = open(os.path.join(config_dir, 'UnicodeDataLower.txt'))
+        self.unicodes = [l.split(";")[0:2] for l in unicode_file]
+        unicode_file.close()
+
         SyncModule.__init__(self,   
                             bot, 
                             desc = desc,
@@ -36,7 +37,7 @@ unicode nom
         
         if len(message) == 1:
             code_rech = "%04x" % ord(m)
-            for code, name in unicodes:
+            for code, name in self.unicodes:
                 if code == code_rech:
                     return u"⌞%s⌟ : %s, code %s" % (message, name, code_rech)
             
@@ -47,7 +48,7 @@ unicode nom
 
         send = u''
         c=0
-        for code,name in unicodes:
+        for code,name in self.unicodes:
             if m in name and name != '<control>':
                 if c != 0:
                     send += u"\n"
