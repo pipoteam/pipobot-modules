@@ -32,15 +32,10 @@ class CmdUrl(ListenModule):
     def __init__(self, bot):
         desc = "Extracting title of page from URL"
         ListenModule.__init__(self, bot,  name = "url", desc = desc)
-        settings = self.bot.settings
-        try:
-            self.repost = settings['modules']['url']['repost']
-        except KeyError:
-            self.repost = False
-        try:
-            self.repost_ignore = settings['modules']['url']['repost-ignore']
-        except KeyError:
-            self.repost_ignore = []
+        self.repost = False
+        if hasattr(self.__class__, '_settings'):
+            self.repost = self._settings['respost'] or False
+            self.repost_ignore = self._settings['repost-ignore'] or []
 
     def answer(self, sender, message):
         if HyperlinksScanner:

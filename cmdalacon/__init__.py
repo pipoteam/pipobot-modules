@@ -49,11 +49,9 @@ class CmdAlacon(MultiSyncModule):
         #To initialize MultiSyncModule
         commands = {}
 
-        settings = bot.settings
-        config_path = ''
-        try:
-            config_path = settings['modules']['cmdalacon']['config_path']
-        except KeyError:
+        if hasattr(self.__class__, '_settings'):
+            config_path = self._settings['config_path']
+        else:
             config_dir = bot.module_path["cmdalacon"]
             config_path = os.path.join(config_dir, "cmdlist.cfg")
 

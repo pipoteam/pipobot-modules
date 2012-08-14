@@ -18,8 +18,10 @@ class CmdUnicode(SyncModule):
 unicode nom
     Recherche le caractère unicode donc le nom ressemble à « nom »
 """
-        config_dir = bot.module_path["unicode"]
-        unicode_file = open(os.path.join(config_dir, 'UnicodeDataLower.txt'))
+        #config_dir = bot.module_path["unicode"]
+        unicode_file = open(os.path.join(os.path.dirname(__file__), 'UnicodeDataLower.txt'))
+
+        #unicode_file = open(os.path.join(config_dir, 'UnicodeDataLower.txt'))
         self.unicodes = [l.split(";")[0:2] for l in unicode_file]
         unicode_file.close()
 

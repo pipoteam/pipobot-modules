@@ -31,16 +31,21 @@ class CmdMpd(NotifyModule):
                              pm_allowed = False,
                              command = "mpd",
                              delay = 0)
-        settings = self.bot.settings
-        try:
-            self.host = settings["modules"]["botmpd"]["host"]
-            self.port = settings["modules"]["botmpd"]["port"]
-            self.pwd = settings["modules"]["botmpd"]["pwd"]
-        except KeyError as e:
-            raise pipobot.lib.exceptions.ConfigException("Missing section %s in configuration file for module botmpd!" % e)
+        self.host = None
+        self.port = None
+        self.pwd = None
 
-        if "datadir" in settings["modules"]["botmpd"]:
-            self.datadir = settings["modules"]["botmpd"]["datadir"]
+        if hasattr(self.__class__, '_settings'):
+            self.host = self._settings['host']
+            self.port = self._settings['port']
+            self.pwd = self._settings['pwd']
+            if "datadir" in self._settings:
+                self.datadir = self._settings["datadir"]
+
+        for name in ['host', 'port', 'pwd']:
+            if not getattr(self, name):
+                raise ConfigException("Missing section %s in configuration file for module botmpd!" % name)
+
         self.mute = True
         # To limit flood in logs : if the bot can't connect to the server, it will only be notified
         # once in the logfile
