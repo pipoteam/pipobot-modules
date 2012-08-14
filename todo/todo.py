@@ -44,7 +44,7 @@ todo list [name] : affiche les todo de la liste [name]""",
                 if tmp == []:
                     send = ""
                 else:
-                    send = "%s :\n%s"%(liste, "\n".join(map(str, tmp)))
+                    send = u"%s :\n%s"%(liste, "\n".join(map(unicode, tmp)))
             if send.strip() == "":
                 return "TODO-list vide"
             return send

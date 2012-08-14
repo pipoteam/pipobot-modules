@@ -27,7 +27,7 @@ class AbstractBlague(SyncModule):
         sjid = self.bot.occupants.pseudo_to_jid(sender.strip())
         jid = self.bot.occupants.pseudo_to_jid(message)
         if jid == "":
-            return "%s n'est pas dans le salon !" % message
+            return u"%s n'est pas dans le salon !" % message
 
         if sjid == jid:
             return self.autocongratulation
@@ -45,6 +45,7 @@ class AbstractBlague(SyncModule):
             ecart = temps - blag.submission
             if ecart > min_delay:
                 date_bl = time.strftime("le %d/%m/%Y à %H:%M", time.localtime(float(blag.submission)))
+                date_bl = date_bl.decode("utf-8")
                 blag.score = self.operation(blag.score, 1)
                 send =  u"Nouveau score - %s : %d\n%d secondes depuis ta dernière blague (%s)" % (message, blag.score, ecart, date_bl)
                 blag.submission = temps

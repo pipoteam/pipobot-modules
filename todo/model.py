@@ -19,4 +19,6 @@ class Todo(Base):
         self.submission = submission
 
     def __str__(self):
-        return "%s - %s (par %s le %s)" % (self.id, self.content, self.reporter, time.strftime("%d/%m/%Y à %H:%M", time.localtime(float(self.submission))))
+        t = time.strftime("%d/%m/%Y à %H:%M", time.localtime(float(self.submission)))
+        t = t.decode("utf-8")
+        return u"%s - %s (par %s le %s)" % (self.id, self.content, self.reporter, t)

@@ -23,9 +23,9 @@ class ListConfigParser(ConfigParser.RawConfigParser):
         "Redéfinition du get pour gérer les listes"
         value = ConfigParser.RawConfigParser.get(self, section, option)
         if (value[0] == "[") and (value[-1] == "]"):
-            return eval(value)
+            return map(lambda s : s.decode("utf-8"), eval(value))
         else:
-            return value
+            return value.decode("utf-8")
 
 class CmdAlacon(MultiSyncModule):
     def __init__(self, bot):
@@ -49,11 +49,13 @@ class CmdAlacon(MultiSyncModule):
         #To initialize MultiSyncModule
         commands = {}
 
+        config_path = ''
         if hasattr(self.__class__, '_settings'):
-            config_path = self._settings['config_path']
-        else:
-            config_dir = bot.module_path["cmdalacon"]
-            config_path = os.path.join(config_dir, "cmdlist.cfg")
+            config_path = self._settings.get('config_path')
+
+        if not config_path:
+            config_path = os.path.join(os.path.dirname(__file__),
+                "cmdlist.cfg")
 
         config = ListConfigParser()
         config.read(config_path)

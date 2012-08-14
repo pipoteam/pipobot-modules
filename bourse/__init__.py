@@ -38,7 +38,7 @@ Valeurs disponibles: %s""" % (', '.join(VALUES.keys()))
         #if the file is too old or does not exist, retrive it again
         CACHE_FILE = os.path.join(CACHE_PATH, VALUES[valeur])
         if not os.path.isfile(CACHE_FILE) or os.path.getmtime(CACHE_FILE) + CACHE_LIMIT <= time.time():
-            distant_file = "%s%s" % (ROOT_URL, VALUES[valeur])
+            distant_file = u"%s%s" % (ROOT_URL, VALUES[valeur])
             urllib.urlretrieve(distant_file, CACHE_FILE)
 
         #Opening file
@@ -58,7 +58,7 @@ Valeurs disponibles: %s""" % (', '.join(VALUES.keys()))
                 data.append((line[0], line[1]))
 
         #Extracting last (histo) values
-        output = ["Denières valeurs: "]
-        output += ["%s : %s %s / 1€" % (date, value, valeur) for date, value in data[-histo::]]
+        output = [u"Denières valeurs: "]
+        output += [u"%s : %s %s / 1€" % (date, value, valeur) for date, value in data[-histo::]]
 
         return "\n".join(output)

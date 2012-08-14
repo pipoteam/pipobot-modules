@@ -24,20 +24,20 @@ class CmdBot(ListenModule):
             else:
                 d = repartie.direct.split("\n")
             random.shuffle(d)
-            return "%s: %s"%(sender, d[0])
+            return u"%s: %s"%(sender, d[0])
         elif re.search("(^|\W)"+self.bot.name.lower()+"($|\W)", message.lower()):
             i = repartie.indirect.split("\n")
             random.shuffle(i)
-            return "%s: %s"%(sender, i[0])
+            return u"%s: %s"%(sender, i[0])
         elif re.search("(\s|^)+si\s+ils(\s|$)+", message.lower()):
-            return "%s: S'ILS, c'est mieux !!! :@"%(sender)
+            return u"%s: S'ILS, c'est mieux !!! :@"%(sender)
         elif re.search("(\s|^)+si\s+il(\s|$)+", message.lower()):
-            return "%s: S'IL, c'est mieux !!!"%(sender)
+            return u"%s: S'IL, c'est mieux !!!"%(sender)
         elif re.search("(^|\s)+_all_(\!|\?|\:|\s+|$)", message.lower()):
             reply = self.bot.occupants.get_all(", ", [sender, self.bot.name]) 
             message = message.replace("_all_", reply)
             return message
         l = [["server", "serveur", "bot"], ["merde", "bois", "carton"]]
         if all([any([elt2 in message.lower() for elt2 in elt]) for elt in l]):
-            msg = "Tu sais ce qu'il te dit le serveur ? Et puis surveille ton langage d'abord !!!"
+            msg = u"Tu sais ce qu'il te dit le serveur ? Et puis surveille ton langage d'abord !!!"
             utils.kick(sender, msg, self.bot)
