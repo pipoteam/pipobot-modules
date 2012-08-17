@@ -41,7 +41,7 @@ class CmdAlacon(MultiSyncModule):
             v = config.get(cmd, backup)
         if type(v) != list:
             v = [v]
-        self.dico[cmd][value] = v
+        self.dico[cmd.decode("utf-8")][value] = v
 
     def readconf(self, bot):
         #name, description and actions associated to each command
@@ -60,10 +60,11 @@ class CmdAlacon(MultiSyncModule):
         config = ListConfigParser()
         config.read(config_path)
         for c in config.sections() :
-            self.dico[c] = {}
-            self.dico[c]['desc'] = config.get(c, 'desc')
-            commands[c] = self.dico[c]['desc']
-            self.dico[c]['toNobody'] = config.get(c, 'toNobody') if type(config.get(c, 'toNobody')) == list else [config.get(c, 'toNobody')]
+            command_name = c.decode("utf-8")
+            self.dico[command_name] = {}
+            self.dico[command_name]['desc'] = config.get(c, 'desc')
+            commands[command_name] = self.dico[command_name]['desc']
+            self.dico[command_name]['toNobody'] = config.get(c, 'toNobody') if type(config.get(c, 'toNobody')) == list else [config.get(c, 'toNobody')]
             self.extract_to(config, c, "toSender", "toNobody")
             self.extract_to(config, c, "toBot", "toNobody")
             self.extract_to(config, c, "toSomebody", "toNobody")
