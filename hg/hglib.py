@@ -1,9 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-from mercurial import ui, hg, commands
-from mercurial.cmdutil import show_changeset
-import mercurial.commands
 import time
+from mercurial import ui, hg
 
 def log(repodir, rev = -1):
     u = ui.ui()

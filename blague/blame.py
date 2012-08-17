@@ -1,10 +1,10 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
-from abstractblague import AbstractBlague
-from pipobot.lib.modules import SyncModule
-from model import Blagueur
 import operator
+from pipobot.lib.modules import SyncModule
+from abstractblague import AbstractBlague
+from model import Blagueur
 
 class CmdBlame(AbstractBlague):
     """ Enlève un point-blague à un collègue blagueur incompétent """

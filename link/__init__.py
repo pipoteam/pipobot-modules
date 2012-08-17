@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 #-*- coding: utf-8 -*-
-import ConfigParser, os
+import os
+import ConfigParser
 from pipobot.lib.modules import MultiSyncModule, defaultcmd
 
 class Link(MultiSyncModule):

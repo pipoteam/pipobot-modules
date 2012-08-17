@@ -1,12 +1,10 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-import sys
-import pprint
-import random
 import mpd
-import utils
 import os
+import random
 import eyeD3
+import utils
 
 class BotMPD(mpd.MPDClient):
     def __init__(self, host, port, password, datadir=None):

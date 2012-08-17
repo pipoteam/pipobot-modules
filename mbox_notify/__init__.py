@@ -1,11 +1,11 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
-import threading
-import traceback
 import time
 from email.header import decode_header
 from pipobot.lib.modules import AsyncModule
+
+#TODO add this in main configuration file
 MAILFILE = '/var/mail/bot'
 
 def decode_header_str(header):

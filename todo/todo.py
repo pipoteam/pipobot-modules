@@ -1,7 +1,6 @@
 #! /usr/bin/python2
 # -*- coding: utf-8 -*-
 import time
-from sqlalchemy.orm.exc import NoResultFound
 from pipobot.lib.modules import SyncModule, answercmd
 from model import Todo
 

@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 #-*- coding: utf-8 -*-
 import re
-import xmpp
 import urllib
 import pipobot.lib.utils
 import httplib

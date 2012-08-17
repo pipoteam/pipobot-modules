@@ -4,7 +4,6 @@
 import csv
 import os
 import time 
-import sys
 import urllib
 from pipobot.lib.modules import SyncModule, defaultcmd
 

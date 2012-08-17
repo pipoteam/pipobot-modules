@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 #-*- coding: utf-8 -*-
 import ConfigParser
-import logging
 import os
 import random
 import re

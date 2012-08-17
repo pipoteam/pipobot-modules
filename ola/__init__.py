@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 #-*- coding: utf-8 -*-
 import random
-import time
 from pipobot.lib.modules import SyncModule, defaultcmd
 
 class Ola(SyncModule):

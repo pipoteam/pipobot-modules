@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 #-*- coding: utf-8 -*-
-import random
 from pendu import Pendu
 from pipobot.lib.modules import SyncModule, answercmd
 

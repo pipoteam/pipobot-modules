@@ -7,8 +7,6 @@ import urllib2
 import gzip
 from StringIO import StringIO
 
-import urllib
-
 class AppURLopener(urllib.FancyURLopener):
     def prompt_user_passwd(self, host, realm):
         return ('', '')

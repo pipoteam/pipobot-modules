@@ -1,10 +1,11 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
-from abstractblague import AbstractBlague
+import operator
+import time
 from pipobot.lib.modules import SyncModule
+from abstractblague import AbstractBlague
 from model import Blagueur
-import time, operator
 
 class CmdBlague(AbstractBlague):
     """ Ajoute un point-blague à un collègue blagueur compétent """
