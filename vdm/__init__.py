@@ -22,9 +22,12 @@ vdm [n] : Affiche la vdm [n]"""
     def extract_data(self, html_content):
         soup = BeautifulSoup(html_content)
         res = []
-        a = soup.find("div", {"class" : "post article"}).find("p")#.findAll("a")[0]
-        for elt in a.findAll("a"):
-            res.append(pipobot.lib.utils.xhtml2text(elt.text))
-        nb = a.findAll("a")[0].get("href").split("/")[-1]
-        res = "VDM#%s : %s"%(nb, "".join(res))
+        try:
+            a = soup.find("div", {"class" : "post article"}).find("p")#.findAll("a")[0]
+            for elt in a.findAll("a"):
+                res.append(pipobot.lib.utils.xhtml2text(elt.text))
+            nb = a.findAll("a")[0].get("href").split("/")[-1]
+            res = u"VDM#%s : %s"%(nb, "".join(res))
+        except:
+            res = u"Je n'arrive pas à parser la page : peut-être que l'html a changé, ou la page cherchée n'existe pas, ou alors mon développeur est un boulet"
         return res
