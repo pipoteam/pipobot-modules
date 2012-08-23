@@ -9,12 +9,12 @@ from pipobot.lib.exceptions import ConfigException
 
 class CmdHg(SyncModule):
     def __init__(self, bot):
-        settings = bot.settings
-        try:
-            self.repos = settings["modules"]["hg"]["repos"]
-            self.defaultrepo = settings["modules"]["hg"]["default"]
-        except KeyError as e:
-            raise ConfigException("Missing section %s in configuration file for module mercurial" % e)
+        if hasattr(self.__class__, "_settings"):
+            try:
+                self.repos = self._settings["repos"]
+                self.defaultrepo = self._settings["default"]
+            except KeyError as e:
+                raise ConfigException("Missing section %s in configuration file for module mercurial" % e)
 
         desc = """hg : donne le dernier changement sur le repo %s
 hg [repo] : donne le dernier changement du repo [repo]

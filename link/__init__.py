@@ -16,13 +16,11 @@ class Link(MultiSyncModule):
         self.dico = {}
         commands = {}
 
-        settings = bot.settings
         config_path = ''
         try:
-            config_path = settings['modules']['link']['config_path']
+            config_path = self._settings['config_path']
         except KeyError:
-            config_dir = bot.module_path["link"]
-            config_path = os.path.join(config_dir, "urllist.cfg")
+            config_path = os.path.join(os.path.dirname(__file__), "urllist.cfg")
 
         config = ConfigParser.RawConfigParser()
         config.read(config_path)
