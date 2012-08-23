@@ -14,7 +14,7 @@ class Pendu(object):
         self.played = ["_"]*len(word)
         self.letters = set()
         self.okletters = set()
-        self.maxanswers = 9
+        self.maxanswers = 8
 
     def getword(self):
         return self._word
@@ -22,42 +22,43 @@ class Pendu(object):
     word = property(getword, setword)
 
     def playedtostr(self):
-        return "Lettres jouées: " + ", ".join(self.letters) + ", ".join(self.okletters)
+        return u"Lettres jouées: %s" % ", ".join(sorted(self.letters | self.okletters))
 
     def propose(self, letter):
         res = ""
         if letter in self.letters:
-            res = "Lettre déjà proposée"
+            return u"Lettre déjà proposée"
+
+        if letter in self.word:
+            i = -1
+            for l in self.word:
+                i += 1
+                if l == letter:
+                    self.played[i] = self.word[i]
+                    self.okletters.add(letter)
+            res = u"Bien vu !"
+            if self.solved():
+                res += u"\nEt oui, le mot à trouver était bien %s !"%(self.word)
+                self.word = ""
+            else:
+                res += u"Mot actuel: %s"%("".join(self.played))
         else:
-            if len(self.letters) == self.maxanswers -1 :
-                rep = asc_res[8]
-                rep += " Tu devais trouver %s"%(self.word)
-                return rep
-            if letter in self.word:
-                i = -1
-                for l in self.word:
-                    i += 1
-                    if l == letter:
-                        self.played[i] = self.word[i]
-                        self.okletters.add(letter)
-                res = "Bien vu !"
-                if self.solved():
-                    res += "\nEt oui, le mot à trouver était bien %s !"%(self.word)
-                else:
-                    res += " Mot actuel: %s"%("".join(self.played))
+            if len(self.letters) == self.maxanswers:
+                res = asc_res[8]
+                res += u"Tu devais trouver %s"%(self.word)
+                self.word = ""
             else:
                 self.letters.add(letter)
                 res = asc_res[len(self.letters) - 1]
-
+                res += "\nMot actuel : %s" % ("".join(self.played))
         return res
 
     def solved(self):
         return not ("_" in self.played)
 
-    def create_word(self, module_path):
+    def create_word(self, word_file):
         word_list = []
-        conf_file = os.path.join(module_path, "wordlist.cfg")
-        with open(conf_file) as f:
+        with open(word_file) as f:
             for line in f:
                 word_list.append(line.strip().lower())
         return choice(word_list)
