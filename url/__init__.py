@@ -69,10 +69,11 @@ class CmdUrl(ListenModule):
                         except KeyError:
                             first = res.jid
                         first_date = 'le ' + res.date.strftime('%x') + ' à ' + res.date.strftime('%X')
+                        first_date = first_date.decode("utf-8")
                         if res.count == 1:
-                            send.append('Ce lien a déjà été posté %s par %s… '%(first_date,first))
+                            send.append(u'Ce lien a déjà été posté %s par %s… '%(first_date,first))
                         else:
-                            send.append('Ce lien a déjà été posté %s fois depuis que %s l’a découvert, %s… ' % (res.count,first,first_date))
+                            send.append(u'Ce lien a déjà été posté %s fois depuis que %s l’a découvert, %s… ' % (res.count,first,first_date))
                         res.count += 1
                     else:
                         u = RepostUrl(url, self.bot.occupants.pseudo_to_jid(sender))
@@ -90,29 +91,32 @@ class CmdUrl(ListenModule):
                     title = 'Pas de titre'
                     html = o.read(1000000)
                     try:
-                        SoupList = BeautifulSoup(pipobot.lib.utils.unescape(html), parseOnlyThese=SoupStrainer('title'))
+                        enco = "utf-8"
+                        SoupList = BeautifulSoup(pipobot.lib.utils.unescape(html.decode(enco)), parseOnlyThese=SoupStrainer('title'))
                     except UnicodeDecodeError:
-                        SoupList = BeautifulSoup(pipobot.lib.utils.unescape(html.decode("latin1", "ignore")), parseOnlyThese=SoupStrainer('title'))
+                        enco = "latin1"
+                        SoupList = BeautifulSoup(pipobot.lib.utils.unescape(html.decode(enco, "ignore")), parseOnlyThese=SoupStrainer('title'))
                     try:
                         titles = [title for title in SoupList]
                         title = pipobot.lib.utils.xhtml2text(titles[0].renderContents())
+                        title = title.decode(enco)
                     except IndexError:
                         title = "Pas de titre"
                     except HTMLParseError:
                         pass
-                    send.append("[Lien] Titre : %s" % " ".join(title.split()))
+                    send.append(u"[Lien] Titre : %s" % " ".join(title.split()))
                 else:
-                    send.append("[Lien] Type: %s, Taille : %s octets" % (ctype, clength))
+                    send.append(u"[Lien] Type: %s, Taille : %s octets" % (ctype, clength))
                 o.close()
             except IOError as error:
                 if error[1] == 401:
-                    send.append("Je ne peux pas m'authentifier sur %s :'(" % url)
+                    send.append(u"Je ne peux pas m'authentifier sur %s :'(" % url)
                 elif error[1] == 404:
-                    send.append("%s n'existe pas !" % url)
+                    send.append(u"%s n'existe pas !" % url)
                 elif error[1] == 403:
-                    send.append("Il est interdit d'accéder à %s !" % url)
+                    send.append(u"Il est interdit d'accéder à %s !" % url)
                 else:
-                    send.append("Erreur %s sur %s"%(error[1], url))
+                    send.append(u"Erreur %s sur %s"%(error[1], url))
             except httplib.InvalidURL:
-                send.append("L'URL %s n'est pas valide !" % url)
+                send.append(u"L'URL %s n'est pas valide !" % url)
         return send

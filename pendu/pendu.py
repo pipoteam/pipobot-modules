@@ -26,7 +26,7 @@ class Pendu(object):
 
     def propose(self, letter):
         res = ""
-        if letter in self.letters:
+        if letter in (self.letters | self.okletters):
             return u"Lettre déjà proposée"
 
         if letter in self.word:
@@ -41,7 +41,7 @@ class Pendu(object):
                 res += u"\nEt oui, le mot à trouver était bien %s !"%(self.word)
                 self.word = ""
             else:
-                res += u"Mot actuel: %s"%("".join(self.played))
+                res += u" Mot actuel: %s"%("".join(self.played))
         else:
             if len(self.letters) == self.maxanswers:
                 res = asc_res[8]
