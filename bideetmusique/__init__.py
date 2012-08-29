@@ -16,7 +16,7 @@ class CmdBideEtMusique(NotifyModule):
         desc = {"": u"Pour afficher des infos sur bides et musique.",
                 "current" : u"Ce qui passe actuellement sur bides et musique",
                 "next [n]" : u"Les [n] chansons à venir (dans la limite des stocks disponibles)",
-                "prev [n]" : u"Les [n] chansons précédentesr (dans la limite des stocks disponibles)",
+                "prev [n]" : u"Les [n] chansons précédentes (dans la limite des stocks disponibles)",
                 "prog [n]" : u"Les [n] programmes à venir (dans la limite des stocks disponibles)",
                 "mute" : u"N'affiche plus les nouvelles chansons.",
                 "unmute" : u"Affiche les nouvelles chansons.",

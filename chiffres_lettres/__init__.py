@@ -52,6 +52,7 @@ class ChiffresCmd(SyncModule):
             if verdict:
                 if verdict == self.game.total:
                     return u"%s : Le compte est bon !!" % sender
+                    self.timer.cancel()
                 else:
                     return u"%s : Les calculs sont bons, tu trouves %s au lieu de %s, soit une erreur de %s" % (sender, 
                                                                                     verdict,
