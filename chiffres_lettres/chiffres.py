@@ -97,7 +97,10 @@ class Chiffres:
             elif isinstance(node, ast.operator): # <operator>
                 return operators[type(node)]
             elif isinstance(node, ast.BinOp): # <left> <operator> <right>
-                return eval_(node.op, left)(eval_(node.left, left), eval_(node.right, left))
+                try:
+                    return eval_(node.op, left)(eval_(node.left, left), eval_(node.right, left))
+                except ZeroDivisionError:
+                    raise CalcError(u"Division par 0, BOOOOOOOOOOOOOOOOOOO")
             else:
                 raise TypeError(node)
 
