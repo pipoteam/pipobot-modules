@@ -5,9 +5,8 @@ import urllib
 import pipobot.lib.utils
 import httplib
 import sqlalchemy.exc
-from BeautifulSoup import BeautifulSoup, SoupStrainer
-from HTMLParser import HTMLParseError
 from pipobot.lib.modules import ListenModule
+from pipobot.lib.utils import check_url
 from model import RepostUrl
 
 try:
@@ -17,14 +16,6 @@ except ImportError:
 
 
 URLS_RE = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-/_=?:;]|[!*\(\),~@]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
-
-
-class AppURLopener(urllib.FancyURLopener):
-    def prompt_user_passwd(self, host, realm):
-        return ('', '')
-
-    version = "Mozilla/5.0 (X11; U; Linux; fr-fr) AppleWebKit/531+ (KHTML, like Gecko) Safari/531.2+ Midori/0.2"
-urllib._urlopener = AppURLopener()
 
 
 class CmdUrl(ListenModule):
@@ -71,12 +62,12 @@ class CmdUrl(ListenModule):
                         first_date = 'le ' + res.date.strftime('%x') + ' à ' + res.date.strftime('%X')
                         first_date = first_date.decode("utf-8")
                         if res.count == 1:
-                            send.append(u'Ce lien a déjà été posté %s par %s… '%(first_date,first))
+                            send.append(u'Ce lien a déjà été posté %s par %s sur %s…' % (first_date, first, res.chan))
                         else:
-                            send.append(u'Ce lien a déjà été posté %s fois depuis que %s l’a découvert, %s… ' % (res.count,first,first_date))
+                            send.append(u'Ce lien a déjà été posté %s fois depuis que %s l’a découvert, %s, sur %s…' % (res.count, first, first_date, res.chan))
                         res.count += 1
                     else:
-                        u = RepostUrl(url, self.bot.occupants.pseudo_to_jid(sender))
+                        u = RepostUrl(url, self.bot.occupants.pseudo_to_jid(sender), self.bot.chatname)
                         self.bot.session.add(u)
                         self.bot.session.commit()
         return send
@@ -84,39 +75,5 @@ class CmdUrl(ListenModule):
     def get_title(self, urls):
         send = []
         for url in urls:
-            try:
-                o=urllib.urlopen(url)
-                ctype, clength = o.info().get("Content-Type"), o.info().get("Content-Length")
-                if  o.info().gettype() == "text/html":
-                    title = 'Pas de titre'
-                    html = o.read(1000000)
-                    try:
-                        enco = "utf-8"
-                        SoupList = BeautifulSoup(pipobot.lib.utils.unescape(html.decode(enco)), parseOnlyThese=SoupStrainer('title'))
-                    except UnicodeDecodeError:
-                        enco = "latin1"
-                        SoupList = BeautifulSoup(pipobot.lib.utils.unescape(html.decode(enco, "ignore")), parseOnlyThese=SoupStrainer('title'))
-                    try:
-                        titles = [title for title in SoupList]
-                        title = pipobot.lib.utils.xhtml2text(titles[0].renderContents())
-                        title = title.decode(enco)
-                    except IndexError:
-                        title = "Pas de titre"
-                    except HTMLParseError:
-                        pass
-                    send.append(u"[Lien] Titre : %s" % " ".join(title.split()))
-                else:
-                    send.append(u"[Lien] Type: %s, Taille : %s octets" % (ctype, clength))
-                o.close()
-            except IOError as error:
-                if error[1] == 401:
-                    send.append(u"Je ne peux pas m'authentifier sur %s :'(" % url)
-                elif error[1] == 404:
-                    send.append(u"%s n'existe pas !" % url)
-                elif error[1] == 403:
-                    send.append(u"Il est interdit d'accéder à %s !" % url)
-                else:
-                    send.append(u"Erreur %s sur %s"%(error[1], url))
-            except httplib.InvalidURL:
-                send.append(u"L'URL %s n'est pas valide !" % url)
+            send += check_url(url)
         return send
