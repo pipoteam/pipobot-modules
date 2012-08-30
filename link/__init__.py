@@ -3,7 +3,7 @@
 import os
 import ConfigParser
 from pipobot.lib.modules import MultiSyncModule, defaultcmd
-from pipobot.lib.url import check_url
+from pipobot.lib.utils import check_url
 
 
 class Link(MultiSyncModule):

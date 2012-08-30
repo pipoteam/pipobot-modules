@@ -5,7 +5,7 @@ import xmpp
 import httplib
 import sqlalchemy.exc
 from pipobot.lib.modules import ListenModule
-from pipobot.lib.url import check_url
+from pipobot.lib.utils import check_url
 from model import RepostUrl
 
 try:
