@@ -1,7 +1,10 @@
 #! /usr/bin/env python
 #-*- coding: utf-8 -*-
-import ConfigParser, os
+import os
+import ConfigParser
 from pipobot.lib.modules import MultiSyncModule, defaultcmd
+from pipobot.lib.url import check_url
+
 
 class Link(MultiSyncModule):
     def __init__(self, bot):
@@ -25,7 +28,7 @@ class Link(MultiSyncModule):
 
         config = ConfigParser.RawConfigParser()
         config.read(config_path)
-        for c in config.sections() :
+        for c in config.sections():
             self.dico[c] = {}
             self.dico[c]['desc'] = config.get(c, 'desc')
             commands[c] = self.dico[c]['desc']
@@ -34,4 +37,6 @@ class Link(MultiSyncModule):
 
     @defaultcmd
     def answer(self, cmd, sender, message):
-        return self.dico[cmd]['url'].replace('KEYWORDS',message).replace(' ','+')
+        if message:
+            return check_url(self.dico[cmd]['url'].replace('KEYWORDS', message).replace(' ', '+'), geturl=True)
+        return "rtfm ;)"
