@@ -32,6 +32,8 @@ hg [repo] [rev] : affiche la révision [rev] du repo [repo]""" % (self.defaultre
     @answercmd(r"^(?P<name>\w+)$")
     def answer_repo(self, sender, message):
         repo = message.group("name")
+        if repo == "repos":
+            return "Liste des repos connus : %s" % (", ".join(self.repos))
         return self.get_log(repo, -1)
 
     @answercmd(r"^(?P<name>\w+)\s+(?P<rev>\d+)$")
