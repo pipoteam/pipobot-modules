@@ -24,7 +24,7 @@ class CmdUrl(ListenModule):
         ListenModule.__init__(self, bot,  name = "url", desc = desc)
         self.repost = False
         if hasattr(self.__class__, '_settings'):
-            self.repost = self._settings['respost'] or False
+            self.repost = self._settings['repost'] or False
             self.repost_ignore = self._settings['repost-ignore'] or []
 
     def answer(self, sender, message):
