@@ -10,9 +10,11 @@ class RepostUrl(Base):
     count = Column(Integer)
     date = Column(DateTime)
     jid = Column(String(250))
+    chan = Column(String(250))
 
-    def __init__(self, url, jid):
+    def __init__(self, url, jid, chan):
         self.url = url
         self.jid = jid
         self.count = 1
         self.date = datetime.datetime.now()
+        self.chan = chan
