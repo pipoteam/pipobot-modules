@@ -45,6 +45,7 @@ class CmdMpd(NotifyModule):
 
         for name in ['host', 'port', 'pwd']:
             if not getattr(self, name):
+                self.delay = 60
                 raise ConfigException("Missing section %s in configuration file for module botmpd!" % name)
 
         self.mute = True
@@ -62,6 +63,10 @@ class CmdMpd(NotifyModule):
                 mpd = BotMPD(self.host, self.port, self.pwd)
         except ConnectionError:
             return "Can't connect to mpd server"
+        except NameError:
+            self.delay = 60
+            logger.error("Error trying to connect to the mpd server")
+            return "Connection failed with mpd server"
         try:
             cmd, arg = message.split(' ', 1)
         except:
@@ -145,3 +150,6 @@ class CmdMpd(NotifyModule):
                 self.error_notified = True
                 #The module will check again in `self.delay` seconds
                 self.delay = 10
+        except NameError:
+            self.delay = 60
+            logger.error("Error trying to connect to the mpd server")
