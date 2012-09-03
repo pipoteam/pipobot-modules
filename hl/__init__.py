@@ -3,7 +3,7 @@
 
 from model import HlList, HlListMembers
 from pipobot.lib.modules import SyncModule, defaultcmd, answercmd
-from pipobot.lib.known_users import KnownUser
+from pipobot.lib.known_users import KnownUser, minpermlvl
 
 
 class HighLight(SyncModule):
@@ -35,7 +35,7 @@ class HighLight(SyncModule):
         hllists = self.bot.session.query(HlList).all()
         if not hllists:
             return _("%s: There is no HighLight List… Maybe you can create one, before trying that ?" % sender)
-        ret = _("HighLigt Lists:")
+        ret = _("HighLight Lists:")
         for hllist in hllists:
             ret += "\n  %-31s" % hllist.name
             for user in hllist.members:
@@ -87,6 +87,7 @@ class HighLight(SyncModule):
         return ret.strip()
 
     @answercmd(r'^rm (?P<list>\w+)')
+    @minpermlvl(2)
     def answer_rm(self, sender, message):
         hllistname = message.group('list')
         hllist = self.bot.session.query(HlList).filter(HlList.name == hllistname).first()
