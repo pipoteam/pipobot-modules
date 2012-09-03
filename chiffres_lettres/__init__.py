@@ -15,9 +15,9 @@ class ChiffresCmd(SyncModule):
         desc += u"chiffres solve : cherche à résoudre le problème"
         self.game = None
         SyncModule.__init__(self,
-                            bot, 
-                            desc = desc,
-                            command = "chiffres")
+                            bot,
+                            desc=desc,
+                            command="chiffres")
 
     @answercmd("init")
     def init(self, sender, args):
@@ -31,7 +31,7 @@ class ChiffresCmd(SyncModule):
         self.timer = threading.Timer(60, self.time_out)
         self.timer.start()
         return res
-    
+
     @answercmd("solve")
     def solve(self, sender, args):
         if self.game is None:
@@ -87,7 +87,7 @@ class LettresCmd(SyncModule):
         t = threading.Timer(60, self.time_out)
         t.start()
         return res
-    
+
     @answercmd("solve")
     def solve(self, sender, args):
         if self.game.letters == []:
