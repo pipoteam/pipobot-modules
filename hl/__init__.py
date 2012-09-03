@@ -10,17 +10,17 @@ class HighLight(SyncModule):
     def __init__(self, bot):
         desc = _("hl <people>: Highligh <people> (whom can be registerd users, pseudos or list of people)")
         desc = _("\nhl <people> :<message>: Highligh <people>, and shows <message>")
-        desc += _("\nhl list show [<list>]: Shows <list> list of people (default: all)")
-        desc += _("\nhl list set <list> <people>: add <people> to <list>")
-        #desc += _("\nhl list rm <list> <people>: remove <people> from <list>")
-        #desc += _("\nhl list rm <list>: remove <list>")
+        desc += _("\nhl show [<list>]: Shows <list> list of people (default: all)")
+        desc += _("\nhl set <list> <people>: add <people> to <list>")
+        #desc += _("\nhl rm <list> <people>: remove <people> from <list>")
+        #desc += _("\nhl rm <list>: remove <list>")
 
         SyncModule.__init__(self,
                 bot,
                 desc=desc,
                 command='hl')
 
-    @answercmd(r'^list show (?P<list>\w+)')
+    @answercmd(r'^show (?P<list>\w+)')
     def aswer_show(self, sender, message):
         hllist = self.bot.session.query(HlList).filter(HlList.name == message.group('list')).first()
         if not hllist:
@@ -30,7 +30,7 @@ class HighLight(SyncModule):
             ret += ' %s' % user.user
         return ret
 
-    @answercmd(r'^list show')
+    @answercmd(r'^show')
     def answer_showall(self, sender, message):
         ret = _("HighLigt Lists:")
         for hllist in self.bot.session.query(HlList).all():
@@ -39,14 +39,14 @@ class HighLight(SyncModule):
                 ret += ' %s' % user.user
         return ret
 
-    @answercmd(r'list set')
+    @answercmd(r'set')
     def answer_set(self, sender, message):
         ret = ''
         message = message.string.split(' ')
-        if len(message) < 4:
+        if len(message) < 3:
             return _("%s: You must provide at least a list and a member" % sender)
-        hllist = message[2]
-        users = message[3:]
+        hllist = message[1]
+        users = message[2:]
         knownusers = []
         unknownusers = []
 
@@ -85,13 +85,15 @@ class HighLight(SyncModule):
 
     @defaultcmd
     def answer(self, sender, message):
+        if not message:
+            return self.desc
         knownusers = []
         unknownusers = []
         hllists = self.bot.session.query(HlList).all()
         hllistnames = []
         for hllist in hllists:
             hllistnames.append(hllist.name)
-        ret = self.desc
+        ret = 'HL:'
         for user in message.split(':')[0].split(' '):
             if user in hllistnames:
                 for hllist in hllists:
@@ -105,13 +107,11 @@ class HighLight(SyncModule):
                     knownusers.append(knownuser)
                 else:
                     unknownusers.append(user)
-        if knownusers or unknownusers:
-            ret = 'HL:'
-            for user in self.bot.occupants.users:
-                if KnownUser.get(user, self.bot) in knownusers:
-                    ret += ' %s' % user
-            for user in unknownusers:
+        for user in self.bot.occupants.users:
+            if KnownUser.get(user, self.bot) in knownusers:
                 ret += ' %s' % user
+        for user in unknownusers:
+            ret += ' %s' % user
         if ':' in message:
             ret += ' => ' + ':'.join(message.split(':')[1:]).strip()
         return ret
