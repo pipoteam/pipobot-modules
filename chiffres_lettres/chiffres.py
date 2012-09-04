@@ -14,8 +14,14 @@ class CalcError(Exception):
         Exception.__init__(self, message)
 
 # supported operators
+def mydiv(a, b) :
+    if a % b == 0 :
+        return op.div(a, b)
+    else :
+        raise CalcError("%d n'est pas divisible par %d, escroc" % (a, b))
+
 operators = {ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul,
-             ast.Div: op.div}
+             ast.Div: mydiv}
 
 
 class Chiffres:
