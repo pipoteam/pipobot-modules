@@ -44,21 +44,22 @@ class Chiffres:
         def compte(digits, result, stack):
             """ Recursive auxiliary function to solve the problem """
 
-            if len(digits) == 1 and digits[0] == result:
+            if result in digits:
                 return (True, stack)
 
-            elif len(digits) == 1:
-                if abs(result - digits[0]) < abs(result - self.best):
-                    self.best = digits[0]
+            goal = abs(result - self.best)
+            for digit in digits:
+                if abs(result - digit) < goal:
+                    self.best = digit
                     self.best_stack = stack[:]
 
-            for idx, i in enumerate(digits):
-                for j in digits[idx + 1:]:
+            for idx, g in enumerate(digits):
+                for h in digits[idx + 1:]:
                     new_digits = digits[:]
-                    new_digits.remove(i)
-                    new_digits.remove(j)
+                    new_digits.remove(g)
+                    new_digits.remove(h)
 
-                    i, j = max(i, j), min(i, j)
+                    i, j = max(g, h), min(g, h)
 
                     exact, solution = compte(new_digits + [i + j],
                                              result,
@@ -153,3 +154,23 @@ class Chiffres:
                 raise CalcError(u"Tu veux vraiment nous faire croire"
                                 u"que %s = %s ???" % (left, right))
         return eval_expr(right, False)
+
+if __name__ == '__main__' :
+    c = Chiffres()
+    c.digits = [5, 9, 25, 50, 75, 4, 143554545]
+    #c.digits = [4, 5, 9, 25, 50, 75]
+    #c.digits = [700, 3, 2]
+    #c.digits = [4, 703]
+    c.total  = 703
+    e, s = c.solve()
+    print c.digits
+    print e
+    print s
+
+
+    c.digits = [ 788, 900, 102, 79, 77, 8765]
+    c.total = 101
+    e, s = c.solve()
+    print c.digits
+    print e
+    print s
