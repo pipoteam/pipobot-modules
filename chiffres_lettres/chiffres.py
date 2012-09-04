@@ -4,7 +4,7 @@ import ast
 import operator as op
 import random
 
-CHOICES = range(1, 10) + [10, 25, 50, 75]
+CHOICES = range(1, 10) + [10, 25, 50, 75, 100]
 NB_OPERANDS = 6
 
 
@@ -28,7 +28,7 @@ class Chiffres:
     """ The game Countdown main class """
 
     def __init__(self):
-        self.total = random.randint(200, 800)
+        self.total = random.randint(100, 999)
         self.digits = []
         i = 0
         while i < NB_OPERANDS:
@@ -151,7 +151,7 @@ class Chiffres:
             except SyntaxError:
                 raise CalcError(u"Je n'arrive pas à calculer « %s »" % right)
             if eleft != eright:
-                raise CalcError(u"Tu veux vraiment nous faire croire"
+                raise CalcError(u"Tu veux vraiment nous faire croire "
                                 u"que %s = %s ???" % (left, right))
         return eval_expr(right, False)
 
