@@ -8,9 +8,13 @@ from pipobot.lib.modules import defaultcmd
 from pipobot.lib.abstract_modules import NotifyModule
 from libmpd.BotMPD import BotMPD
 
+DEFAULT_PORT = 6600
+
 logger = logging.getLogger("pipobot.botmpd")
 
 class CmdMpd(NotifyModule):
+    _config = (("host", str), ("port", int), ("pwd", str), ("datadir", str))
+
     def __init__(self, bot):
         desc = {"" : "Controle du mpd",
                 "current" : "mpd current : chanson actuelle",
@@ -32,21 +36,11 @@ class CmdMpd(NotifyModule):
                              pm_allowed = False,
                              command = "mpd",
                              delay = 0)
-        self.host = None
-        self.port = None
-        self.pwd = None
 
-        if hasattr(self.__class__, '_settings'):
-            self.host = self._settings['host']
-            self.port = self._settings['port']
-            self.pwd = self._settings['pwd']
-            if "datadir" in self._settings:
-                self.datadir = self._settings["datadir"]
-
-        for name in ['host', 'port', 'pwd']:
-            if not getattr(self, name):
-                self.delay = 60
-                raise ConfigException("Missing section %s in configuration file for module botmpd!" % name)
+        self.host = self.__class__.host
+        self.port = self.__class__.port or DEFAULT_PORT
+        self.pwd = self.__class__.pwd
+        self.datadir = self.__class__.datadir
 
         self.mute = True
         # To limit flood in logs : if the bot can't connect to the server, it will only be notified
@@ -57,7 +51,7 @@ class CmdMpd(NotifyModule):
     @defaultcmd
     def answer(self, sender, message):
         try:
-            if hasattr(self, "datadir"):
+            if self.datadir != "":
                 mpd = BotMPD(self.host, self.port, self.pwd, self.datadir)
             else:
                 mpd = BotMPD(self.host, self.port, self.pwd)

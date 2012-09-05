@@ -27,6 +27,7 @@ class ListConfigParser(ConfigParser.RawConfigParser):
             return value.decode("utf-8")
 
 class CmdAlacon(MultiSyncModule):
+    _config = (("config_path", str),)
     def __init__(self, bot):
         commands = self.readconf(bot)
         MultiSyncModule.__init__(self,
@@ -48,9 +49,7 @@ class CmdAlacon(MultiSyncModule):
         #To initialize MultiSyncModule
         commands = {}
 
-        config_path = ''
-        if hasattr(self.__class__, '_settings'):
-            config_path = self._settings.get('config_path')
+        config_path = self.__class__.config_path
 
         if not config_path:
             config_path = os.path.join(os.path.dirname(__file__),

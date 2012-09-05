@@ -8,13 +8,10 @@ from pipobot.lib.modules import SyncModule, answercmd
 from pipobot.lib.exceptions import ConfigException
 
 class CmdHg(SyncModule):
+    _config = (("default", str), ("repos", dict))
     def __init__(self, bot):
-        if hasattr(self.__class__, "_settings"):
-            try:
-                self.repos = self._settings["repos"]
-                self.defaultrepo = self._settings["default"]
-            except KeyError as e:
-                raise ConfigException("Missing section %s in configuration file for module mercurial" % e)
+        self.repos = self.__class__.repos
+        self.defaultrepo = self.__class__.default
 
         desc = """hg : donne le dernier changement sur le repo %s
 hg [repo] : donne le dernier changement du repo [repo]
