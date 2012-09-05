@@ -24,8 +24,8 @@ class CmdUrl(ListenModule):
         ListenModule.__init__(self, bot,  name = "url", desc = desc)
         self.repost = False
         if hasattr(self.__class__, '_settings'):
-            self.repost = self._settings['repost'] or False
-            self.repost_ignore = self._settings['repost-ignore'] or []
+            self.repost = self._settings['repost'] if "repost" in self._settings else False
+            self.repost_ignore = self._settings['repost-ignore'] if "repost-ignore" in self._settings else []
 
     def answer(self, sender, message):
         if HyperlinksScanner:
