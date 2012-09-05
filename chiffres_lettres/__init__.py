@@ -1,11 +1,14 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
+import logging
 import threading
 import string
 from pipobot.lib.modules import SyncModule, answercmd
 from lettres import Lettres
 from chiffres import Chiffres, CalcError
+
+logger = logging.getLogger("pipobot.chiffres_lettres")
 
 
 class ChiffresCmd(SyncModule):
@@ -73,7 +76,15 @@ class LettresCmd(SyncModule):
         desc = u"Le module du jeux des chiffres et des lettres\n"
         desc += u"lettres init : génère une nouvelle partie\n"
         desc += u"lettres solve : cherche à résoudre le problème"
-        self.game = Lettres()
+        dico = ""
+        if hasattr(self.__class__, "_settings"):
+            if "dico" in self._settings:
+                dico = self._settings["dico"]
+        if dico == "":
+            logger.error(_("Missing dictionary for lettres modules. "
+                           "Solving function will not work !"))
+
+        self.game = Lettres(dico)
         SyncModule.__init__(self,
                             bot, 
                             desc = desc,
@@ -94,6 +105,9 @@ class LettresCmd(SyncModule):
             return u"Aucune partie lancée"
 
         results = self.game.solve()
+        if results is None:
+            return u"Je n'ai pas de dictionnaire dans ma config :'("
+
         self.game.letters = []
         return u"Voici ce que j'ai trouvé : \n%s" % ", ".join(results)
 

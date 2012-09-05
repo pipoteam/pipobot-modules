@@ -2,27 +2,31 @@
 """ Tools to start and resolve 'le mot le plus long' game """
 import os
 import random
+import logging
 
-DICO_FILE = os.path.join(os.path.dirname(__file__), 'ods3')
+logger = logging.getLogger("pipobot.lettres")
 
 
-def creation_dictionnaire_ordonne():
+def creation_dictionnaire_ordonne(dico):
     """ Reads DICO_FILE and create a python dictionary
         out of it """
-    with open(DICO_FILE, "r") as fichier_dico:
-        dict_ord_len = {}
-        for longueur in range(26):
-            dict_ord_len[longueur + 1] = []
-        while True:
-            mot = fichier_dico.readline()
-            if mot == '':
-                break
-            mot = mot.strip('\n')
-            if '-' in mot:
-                mot = mot.replace('-', '')
-            dict_ord_len[len(mot)].append(mot)
-        fichier_dico.close()
-        return dict_ord_len
+    try:
+        with open(dico, "r") as fichier_dico:
+            dict_ord_len = {}
+            for longueur in range(26):
+                dict_ord_len[longueur + 1] = []
+            while True:
+                mot = fichier_dico.readline()
+                if mot == '':
+                    break
+                mot = mot.strip('\n')
+                if '-' in mot:
+                    mot = mot.replace('-', '')
+                dict_ord_len[len(mot)].append(mot)
+            fichier_dico.close()
+            return dict_ord_len
+    except IOError:
+        return None
 
 
 def trouver_mot_plus_long(longueur_max_mot, dico, tirage):
@@ -47,21 +51,28 @@ def trouver_mot_plus_long(longueur_max_mot, dico, tirage):
 
 class Lettres:
     """ Class to define the game 'le mot le plus long' """
-    def __init__(self):
+    def __init__(self, dico):
         self.result = []
         self.letters = []
         self.tirage()
-        self.dict_ord_len = creation_dictionnaire_ordonne()
+        if dico != "":
+            dict_ord_len = creation_dictionnaire_ordonne(dico)
+            if dict_ord_len is not None:
+                self.dict_ord_len = dict_ord_len
 
     def solve(self):
         """ Finds the best solution for the game """
-        solution = trouver_mot_plus_long(len(self.letters),
-                                         self.dict_ord_len,
-                                         self.letters)
-        return solution
+        if hasattr(self, "dict_ord_len"):
+            solution = trouver_mot_plus_long(len(self.letters),
+                                             self.dict_ord_len,
+                                             self.letters)
+            return solution
+        else:
+            return None
 
     def tirage(self):
         """ Initialize the game with random letters """
+        self.letters = []
         consonnes = 'bcdfghjklmnpqrstvwxz'
         voyelles = 'aeiouy'
 
