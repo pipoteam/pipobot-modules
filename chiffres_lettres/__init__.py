@@ -3,6 +3,8 @@
 
 import threading
 import string
+import ast
+import operator as op
 from pipobot.lib.modules import SyncModule, answercmd
 from lettres import Lettres
 from chiffres import Chiffres, CalcError
@@ -18,6 +20,10 @@ class ChiffresCmd(SyncModule):
                             bot,
                             desc=desc,
                             command="chiffres")
+
+        # Activated printers and their names
+        self.printers = { 'br': ChiffresCmd.pretty_br, 'lisp': ChiffresCmd.pretty_lisp, 'tiles': ChiffresCmd.pretty_tiles }
+        self.default_printer = 'tiles'
 
     @answercmd("init")
     def init(self, sender, args):
@@ -37,10 +43,15 @@ class ChiffresCmd(SyncModule):
         if self.game is None:
             return u"Aucune partie lancée"
         exact, res = self.game.solve()
+
+        printer = self.printers[self.default_printer]
+        if args and self.printers.get(args) :
+            printer = self.printers[args]
+
         if exact:
-            return u"J'ai trouvé une solution exacte : \n%s" % res
+            return u"J'ai trouvé une solution exacte : \n%s" % printer(res.ast)
         else:
-            return u"Pas de solution exacte… voici ce que j'ai de mieux : \n%s" % res
+            return u"Pas de solution exacte… voici ce que j'ai de mieux : \n%s" % printer(res.ast)
 
     @answercmd("check")
     def check(self, sender, args):
@@ -66,6 +77,96 @@ class ChiffresCmd(SyncModule):
 
     def time_out(self):
         self.bot.say("Temps écoulé !! On arrête de compter !")
+
+    #
+    # Some printers for ast describing a solve
+    #
+
+    opstr = {ast.Add: u'+', ast.Sub: u'-', ast.Mult: u'×', ast.Div: u'÷'}
+    opast = {ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul, ast.Div: op.div}
+
+    @staticmethod
+    def pretty_lisp(astree) :
+        """ Print ast tree in algebra formula. Its name is a reference to the number of parentheses that it involves """
+
+        if isinstance(astree, ast.Num) :
+            return unicode(astree.n)
+        elif isinstance(astree, ast.BinOp) :
+            return u'(%s%s%s)' % (ChiffresCmd.pretty_lisp(astree.left), ChiffresCmd.opstr[astree.op], ChiffresCmd.pretty_lisp(astree.right))
+
+
+    @staticmethod
+    def pretty_br(astree) :
+        """ A pretty printer imitating the fantastic Betrand Renard """
+
+        def inside(astree) :
+            if isinstance(astree.left, ast.Num) and isinstance(astree.right, ast.Num) :
+                res = ChiffresCmd.opast[astree.op](astree.left.n, astree.right.n)
+                return (u"Avec les nombres de départs, vous voyez on a %d %s %d, ce qui donne %d\n" % \
+                        (astree.left.n, ChiffresCmd.opstr[astree.op], astree.right.n, res),
+                        res)
+            elif isinstance(astree.left, ast.Num) :
+                before, bres = inside(astree.right)
+                res = ChiffresCmd.opast[astree.op](astree.left.n, bres)
+                return (before + \
+                        u"Et après ? Et ben on prend le %d calculé et le %d du tirage, un coup de %s et hop, %d\n" % \
+                                    (bres, astree.left.n, ChiffresCmd.opstr[astree.op], res),
+                        res)
+            elif isinstance(astree.right, ast.Num) :
+                before, bres = inside(astree.left)
+                res = ChiffresCmd.opast[astree.op](bres, astree.right.n)
+                return (before + \
+                        u"Vous vous croyez coincé ? Et non, le %d %s le %d du tirage, ça donne %d\n" % \
+                                    (bres, ChiffresCmd.opstr[astree.op], astree.right.n, res),
+                        res)
+            else :
+                beforel, bresl = inside(astree.left)
+                beforer, bresr = inside(astree.right)
+                res = ChiffresCmd.opast[astree.op](bresl, bresr)
+                return  (beforel +\
+                         beforer +\
+                         u"On prend le %d et le %d, on fait %s et on arrive à %d\n" %
+                                    (bresl, bresr, ChiffresCmd.opstr[astree.op], res),
+                         res)
+
+        mess, res = inside(astree)
+        return mess + u"Et voila, on arrive bien à %d, c'était pas compliqué" % res
+
+    @staticmethod
+    def pretty_tiles(astree) :
+        """ A pretty printer showing the results as with the tiles """
+
+        def inside(astree) :
+            if isinstance(astree.left, ast.Num) and isinstance(astree.right, ast.Num) :
+                res = ChiffresCmd.opast[astree.op](astree.left.n, astree.right.n)
+                return (u"%d %s %d = %d\n" % \
+                        (astree.left.n, ChiffresCmd.opstr[astree.op], astree.right.n, res),
+                        res)
+            elif isinstance(astree.left, ast.Num) :
+                before, bres = inside(astree.right)
+                res = ChiffresCmd.opast[astree.op](astree.left.n, bres)
+                return (before + \
+                        u"%d %s %d = %d\n" % \
+                        (bres, ChiffresCmd.opstr[astree.op], astree.left.n, res),
+                        res)
+            elif isinstance(astree.right, ast.Num) :
+                before, bres = inside(astree.left)
+                res = ChiffresCmd.opast[astree.op](bres, astree.right.n)
+                return (before + \
+                        u"%d %s %d = %d\n" % \
+                        (bres, ChiffresCmd.opstr[astree.op], astree.right.n, res),
+                        res)
+            else :
+                beforel, bresl = inside(astree.left)
+                beforer, bresr = inside(astree.right)
+                res = ChiffresCmd.opast[astree.op](bresl, bresr)
+                return  (beforel +\
+                         beforer +\
+                         u"%d %s %d = %d\n" % \
+                                    (bresl, ChiffresCmd.opstr[astree.op], bresr, res),
+                         res)
+
+        return inside(astree)[0].strip()
 
 
 class LettresCmd(SyncModule):
