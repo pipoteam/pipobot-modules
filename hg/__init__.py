@@ -13,7 +13,7 @@ class CmdHg(SyncModule):
     def __init__(self, bot):
         desc = """hg : donne le dernier changement sur le repo %s
 hg [repo] : donne le dernier changement du repo [repo]
-hg [repo] [rev] : affiche la révision [rev] du repo [repo]""" % (self.defaultrepo)
+hg [repo] [rev] : affiche la révision [rev] du repo [repo]""" % (self.default)
         SyncModule.__init__(self, 
                             bot, 
                             desc = desc,

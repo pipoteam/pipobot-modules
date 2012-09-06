@@ -57,4 +57,4 @@ unicode nom
                 c+=1
             if c >= MAX:
                 break
-        return send
+        return send if send != u'' else u'Aucun résultat trouvé'
