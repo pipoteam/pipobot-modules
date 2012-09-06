@@ -5,6 +5,8 @@ import sqlite3
 from pipobot.lib.modules import SyncModule, defaultcmd
 
 class CmdTrac(SyncModule):
+    _config = (("db_path", str, None),)
+
     def __init__(self, bot):
         desc = "trac [num]\nListe les tickets trac actifs ou en affiche un en détail"
         SyncModule.__init__(self, 
@@ -12,14 +14,14 @@ class CmdTrac(SyncModule):
                             desc = desc,
                             command = "trac",
                             )
-        self.db_path = None
-        if hasattr(self.__class__, '_settings'):
-            self.db_path = self._settings.get('db_path')
     
     @defaultcmd
     def answer(self, sender, message):
         send = "\n"
         # Connection db
+        if self.db_path == "":
+            return u"Ma configuration ne me permet pas de répondre à cette question…"
+
         conn = sqlite3.connect(self.db_path)
         conn.isolation_level = None
         c = conn.cursor()

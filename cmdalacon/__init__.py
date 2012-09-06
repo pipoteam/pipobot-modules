@@ -6,6 +6,8 @@ import random
 import re
 from pipobot.lib.modules import MultiSyncModule, defaultcmd
 
+DEFAULT_CONFIG = os.path.join(os.path.dirname(__file__), "cmdlist.cfg")
+
 def multiwordReplace(text, wordDic):
     """
     take a text and replace words that match a key in a dictionary with
@@ -27,7 +29,7 @@ class ListConfigParser(ConfigParser.RawConfigParser):
             return value.decode("utf-8")
 
 class CmdAlacon(MultiSyncModule):
-    _config = (("config_path", str),)
+    _config = (("config_path", str, DEFAULT_CONFIG),)
     def __init__(self, bot):
         commands = self.readconf(bot)
         MultiSyncModule.__init__(self,
@@ -49,14 +51,8 @@ class CmdAlacon(MultiSyncModule):
         #To initialize MultiSyncModule
         commands = {}
 
-        config_path = self.__class__.config_path
-
-        if not config_path:
-            config_path = os.path.join(os.path.dirname(__file__),
-                "cmdlist.cfg")
-
         config = ListConfigParser()
-        config.read(config_path)
+        config.read(self.config_path)
         for c in config.sections() :
             command_name = c.decode("utf-8")
             self.dico[command_name] = {}

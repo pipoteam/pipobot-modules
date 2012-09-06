@@ -11,6 +11,7 @@ logger = logging.getLogger("mail")
 
 class Mail(AsyncModule):
     """A module for notification of emails"""
+    _config = (("format", str, None), ("path", str, ""))
 
     def __init__(self, bot):
         AsyncModule.__init__(self,
@@ -19,26 +20,15 @@ class Mail(AsyncModule):
                              desc="Displaying incoming mails",
                              delay=0)
 
-        if hasattr(self.__class__, '_settings'):
-            box_format = self._settings['format']
-            if box_format == "mbox":
-                try:
-                    box_path = self._settings["path"]
-                except KeyError:
-                    #~/Maildir will be used
-                    box_path = ""
-                self.notifier = mbox.MboxNotify(bot, box_path)
-            elif box_format == "mdir":
-                try:
-                    box_path = self._settings["path"]
-                except KeyError:
-                    box_path = ""
-                self.notifier = mdir.MdirNotify(bot, box_path)
-            else:
-                logger.error(u"Mail box format %s not defined. You must use either mbox or mdir !" % box_format)
-        else:
-            self.delay = 60
-            logger.error(u"You must specify a mailbox format in your configuration file")
+        if self.format == "mbox":
+            self.notifier = mbox.MboxNotify(bot, self.path)
+        elif self.format == "mdir":
+            self.notifier = mdir.MdirNotify(bot, self.path)
+        elif self.format != "":
+            self.alive = False
+            logger.error(u"Mail box format « %s » not defined. You must use either mbox or mdir !" % self.format)
+        elif self.format == "":
+            self.delay = 10
 
     def action(self):
         if hasattr(self, "notifier"):

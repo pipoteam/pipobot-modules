@@ -173,19 +173,18 @@ class ChiffresCmd(SyncModule):
 
 
 class LettresCmd(SyncModule):
+    _config = (("dico", str, ""),)
+
     def __init__(self, bot):
         desc = u"Le module du jeux des chiffres et des lettres\n"
         desc += u"lettres init : génère une nouvelle partie\n"
         desc += u"lettres solve : cherche à résoudre le problème"
-        dico = ""
-        if hasattr(self.__class__, "_settings"):
-            if "dico" in self._settings:
-                dico = self._settings["dico"]
-        if dico == "":
+
+        if self.dico == "":
             logger.error(_("Missing dictionary for lettres modules. "
                            "Solving function will not work !"))
 
-        self.game = Lettres(dico)
+        self.game = Lettres(self.dico)
         SyncModule.__init__(self,
                             bot, 
                             desc = desc,

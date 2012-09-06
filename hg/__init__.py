@@ -8,11 +8,9 @@ from pipobot.lib.modules import SyncModule, answercmd
 from pipobot.lib.exceptions import ConfigException
 
 class CmdHg(SyncModule):
-    _config = (("default", str), ("repos", dict))
-    def __init__(self, bot):
-        self.repos = self.__class__.repos
-        self.defaultrepo = self.__class__.default
+    _config = (("default", str, ""), ("repos", dict, {}))
 
+    def __init__(self, bot):
         desc = """hg : donne le dernier changement sur le repo %s
 hg [repo] : donne le dernier changement du repo [repo]
 hg [repo] [rev] : affiche la révision [rev] du repo [repo]""" % (self.defaultrepo)

@@ -8,12 +8,14 @@ from pipobot.lib.modules import defaultcmd
 from pipobot.lib.abstract_modules import NotifyModule
 from libmpd.BotMPD import BotMPD
 
-DEFAULT_PORT = 6600
 
 logger = logging.getLogger("pipobot.botmpd")
 
 class CmdMpd(NotifyModule):
-    _config = (("host", str), ("port", int), ("pwd", str), ("datadir", str))
+    _config = (("host", str, "localhost"),
+               ("port", int, 6600),
+               ("pwd", str, None),
+               ("datadir", str, ""))
 
     def __init__(self, bot):
         desc = {"" : "Controle du mpd",
@@ -36,11 +38,6 @@ class CmdMpd(NotifyModule):
                              pm_allowed = False,
                              command = "mpd",
                              delay = 0)
-
-        self.host = self.__class__.host
-        self.port = self.__class__.port or DEFAULT_PORT
-        self.pwd = self.__class__.pwd
-        self.datadir = self.__class__.datadir
 
         self.mute = True
         # To limit flood in logs : if the bot can't connect to the server, it will only be notified

@@ -19,13 +19,11 @@ URLS_RE = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-/_=?:;]|[!*\(\),~@]|(?:%[0
 
 
 class CmdUrl(ListenModule):
-    _config = (("repost", bool), ("repost_ignore", list))
+    _config = (("repost", bool, False), ("repost_ignore", list, []))
 
     def __init__(self, bot):
         desc = "Extracting title of page from URL"
         ListenModule.__init__(self, bot,  name="url", desc=desc)
-        self.repost = self.__class__.repost
-        self.repost_ignore = self.__class__.repost_ignore
 
     def answer(self, sender, message):
         if HyperlinksScanner:

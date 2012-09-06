@@ -5,8 +5,11 @@ import ConfigParser
 from pipobot.lib.modules import MultiSyncModule, defaultcmd
 from pipobot.lib.utils import check_url
 
+DEFAULT_CONFIG = os.path.join(os.path.dirname(__file__), "urllist.cfg")
 
 class Link(MultiSyncModule):
+    _config = (("config_path", str, DEFAULT_CONFIG),)
+
     def __init__(self, bot):
         commands = self.readconf(bot)
         MultiSyncModule.__init__(self,
@@ -18,14 +21,8 @@ class Link(MultiSyncModule):
         self.dico = {}
         commands = {}
 
-        config_path = ''
-        try:
-            config_path = self._settings['config_path']
-        except KeyError:
-            config_path = os.path.join(os.path.dirname(__file__), "urllist.cfg")
-
         config = ConfigParser.RawConfigParser()
-        config.read(config_path)
+        config.read(self.config_path)
         for c in config.sections():
             self.dico[c] = {}
             self.dico[c]['desc'] = config.get(c, 'desc')

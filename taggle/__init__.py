@@ -7,6 +7,8 @@ import random
 from pipobot.lib.modules import SyncModule, defaultcmd
 
 class CmdTaggle(SyncModule):
+    _config = (("default", str, ""),)
+
     def __init__(self, bot):
         desc = "Ta gueule [nom]\nDit taggle à nom (valeur par défaut à mettre dans le fichier de configuration)"
         SyncModule.__init__(self, 
@@ -14,10 +16,6 @@ class CmdTaggle(SyncModule):
                             desc = desc,
                             command = "tg",
                             )
-        self.default = self.bot.name
-        if hasattr(self.__class__, '_settings'):
-            self.default = self._settings.get('default')
-
 
     @defaultcmd 
     def answer(self, sender, message):
@@ -26,7 +24,10 @@ class CmdTaggle(SyncModule):
             return u"%s: Fermez tous voggle !!!"%(toalmostall)
         else:
             if message == '':
-                return u"Taggle %s" % self.default
+                if self.default == "":
+                    return u"EUH, taggle qui ?"
+                else:
+                    return u"Taggle %s" % self.default
             elif self.bot.name.lower() in message.lower():
                 r = random.random()
                 if r < 0.1:

@@ -8,23 +8,22 @@ from pipobot.lib.abstract_modules import NotifyModule
 DEFAULT_TIMER = 60
 
 class CmdCanalPlus(NotifyModule):
-    _config = (("timer", int), ("notify", list))
+    _config = (("timer", int, DEFAULT_TIMER), ("notify", list, []))
 
     def __init__(self, bot):
         desc = """Pour récuperer des url de vidéos sur canalplus
 !canal emission : donne les liens rtmp pour l'emission dans toutes les qualités
 !canal emission [HD|BAS_DEBIT|HAUT_DEBIT] : donne le lien pour la qualité spécifiée
 !canal mute/unmute : désactive/active les notifications """
-        timer = self.__class__.timer or DEFAULT_TIMER
 
         NotifyModule.__init__(self,
                               bot,
                               desc=desc,
                               command="canal",
-                              delay=timer)
+                              delay=self.timer)
         self.shows = {}
         for show in config.emissions_id.keys():
-            em = libcanal.Emission(show, notif = (show in self.__class__.notify))
+            em = libcanal.Emission(show, notif = (show in self.notify))
             em.update()
             self.shows[show] = em
 
