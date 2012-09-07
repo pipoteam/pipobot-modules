@@ -82,7 +82,7 @@ class Chiffres:
         self.best = None
 
         r = compte([digit_ast(d, ast.Num(d)) for d in self.digits])
-        return r is not None, r if r is not None else self.best.ast
+        return r is not None, r if r is not None else self.best
 
     def check(self, answer):
         """ Checks if a solution is valid """
