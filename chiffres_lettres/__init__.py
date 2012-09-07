@@ -51,10 +51,12 @@ class ChiffresCmd(SyncModule):
         if args and self.printers.get(args) :
             printer = self.printers[args]
 
+        self.timer.cancel()
+
         if exact:
-            return u"J'ai trouvé une solution exacte : \n%s" % printer(res.ast)
+            return u"J'ai trouvé une solution exacte : \n%s" % printer(res.ast, exact)
         else:
-            return u"Pas de solution exacte… voici ce que j'ai de mieux : \n%s" % printer(res.ast)
+            return u"Pas de solution exacte… voici ce que j'ai de mieux : \n%s" % printer(res.ast, exact)
 
     @answercmd("check")
     def check(self, sender, args):
@@ -89,17 +91,19 @@ class ChiffresCmd(SyncModule):
     opast = {ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul, ast.Div: op.div}
 
     @staticmethod
-    def pretty_lisp(astree) :
+    def pretty_lisp(astree, exact) :
         """ Print ast tree in algebra formula. Its name is a reference to the number of parentheses that it involves """
 
         if isinstance(astree, ast.Num) :
             return unicode(astree.n)
         elif isinstance(astree, ast.BinOp) :
-            return u'(%s%s%s)' % (ChiffresCmd.pretty_lisp(astree.left), ChiffresCmd.opstr[astree.op], ChiffresCmd.pretty_lisp(astree.right))
+            return u'(%s%s%s)' % (ChiffresCmd.pretty_lisp(astree.left, exact),
+                                  ChiffresCmd.opstr[astree.op],
+                                  ChiffresCmd.pretty_lisp(astree.right, exact))
 
 
     @staticmethod
-    def pretty_br(astree) :
+    def pretty_br(astree, exact) :
         """ A pretty printer imitating the fantastic Betrand Renard """
 
         def inside(astree) :
@@ -133,10 +137,14 @@ class ChiffresCmd(SyncModule):
                          res)
 
         mess, res = inside(astree)
-        return mess + u"Et voila, on arrive bien à %d, c'était pas compliqué" % res
+        if exact:
+            mess += u"Et voila, on arrive bien à %d, c'était pas compliqué" % res
+        else:
+            mess += u"Bon ben, j'ai fait ce que j'ai pu et j'arrive à %d" % res
+        return mess
 
     @staticmethod
-    def pretty_tiles(astree) :
+    def pretty_tiles(astree, exact) :
         """ A pretty printer showing the results as with the tiles """
 
         def inside(astree) :
