@@ -146,5 +146,5 @@ class HighLight(SyncModule):
         for user in unknownusers:
             ret += ' %s' % user
         if ':' in message:
-            ret += ' => ' + ':'.join(message.split(':')[1:]).strip()
+            ret += ' => ' + message.split(':', 1)[1].strip()
         return ret
