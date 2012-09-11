@@ -3,6 +3,8 @@
 import urllib
 import simplejson
 from pipobot.lib.modules import SyncModule, defaultcmd
+from pipobot.lib.unittest import UnitTest
+
 import pipobot.lib.utils
 
 class CmdGoogle(SyncModule):
@@ -34,3 +36,10 @@ class CmdGoogle(SyncModule):
             rep["text"] = pipobot.lib.utils.xhtml2text(ans)
             rep["xhtml"] = ans_xhtml
             return rep
+
+
+class GoogleTest(UnitTest):
+    def __init__(self, bot):
+        cmd = (("!google test", {"type": UnitTest.EXCEPT,
+                                 "desc": "!google test"}),)
+        UnitTest.__init__(self, cmd, bot, "google")

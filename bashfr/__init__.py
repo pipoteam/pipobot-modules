@@ -5,6 +5,7 @@ import random
 import pipobot.lib.utils
 from BeautifulSoup import BeautifulSoup
 from pipobot.lib.abstract_modules import FortuneModule
+from pipobot.lib.unittest import UnitTest
 
 
 class CmdBashfr(FortuneModule):
@@ -41,3 +42,22 @@ bashfr [n] : Affiche la quote [n] de bashfr"""
                 else:
                     result = result + pipobot.lib.utils.xhtml2text(unicode(i))
             return "bashfr #%s :\n%s" % (quote_id, result)
+
+
+class BashfrTest(UnitTest):
+    def __init__(self, bot):
+        cmd = (("!bashfr", {"type" : UnitTest.RE,
+                            "expected" : ["bashfr #(\d+) :(.*)", "La quote demandée n'existe pas.(.*)"],
+                            "sender" : "test",
+                            "desc" : "Test random bashfr"}),
+                ("!bashfr 42", {"type" : UnitTest.EXACT,
+                                "expected" : "La quote demandée n'existe pas. (Erreur 404)",
+                                "sender" : "test",
+                                "desc" : "Test erreur 404 sur bashfr"}),
+                ("!bashfr 5", {"type" : UnitTest.EXACT,
+                               "expected" : ("bashfr #5 :\n"
+                                             "(swatchtim) mac ? ca existe encore ca ?\n"
+                                             " * kick: (swatchtim) was kicked by (Cafmac) (Ouais. Les cons aussi.)"),
+                                "sender" : "test",
+                                "desc" : "Test OK sur bashfr"}))
+        UnitTest.__init__(self, cmd, bot, "bashfr")

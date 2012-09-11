@@ -7,6 +7,7 @@ import string
 import ast
 import operator as op
 from pipobot.lib.modules import SyncModule, answercmd
+from pipobot.lib.unittest import UnitTest
 from lettres import Lettres
 from chiffres import Chiffres, CalcError
 
@@ -221,3 +222,17 @@ class LettresCmd(SyncModule):
 
     def time_out(self):
         self.bot.say(u"Temps écoulé !! On arrête de chercher !")
+
+
+class ChiffresTest(UnitTest):
+    def __init__(self, bot):
+        cmd = (("!chiffres init", {"type": UnitTest.RE,
+                                   "expected": u"Nouvelle partie lancée\nTotal à trouver : (\d+)\n"
+                                               u"Nombres fournis : [(\d+),]*(\d+)",
+                                   "desc": "Test de !chiffres init"}),
+               ("!chiffres solve", {"type": UnitTest.RE,
+                                    "expected": [u"J'ai trouvé une solution exacte(.*)",
+                                                 u"Pas de solution exacte…(.*)"],
+                                    "desc": "Test !chiffres solve"}),
+               )
+        UnitTest.__init__(self, cmd, bot, "chiffres")

@@ -2,6 +2,7 @@
 #-*- coding: utf-8 -*-
 import enchant
 from pipobot.lib.modules import SyncModule, defaultcmd
+from pipobot.lib.unittest import UnitTest
 
 class CmdSpell(SyncModule):
     def __init__(self, bot):
@@ -31,3 +32,12 @@ spell suggest : donne les mots approchants"""
             res = "Suggestions possibles pour %s : "%(mot)
             res += "; ".join(suggestions)
             return res
+
+
+class SpellTest(UnitTest):
+    def __init__(self, bot):
+        cmd = (("!spell pipo", {"type" : UnitTest.EXACT,
+                               "expected" : "Suggestions possibles pour pipo : pipeau; pipi; pipe; sipo; pipa; pipé",
+                                "sender" : "test",
+                                "desc" : "Test de !spell pipo" }),)
+        UnitTest.__init__(self, cmd, bot, "spell")
