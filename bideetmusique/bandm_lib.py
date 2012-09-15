@@ -17,8 +17,8 @@ class AppURLopener(urllib.FancyURLopener):
 PLAYLIST = 'http://www.bide-et-musique.com/playlist.rss'
 PROGS = "http://www.bide-et-musique.com/programme-webradio.html"
 SHOWS = "http://www.bide-et-musique.com/grille.html"
-PROG_ID = {"next": 2,
-           "prev": 3}
+PROG_ID = {"next": 1,
+           "prev": 2}
 HOME_PAGE = "http://www.bide-et-musique.com/programme-webradio.html"
 
 
@@ -113,7 +113,7 @@ def current():
     page.close()
     soup = BeautifulSoup(content)
     try:
-        return xhtml2text(soup.findAll("title")[1].text.partition(": ")[2])
+        return xhtml2text(xhtml2text(soup.findAll("title")[1].text.partition(": ")[2]))
     except:
         return "HTML parsing failed !"
 

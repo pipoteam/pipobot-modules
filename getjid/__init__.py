@@ -4,16 +4,17 @@ from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.unittest import UnitTest
 
 
+
 class CmdGetjid(SyncModule):
     def __init__(self, bot):
         desc = "getjid [nom]\nAffiche la première partie du jid pour découvrir qui se cache derrière un pseudo"
-        SyncModule.__init__(self, 
-                            bot, 
+        SyncModule.__init__(self,
+                            bot,
                             desc=desc,
                             command="getjid",
                             )
 
-    @defaultcmd 
+    @defaultcmd
     def answer(self, sender, message):
         who = message or sender
         jid = self.bot.occupants.pseudo_to_jid(who)
