@@ -7,7 +7,7 @@ import string
 import ast
 import operator as op
 from pipobot.lib.modules import SyncModule, answercmd
-from pipobot.lib.unittest import UnitTest
+from pipobot.lib.unittest import GroupUnitTest, ReTest
 from lettres import Lettres
 from chiffres import Chiffres, CalcError
 
@@ -224,15 +224,12 @@ class LettresCmd(SyncModule):
         self.bot.say(u"Temps écoulé !! On arrête de chercher !")
 
 
-class ChiffresTest(UnitTest):
+class ChiffresTest(GroupUnitTest):
     def __init__(self, bot):
-        cmd = (("!chiffres init", {"type": UnitTest.RE,
-                                   "expected": u"Nouvelle partie lancée\nTotal à trouver : (\d+)\n"
-                                               u"Nombres fournis : [(\d+),]*(\d+)",
-                                   "desc": "Test de !chiffres init"}),
-               ("!chiffres solve", {"type": UnitTest.RE,
-                                    "expected": [u"J'ai trouvé une solution exacte(.*)",
-                                                 u"Pas de solution exacte…(.*)"],
-                                    "desc": "Test !chiffres solve"}),
-               )
-        UnitTest.__init__(self, cmd, bot, "chiffres")
+        tst1 = ReTest(cmd="!chiffres init",
+                      expected=(u"Nouvelle partie lancée\nTotal à trouver : (\d+)\n"
+                                u"Nombres fournis : [(\d+),]*(\d+)"))
+        tst2 = ReTest(cmd="!chiffres solve",
+                      expected=[u"J'ai trouvé une solution exacte(.*)",
+                                u"Pas de solution exacte…(.*)"])
+        GroupUnitTest.__init__(self, [tst1, tst2], bot, "chiffres")

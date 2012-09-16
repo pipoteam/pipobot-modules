@@ -3,7 +3,7 @@
 import urllib
 import simplejson
 from pipobot.lib.modules import SyncModule, defaultcmd
-from pipobot.lib.unittest import UnitTest
+from pipobot.lib.unittest import GroupUnitTest, ExceptTest
 
 import pipobot.lib.utils
 
@@ -38,8 +38,8 @@ class CmdGoogle(SyncModule):
             return rep
 
 
-class GoogleTest(UnitTest):
+class GoogleTest(GroupUnitTest):
     def __init__(self, bot):
-        cmd = (("!google test", {"type": UnitTest.EXCEPT,
-                                 "desc": "!google test"}),)
-        UnitTest.__init__(self, cmd, bot, "google")
+        keyword = "test"
+        tst = ExceptTest(cmd="!google %s" % keyword)
+        GroupUnitTest.__init__(self, [tst], bot, "google")
