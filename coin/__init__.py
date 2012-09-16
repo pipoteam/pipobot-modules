@@ -4,21 +4,17 @@
 from pipobot.lib.modules import ListenModule
 orig_ducks = [u"\_°<", u">°_/"]
 
+
 class CmdCoin(ListenModule):
     def __init__(self, bot):
         desc = "Shooting ducks"
-        ListenModule.__init__(self, bot,  name = "coin", desc = desc)
+        ListenModule.__init__(self, bot, name="coin", desc=desc)
         self.ducks = list(orig_ducks)
-        for eye in "0Oo":
+        for eye in u"0Oo+":
             self.ducks.extend([duck.replace(u"°", eye) for duck in orig_ducks])
-            
 
-    def answer(self, sender, message) :
-        if sender == self.bot.name :
-            return
-        if type(message) not in (str,unicode) :
-            return
+    def answer(self, sender, message):
         coins = sum([message.count(duck) for duck in self.ducks])
         if coins > 0:
-            pans = " ".join([u"*PAN*"]*coins)
+            pans = (" *PAN*" * coins).strip()
             return u"%s : %s" % (sender, pans)
