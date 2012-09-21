@@ -25,7 +25,9 @@ class ChiffresCmd(SyncModule):
                             command="chiffres")
 
         # Activated printers and their names
-        self.printers = { 'br': ChiffresCmd.pretty_br, 'lisp': ChiffresCmd.pretty_lisp, 'tiles': ChiffresCmd.pretty_tiles }
+        self.printers = {'br': ChiffresCmd.pretty_br,
+                         'lisp': ChiffresCmd.pretty_lisp,
+                         'tiles': ChiffresCmd.pretty_tiles}
         self.default_printer = 'tiles'
 
     @answercmd("init")
@@ -48,7 +50,7 @@ class ChiffresCmd(SyncModule):
         exact, res = self.game.solve()
 
         printer = self.printers[self.default_printer]
-        if args and self.printers.get(args) :
+        if args and self.printers.get(args):
             printer = self.printers[args]
 
         self.timer.cancel()
@@ -70,7 +72,7 @@ class ChiffresCmd(SyncModule):
                     return u"%s : Le compte est bon !!" % sender
                     self.timer.cancel()
                 else:
-                    return u"%s : Les calculs sont bons, tu trouves %s au lieu de %s, soit une erreur de %s" % (sender, 
+                    return u"%s : Les calculs sont bons, tu trouves %s au lieu de %s, soit une erreur de %s" % (sender,
                                                                                     verdict,
                                                                                     self.game.total,
                                                                                     abs(verdict - self.game.total))
@@ -91,42 +93,41 @@ class ChiffresCmd(SyncModule):
     opast = {ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul, ast.Div: op.div}
 
     @staticmethod
-    def pretty_lisp(astree, exact) :
+    def pretty_lisp(astree, exact):
         """ Print ast tree in algebra formula. Its name is a reference to the number of parentheses that it involves """
 
-        if isinstance(astree, ast.Num) :
+        if isinstance(astree, ast.Num):
             return unicode(astree.n)
-        elif isinstance(astree, ast.BinOp) :
+        elif isinstance(astree, ast.BinOp):
             return u'(%s%s%s)' % (ChiffresCmd.pretty_lisp(astree.left, exact),
                                   ChiffresCmd.opstr[astree.op],
                                   ChiffresCmd.pretty_lisp(astree.right, exact))
 
-
     @staticmethod
-    def pretty_br(astree, exact) :
+    def pretty_br(astree, exact):
         """ A pretty printer imitating the fantastic Betrand Renard """
 
         def inside(astree) :
-            if isinstance(astree.left, ast.Num) and isinstance(astree.right, ast.Num) :
+            if isinstance(astree.left, ast.Num) and isinstance(astree.right, ast.Num):
                 res = ChiffresCmd.opast[astree.op](astree.left.n, astree.right.n)
                 return (u"Avec les nombres de départs, vous voyez on a %d %s %d, ce qui donne %d\n" % \
                         (astree.left.n, ChiffresCmd.opstr[astree.op], astree.right.n, res),
                         res)
-            elif isinstance(astree.left, ast.Num) :
+            elif isinstance(astree.left, ast.Num):
                 before, bres = inside(astree.right)
                 res = ChiffresCmd.opast[astree.op](astree.left.n, bres)
                 return (before + \
                         u"Et après ? Et ben on prend le %d calculé et le %d du tirage, un coup de %s et hop, %d\n" % \
                                     (bres, astree.left.n, ChiffresCmd.opstr[astree.op], res),
                         res)
-            elif isinstance(astree.right, ast.Num) :
+            elif isinstance(astree.right, ast.Num):
                 before, bres = inside(astree.left)
                 res = ChiffresCmd.opast[astree.op](bres, astree.right.n)
                 return (before + \
                         u"Vous vous croyez coincé ? Et non, le %d %s le %d du tirage, ça donne %d\n" % \
                                     (bres, ChiffresCmd.opstr[astree.op], astree.right.n, res),
                         res)
-            else :
+            else:
                 beforel, bresl = inside(astree.left)
                 beforer, bresr = inside(astree.right)
                 res = ChiffresCmd.opast[astree.op](bresl, bresr)
@@ -144,30 +145,30 @@ class ChiffresCmd(SyncModule):
         return mess
 
     @staticmethod
-    def pretty_tiles(astree, exact) :
+    def pretty_tiles(astree, exact):
         """ A pretty printer showing the results as with the tiles """
 
-        def inside(astree) :
-            if isinstance(astree.left, ast.Num) and isinstance(astree.right, ast.Num) :
+        def inside(astree):
+            if isinstance(astree.left, ast.Num) and isinstance(astree.right, ast.Num):
                 res = ChiffresCmd.opast[astree.op](astree.left.n, astree.right.n)
                 return (u"%d %s %d = %d\n" % \
                         (astree.left.n, ChiffresCmd.opstr[astree.op], astree.right.n, res),
                         res)
-            elif isinstance(astree.left, ast.Num) :
+            elif isinstance(astree.left, ast.Num):
                 before, bres = inside(astree.right)
                 res = ChiffresCmd.opast[astree.op](astree.left.n, bres)
                 return (before + \
                         u"%d %s %d = %d\n" % \
                         (bres, ChiffresCmd.opstr[astree.op], astree.left.n, res),
                         res)
-            elif isinstance(astree.right, ast.Num) :
+            elif isinstance(astree.right, ast.Num):
                 before, bres = inside(astree.left)
                 res = ChiffresCmd.opast[astree.op](bres, astree.right.n)
                 return (before + \
                         u"%d %s %d = %d\n" % \
                         (bres, ChiffresCmd.opstr[astree.op], astree.right.n, res),
                         res)
-            else :
+            else:
                 beforel, bresl = inside(astree.left)
                 beforer, bresr = inside(astree.right)
                 res = ChiffresCmd.opast[astree.op](bresl, bresr)
@@ -194,9 +195,9 @@ class LettresCmd(SyncModule):
 
         self.game = Lettres(self.dico)
         SyncModule.__init__(self,
-                            bot, 
-                            desc = desc,
-                            command = "lettres")
+                            bot,
+                            desc=desc,
+                            command="lettres")
 
     @answercmd("init")
     def init(self, sender, args):

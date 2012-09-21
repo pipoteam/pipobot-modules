@@ -52,6 +52,7 @@ def trouver_mot_plus_long(longueur_max_mot, dico, tirage):
 class Lettres:
     """ Class to define the game 'le mot le plus long' """
     _config = (("dico", str, None),)
+
     def __init__(self, dico):
         self.result = []
         self.letters = []

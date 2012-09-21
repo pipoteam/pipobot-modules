@@ -5,17 +5,18 @@ from model import Blagueur
 from pipobot.lib.modules import SyncModule, defaultcmd
 import time
 
+
 class AbstractBlague(SyncModule):
     """ Modifie les scores de blague """
     def __init__(self, bot, desc, command, autocongratulation, premier, operation):
         SyncModule.__init__(self,
-                        bot,
-                        desc = desc,
-                        pm_allowed = False,
-                        command = command,
-                        )
+                            bot,
+                            desc=desc,
+                            pm_allowed=False,
+                            command=command,
+                            )
         self.autocongratulation = autocongratulation
-        self.premier = premier # S’utilise avec un %s pour le pseudo
+        self.premier = premier  # S’utilise avec un %s pour le pseudo
         self.operation = operation
         self.init = self.operation(0, 1)
 
@@ -44,12 +45,13 @@ class AbstractBlague(SyncModule):
             blag = res[0]
             ecart = temps - blag.submission
             if ecart > min_delay:
-                date_bl = time.strftime("le %d/%m/%Y à %H:%M", time.localtime(float(blag.submission)))
+                date_bl = time.strftime("le %d/%m/%Y à %H:%M",
+                                        time.localtime(float(blag.submission)))
                 date_bl = date_bl.decode("utf-8")
                 blag.score = self.operation(blag.score, 1)
-                send =  u"Nouveau score - %s : %d\n%d secondes depuis ta dernière blague (%s)" % (message, blag.score, ecart, date_bl)
+                send = u"Nouveau score - %s : %d\n%d secondes depuis ta dernière blague (%s)" % (message, blag.score, ecart, date_bl)
                 blag.submission = temps
             else:
-                send = "Ta dernière blague date de moins de %s secondes !"%(min_delay)
+                send = "Ta dernière blague date de moins de %s secondes !" % min_delay
         self.bot.session.commit()
         return send

@@ -5,20 +5,21 @@ import os
 from random import choice
 from pendu_ascii import asc_res
 
+
 class Pendu(object):
     def __init__(self, word):
         self.setword(word)
 
     def setword(self, word):
         self._word = word
-        self.played = ["_"]*len(word)
+        self.played = ["_"] * len(word)
         self.letters = set()
         self.okletters = set()
         self.maxanswers = 8
 
     def getword(self):
         return self._word
-    
+
     word = property(getword, setword)
 
     def playedtostr(self):
@@ -38,14 +39,14 @@ class Pendu(object):
                     self.okletters.add(letter)
             res = u"Bien vu !"
             if self.solved():
-                res += u"\nEt oui, le mot à trouver était bien %s !"%(self.word)
+                res += u"\nEt oui, le mot à trouver était bien %s !" % self.word
                 self.word = ""
             else:
-                res += u" Mot actuel: %s"%("".join(self.played))
+                res += u" Mot actuel: %s" % "".join(self.played)
         else:
             if len(self.letters) == self.maxanswers:
                 res = asc_res[8]
-                res += u"Tu devais trouver %s"%(self.word)
+                res += u"Tu devais trouver %s" % self.word
                 self.word = ""
             else:
                 self.letters.add(letter)

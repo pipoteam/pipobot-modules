@@ -4,9 +4,10 @@ import time
 from sqlalchemy import Column, Float, Integer, String
 from pipobot.lib.bdd import Base
 
+
 class Dette(Base):
     __tablename__ = "dette"
-    id = Column(Integer, primary_key = True, autoincrement = True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     debtor = Column(String)
     amount = Column(Float)
     creditor = Column(String)

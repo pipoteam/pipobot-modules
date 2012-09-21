@@ -4,9 +4,10 @@ import time
 from sqlalchemy import Column, Integer, String
 from pipobot.lib.bdd import Base
 
+
 class Todo(Base):
     __tablename__ = "todo"
-    id = Column(Integer, primary_key = True, autoincrement = True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(250))
     content = Column(String(250))
     reporter = Column(String(250))
@@ -19,6 +20,7 @@ class Todo(Base):
         self.submission = submission
 
     def __str__(self):
-        t = time.strftime("%d/%m/%Y à %H:%M", time.localtime(float(self.submission)))
+        t = time.strftime("%d/%m/%Y à %H:%M",
+                          time.localtime(float(self.submission)))
         t = t.decode("utf-8")
         return u"%s - %s (par %s le %s)" % (self.id, self.content, self.reporter, t)

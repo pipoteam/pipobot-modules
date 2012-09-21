@@ -60,5 +60,6 @@ class CmdBlague(AbstractBlague):
             else:
                 #We do not know him : we use his jid
                 result[blag.pseudo] = (blag.score, blag.submission)
-        result = sorted(result.iteritems(), key=operator.itemgetter(1), reverse=True)
+        result = sorted(result.iteritems(),
+                        key=operator.itemgetter(1), reverse=True)
         return result

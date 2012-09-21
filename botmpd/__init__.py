@@ -11,6 +11,7 @@ from libmpd.BotMPD import BotMPD
 
 logger = logging.getLogger("pipobot.botmpd")
 
+
 class CmdMpd(NotifyModule):
     _config = (("host", str, "localhost"),
                ("port", int, 6600),
@@ -18,26 +19,26 @@ class CmdMpd(NotifyModule):
                ("datadir", str, ""))
 
     def __init__(self, bot):
-        desc = {"" : "Controle du mpd",
-                "current" : "mpd current : chanson actuelle",
-                "next" : "mpd next : chanson suivante",
-                "prev" : "mpd prev : chanson précédente",
-                "shuffle" : "mpd shuffle : fait un shuffle sur la playlist",
-                "list" : "mpd list [n] : liste les [n] chansons suivantes",
-                "clear" : "mpd clear : vide la playlist (ou pas)",
-                "search" : "mpd search (Artist|Title) requete : cherche toutes les pistes d'Artiste/Titre correspondant à la requête",
-                "setnext" : "mpd setnext [i] : place la chanson à la position [i] dans la playlist après la chanson courante (enfin elle court pas vraiment)",
-                "nightmare" : "mpd nightmare [i] : les [i] prochaines chansons vont vous faire souffrir (plus que le reste)",
-                "clean" : "mpd clean : pour retarder l'inévitable...",
-                "connected" : "mpd connected : pour voir qui écoute le mpd",
-                "settag" : "mpd settag [artist|title]=Nouvelle valeur",
+        desc = {"": "Controle du mpd",
+                "current": "mpd current : chanson actuelle",
+                "next": "mpd next : chanson suivante",
+                "prev": "mpd prev : chanson précédente",
+                "shuffle": "mpd shuffle : fait un shuffle sur la playlist",
+                "list": "mpd list [n] : liste les [n] chansons suivantes",
+                "clear": "mpd clear : vide la playlist (ou pas)",
+                "search": "mpd search (Artist|Title) requete : cherche toutes les pistes d'Artiste/Titre correspondant à la requête",
+                "setnext": "mpd setnext [i] : place la chanson à la position [i] dans la playlist après la chanson courante (enfin elle court pas vraiment)",
+                "nightmare": "mpd nightmare [i] : les [i] prochaines chansons vont vous faire souffrir (plus que le reste)",
+                "clean": "mpd clean : pour retarder l'inévitable...",
+                "connected": "mpd connected : pour voir qui écoute le mpd",
+                "settag": "mpd settag [artist|title]=Nouvelle valeur",
                 }
         NotifyModule.__init__(self,
-                             bot,
-                             desc = desc,
-                             pm_allowed = False,
-                             command = "mpd",
-                             delay = 0)
+                              bot,
+                              desc=desc,
+                              pm_allowed=False,
+                              command="mpd",
+                              delay=0)
 
         self.mute = True
         # To limit flood in logs : if the bot can't connect to the server, it will only be notified
@@ -82,8 +83,8 @@ class CmdMpd(NotifyModule):
                 'coffee': 'coffee',
                 'wakeup': 'wakeup',
                 'connected': 'connected',
-               }
-        if cmds.has_key(cmd):
+                }
+        if cmd in cmds:
             try:
                 if arg == '':
                     send = getattr(mpd, cmds[cmd])()
@@ -107,16 +108,16 @@ class CmdMpd(NotifyModule):
             self.delay = 0
             mpd.send_idle()
             r = mpd.fetch_idle()
-            repDict = {"The Who - Baba O`riley":"La musique des experts !!!",
-                        "The Who - Won't Get Fooled Again":"La musique des experts !!!",
-                        "Oledaf et Monsieur D - Le café":"Coffee time !",
-                        "Popcorn":"Moi aussi j'aime bien le popcorn",
-                        "popcorn":"Moi aussi j'aime bien le popcorn",
-                        "Ping Pong":"IPQ charlie est mauvais en ping pong :p",
-                        "Daddy DJ":"<xouillet> on écoutait ca comme des dingues à La Souterraine en Creuse \o/ </xouillet>",
-                        "Goldman":"JJG !!!",
-#                            "Clapton":"<xouillet> owi c'est Joe !!! </xouillet>",
-                        "Les 4 barbus - La pince a linge":"LA PINCE A LINGE !!!"}
+            repDict = {"The Who - Baba O`riley": "La musique des experts !!!",
+                       "The Who - Won't Get Fooled Again": "La musique des experts !!!",
+                       "Oledaf et Monsieur D - Le café": "Coffee time !",
+                       "Popcorn": "Moi aussi j'aime bien le popcorn",
+                       "popcorn": "Moi aussi j'aime bien le popcorn",
+                       "Ping Pong": "IPQ charlie est mauvais en ping pong :p",
+                       "Daddy DJ": "<xouillet> on écoutait ca comme des dingues à La Souterraine en Creuse \o/ </xouillet>",
+                       "Goldman": "JJG !!!",
+#                       "Clapton": "<xouillet> owi c'est Joe !!! </xouillet>",
+                       "Les 4 barbus - La pince a linge": "LA PINCE A LINGE !!!"}
             repDict["Les 4 barbus - La pince a linge"] = """
 |\    /|
 | \  / |

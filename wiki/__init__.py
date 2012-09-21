@@ -6,13 +6,14 @@ import urllib
 from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.utils import xhtml2text
 
+
 class CmdWiki(SyncModule):
     def __init__(self, bot):
         desc = "wiki word : Cherche la définition d'un mot dans le wikitionary"
         SyncModule.__init__(self,
                             bot,
-                            desc = desc,
-                            command = "wiki")
+                            desc=desc,
+                            command="wiki")
 
     @defaultcmd
     def answer(self, sender, message):

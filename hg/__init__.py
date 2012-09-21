@@ -7,6 +7,7 @@ import mercurial
 from pipobot.lib.modules import SyncModule, answercmd
 from pipobot.lib.exceptions import ConfigException
 
+
 class CmdHg(SyncModule):
     _config = (("default", str, ""), ("repos", dict, {}))
 
@@ -14,10 +15,10 @@ class CmdHg(SyncModule):
         desc = """hg : donne le dernier changement sur le repo %s
 hg [repo] : donne le dernier changement du repo [repo]
 hg [repo] [rev] : affiche la révision [rev] du repo [repo]""" % (self.default)
-        SyncModule.__init__(self, 
-                            bot, 
-                            desc = desc,
-                            command = "hg")
+        SyncModule.__init__(self,
+                            bot,
+                            desc=desc,
+                            command="hg")
 
     @answercmd(r"^$")
     def answer_default(self, sender, message):
@@ -42,5 +43,5 @@ hg [repo] [rev] : affiche la révision [rev] du repo [repo]""" % (self.default)
             return "Le repo %s n'existe pas" % repo
         try:
             return hglib.log(self.repos[repo], int(rev))
-        except mercurial.error.RepoError: 
+        except mercurial.error.RepoError:
             return "Le répertoire %s associé à %s n'est pas valide !" % (self.repos[repo], repo)

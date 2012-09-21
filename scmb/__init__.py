@@ -30,7 +30,7 @@ scmb [n] : Affiche l'information [n]"""
         else:
             sections = soup.findAll("p", {"class": "anecdote-summary"})
             details = soup.findAll("p", {"class": "anecdote-details"})
-            #If we are in a random page, we select a quote then continue parsing
+            # If we are in a random page, we select a quote then continue parsing
             if len(sections) != 1:
                 quotes = soup.findAll("h3", {"class": "anecdotes title"})
                 if quotes == []:

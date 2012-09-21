@@ -7,6 +7,7 @@ from pipobot.lib.abstract_modules import NotifyModule
 
 DEFAULT_TIMER = 60
 
+
 class CmdCanalPlus(NotifyModule):
     _config = (("timer", int, DEFAULT_TIMER), ("notify", list, []))
 
@@ -23,7 +24,7 @@ class CmdCanalPlus(NotifyModule):
                               delay=self.timer)
         self.shows = {}
         for show in config.emissions_id.keys():
-            em = libcanal.Emission(show, notif = (show in self.notify))
+            em = libcanal.Emission(show, notif=(show in self.notify))
             em.update()
             self.shows[show] = em
 
@@ -63,10 +64,10 @@ class CmdCanalPlus(NotifyModule):
             updated = show.update()
             if updated:
                 url = show.last_vid.get_url("HD")
-                msg =  u"Nouvel épisode de %s !!!\n" % show.name
+                msg = u"Nouvel épisode de %s !!!\n" % show.name
                 msg += u"Lien HD : %s" % str(url)
                 self.bot.say(">> %s" % msg)
 
-    def update(self, silent = False):
+    def update(self, silent=False):
         for show in self.shows.values():
             updated = show.update()

@@ -14,19 +14,19 @@ import bandm_lib
 class CmdBideEtMusique(NotifyModule):
     def __init__(self, bot):
         desc = {"": u"Pour afficher des infos sur bides et musique.",
-                "current" : u"Ce qui passe actuellement sur bides et musique",
-                "next [n]" : u"Les [n] chansons à venir (dans la limite des stocks disponibles)",
-                "prev [n]" : u"Les [n] chansons précédentes (dans la limite des stocks disponibles)",
-                "prog [n]" : u"Les [n] programmes à venir (dans la limite des stocks disponibles)",
-                "mute" : u"N'affiche plus les nouvelles chansons.",
-                "unmute" : u"Affiche les nouvelles chansons.",
-                "lyrics" : u"Les paroles de la chanson courante",
+                "current": u"Ce qui passe actuellement sur bides et musique",
+                "next [n]": u"Les [n] chansons à venir (dans la limite des stocks disponibles)",
+                "prev [n]": u"Les [n] chansons précédentes (dans la limite des stocks disponibles)",
+                "prog [n]": u"Les [n] programmes à venir (dans la limite des stocks disponibles)",
+                "mute": u"N'affiche plus les nouvelles chansons.",
+                "unmute": u"Affiche les nouvelles chansons.",
+                "lyrics": u"Les paroles de la chanson courante",
                 }
         NotifyModule.__init__(self,
                               bot,
-                              desc = desc,
-                              command = u"b&m",
-                              delay = 10,
+                              desc=desc,
+                              command=u"b&m",
+                              delay=10,
                               )
         self.old = ""
         self.mute = True
@@ -84,5 +84,5 @@ class CmdBideEtMusique(NotifyModule):
             self.bot.say(u"Nouvelle chanson : %s" % new)
             self.old = new
 
-    def update(self, silent = False):
+    def update(self, silent=False):
         self.old = bandm_lib.current()

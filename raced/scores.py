@@ -6,22 +6,24 @@ from sqlalchemy.sql.expression import desc
 from sqlalchemy import func
 from lib.modules import SyncModule, defaultcmd
 
+
 class CmdRacedScores(SyncModule):
     def __init__(self, bot):
         desc = 'racedscores\nAffiche le palmarès actuel des raced'
-        SyncModule.__init__(self, 
-                            bot, 
-                            desc = desc,
-                            command = "racedres",
+        SyncModule.__init__(self,
+                            bot,
+                            desc=desc,
+                            command="racedres",
                             )
+
     @defaultcmd
     def answer(self, sender, message):
         """Affiche les scores des raced"""
         classement = self.bot.session.query(Racer).order_by(desc(Racer.score), Racer.jid_from).all()
 
-        if len(classement) != 0:
+        if classement != []:
             sc = "\nRaced - scores :\n"
-            sc += " " + 82*"_"
+            sc += " " + 82 * "_"
             for racer in classement:
                 sc += "\n| "
                 pseudo_from = self.bot.occupants.jid_to_pseudo(racer.jid_from)
@@ -39,7 +41,7 @@ class CmdRacedScores(SyncModule):
                     sc += "%-30s " % (pseudo_to)
                 sc += " |"
             sc += "\n"
-            sc +=  "|" + 81*"_" + "|"
-            return {"text" : sc, "monospace" : True}
+            sc += "|" + 81 * "_" + "|"
+            return {"text": sc, "monospace": True}
         else:
             return "Aucun race, bande de nuls !"
