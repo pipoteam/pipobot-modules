@@ -120,8 +120,8 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
                 self.bot.session.add(dette)
                 self.bot.session.commit()
                 sum_res = func.sum(Dette.amount)
-                n = self.bot.session.query(sum_res).filter(and_(Dette.debtor == elt, Dette.creditor == creditor)).all()[0][0]
-                p = self.bot.session.query(sum_res).filter(and_(Dette.debtor == creditor, Dette.creditor == elt)).all()[0][0]
+                n = self.bot.session.query(sum_res).filter(and_(Dette.debtor == elt, Dette.creditor == creditor)).first()[0]
+                p = self.bot.session.query(sum_res).filter(and_(Dette.debtor == creditor, Dette.creditor == elt)).first()[0]
                 if n is not None and p is not None and (n-p) == 0:
                     deleted = self.bot.session.query(Dette).filter(or_(and_(Dette.debtor == elt, Dette.creditor == creditor), and_(Dette.debtor == creditor, Dette.creditor == elt))).all()
                     for e in deleted:
@@ -143,12 +143,12 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
         res = []
         for i in arg:
             n = int(i)
-            deleted = self.bot.session.query(Dette).filter(Dette.id == n).all()
-            if deleted == []:
+            deleted = self.bot.session.query(Dette).filter(Dette.id == n).first()
+            if deleted is None:
                 res.append(u"Pas de dette d'id %s"%(n))
             else:
-                self.bot.session.delete(deleted[0])
-                res.append(u"%s a été supprimé"%(deleted[0]))
+                self.bot.session.delete(deleted)
+                res.append(u"%s a été supprimé"%(deleted))
         self.bot.session.commit()
         return "\n".join(res)
 
@@ -170,8 +170,8 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
                 self.bot.session.add(dette)
                 self.bot.session.commit()
                 sum_res = func.sum(Dette.amount)
-                n = self.bot.session.query(sum_res).filter(and_(Dette.debtor == elt, Dette.creditor == creditor)).all()[0][0]
-                p = self.bot.session.query(sum_res).filter(and_(Dette.debtor == creditor, Dette.creditor == elt)).all()[0][0]
+                n = self.bot.session.query(sum_res).filter(and_(Dette.debtor == elt, Dette.creditor == creditor)).first()[0]
+                p = self.bot.session.query(sum_res).filter(and_(Dette.debtor == creditor, Dette.creditor == elt)).first()[0]
                 if n is not None and p is not None and (n-p) == 0:
                     deleted = self.bot.session.query(Dette).filter(or_(and_(Dette.debtor == elt, Dette.creditor == creditor), and_(Dette.debtor == creditor, Dette.creditor == elt))).all()
                     for e in deleted:

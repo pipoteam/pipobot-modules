@@ -21,7 +21,7 @@ hg [repo] [rev] : affiche la révision [rev] du repo [repo]""" % (self.default)
 
     @answercmd(r"^$")
     def answer_default(self, sender, message):
-        repo = self.defaultrepo
+        repo = self.default
         return self.get_log(repo, -1)
 
     @answercmd(r"^(?P<name>\w+)$")
