@@ -39,9 +39,11 @@ class MboxNotify:
         if self.mfrom != "" and self.msubject != "":
             if self.spam < 0:
                 try:
-                    self.bot.say(">> Mail de %s : %s (Spam Score : %f)" % (self.mfrom, self.msubject, self.spam))
+                    self.bot.say(">> Mail de %s : %s (Spam Score : %f)" %
+                                 (self.mfrom, self.msubject, self.spam))
                 except:
-                    self.bot.say(">> Mail de %s : <encodage foireux> (Spam Score : %f)" % (self.mfrom, self.spam))
+                    self.bot.say(">> Mail de %s : <encodage foireux> (Spam Score : %f)" %
+                                 (self.mfrom, self.spam))
             self.mfrom = ""
             self.msubject = ""
             self.spam = -1

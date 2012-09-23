@@ -4,9 +4,10 @@ from sqlalchemy import Column, String, Integer, DateTime
 from pipobot.lib.bdd import Base
 import datetime
 
+
 class RepostUrl(Base):
     __tablename__ = "url"
-    url = Column(String(250), primary_key = True)
+    url = Column(String(250), primary_key=True)
     count = Column(Integer)
     date = Column(DateTime)
     jid = Column(String(250))

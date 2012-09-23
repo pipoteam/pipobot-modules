@@ -3,15 +3,16 @@
 
 from pipobot.lib.modules import SyncModule, defaultcmd
 
+
 class CmdScores(SyncModule):
     """ Consulte les scores de certains modules """
     def __init__(self, bot):
         desc = "score [module] [params]\nConsulte les scores pour le module [module]"
-        SyncModule.__init__(self, 
-                        bot, 
-                        desc = desc,
-                        command = "score",
-                        )
+        SyncModule.__init__(self,
+                            bot,
+                            desc=desc,
+                            command="score",
+                            )
         self.avail_mods = {}
 
     def init_mods(self):

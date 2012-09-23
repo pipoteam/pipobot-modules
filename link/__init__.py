@@ -7,14 +7,15 @@ from pipobot.lib.utils import check_url
 
 DEFAULT_CONFIG = os.path.join(os.path.dirname(__file__), "urllist.cfg")
 
+
 class Link(MultiSyncModule):
     _config = (("config_path", str, DEFAULT_CONFIG),)
 
     def __init__(self, bot):
         commands = self.readconf(bot)
         MultiSyncModule.__init__(self,
-                        bot,
-                        commands=commands)
+                                 bot,
+                                 commands=commands)
 
     def readconf(self, bot):
         #name, description and url associated to each link

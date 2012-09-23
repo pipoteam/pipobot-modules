@@ -11,6 +11,7 @@ ERROR_MSG = (u"Je n'arrive pas à parser la page : peut-être que l'html a chang
              u"ou la page cherchée n'existe pas, ou alors mon développeur est un boulet")
 
 
+
 class CmdVdm(FortuneModule):
     def __init__(self, bot):
         desc = """Pour afficher des vdm.

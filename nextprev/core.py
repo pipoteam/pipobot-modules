@@ -7,6 +7,7 @@ import urllib2
 import gzip
 from StringIO import StringIO
 
+
 class AppURLopener(urllib.FancyURLopener):
     def prompt_user_passwd(self, host, realm):
         return ('', '')
@@ -14,20 +15,18 @@ class AppURLopener(urllib.FancyURLopener):
     version = "Mozilla/5.0 (X11; U; Linux; fr-fr) AppleWebKit/531+ (KHTML, like Gecko) Safari/531.2+ Midori/0.2"
 urllib._urlopener = AppURLopener()
 
-alias = {
-            'sgu': 'stargate-universe',
-            'tbbt': 'the-big-bang-theory',
-            'itcrowd': 'the-it-crowd',
-            'southpark': 'south-park',
-            'fma': 'fullmetal-alchemist-brotherhood',
-            'himym': 'how-i-met-your-mother',
-            'to': 'the-office-us',
-            'simpsons': 'the-simpsons',
-            'seeker': 'legend-of-the-seeker',
-            'sp': 'south-park',
-            'clonewars': 'star-wars-the-clone-wars'
-        }
-
+alias = {'sgu': 'stargate-universe',
+         'tbbt': 'the-big-bang-theory',
+         'itcrowd': 'the-it-crowd',
+         'southpark': 'south-park',
+         'fma': 'fullmetal-alchemist-brotherhood',
+         'himym': 'how-i-met-your-mother',
+         'to': 'the-office-us',
+         'simpsons': 'the-simpsons',
+         'seeker': 'legend-of-the-seeker',
+         'sp': 'south-park',
+         'clonewars': 'star-wars-the-clone-wars'
+         }
 
 
 def getdata(message, isnext):
@@ -66,24 +65,29 @@ def getdata(message, isnext):
 
             title = 'Pas de titre'
             if html == u"Sorry. The url you are looking for is non existent.":
-                res += u"Le show %s n'existe pas\n"%(sh)
+                res += u"Le show %s n'existe pas\n" % sh
 
             date = redate.search(html).group(1)
             # Format : Thu Sep 23, 2010
             date = datetime.datetime.strptime(date, "%a %b %d, %Y")
             date = date.strftime("%d/%m/%Y")
-        
+
             res += u"Episode %s de %s : %sx%s : %s diffusé le %s\n" %  \
-            (precornext, sh, reseason.search(html).group(1), renum.search(html).group(1).zfill(2), reep.search(html).group(1), date)
+                (precornext,
+                   sh,
+                   reseason.search(html).group(1),
+                   renum.search(html).group(1).zfill(2),
+                   reep.search(html).group(1),
+                   date)
         except IOError:
-            res += u"Le show %s n'existe pas\n"%(sh)
+            res += u"Le show %s n'existe pas\n" % sh
         except AttributeError:
             # Ptet que c'est le show qui diffuse plus
             t = reparachute.search(html)
             if t:
-                res += u"Rien de prévu pour %s… Dernières infos : %s\n" %(sh, t.group(1))
+                res += u"Rien de prévu pour %s… Dernières infos : %s\n" % (sh, t.group(1))
             else:
-                res += u"Beenn euh ca existe mais la page de %s est pas correcte\n"%(sh)
+                res += u"Beenn euh ca existe mais la page de %s est pas correcte\n" % sh
     if res != "":
         return res[0:-1]
     else:

@@ -8,12 +8,14 @@ from pipobot.lib.modules import MultiSyncModule, defaultcmd
 
 DEFAULT_CONFIG = os.path.join(os.path.dirname(__file__), "cmdlist.cfg")
 
+
 def multiwordReplace(text, wordDic):
     """
     take a text and replace words that match a key in a dictionary with
     the associated value, return the changed text
     """
     rc = re.compile('|'.join(map(re.escape, wordDic)))
+
     def translate(match):
         return wordDic[match.group(0)]
     return rc.sub(translate, text)
@@ -24,22 +26,24 @@ class ListConfigParser(ConfigParser.RawConfigParser):
         "Redéfinition du get pour gérer les listes"
         value = ConfigParser.RawConfigParser.get(self, section, option)
         if (value[0] == "[") and (value[-1] == "]"):
-            return map(lambda s : s.decode("utf-8"), eval(value))
+            return map(lambda s: s.decode("utf-8"), eval(value))
         else:
             return value.decode("utf-8")
 
+
 class CmdAlacon(MultiSyncModule):
     _config = (("config_path", str, DEFAULT_CONFIG),)
+
     def __init__(self, bot):
         commands = self.readconf(bot)
         MultiSyncModule.__init__(self,
-                        bot,
-                        commands=commands)
+                                 bot,
+                                 commands=commands)
 
     def extract_to(self, config, cmd, value, backup):
         try:
             v = config.get(cmd, value)
-        except ConfigParser.NoOptionError :
+        except ConfigParser.NoOptionError:
             v = config.get(cmd, backup)
         if type(v) != list:
             v = [v]
@@ -53,7 +57,7 @@ class CmdAlacon(MultiSyncModule):
 
         config = ListConfigParser()
         config.read(self.config_path)
-        for c in config.sections() :
+        for c in config.sections():
             command_name = c.decode("utf-8")
             self.dico[command_name] = {}
             self.dico[command_name]['desc'] = config.get(c, 'desc')
@@ -67,7 +71,7 @@ class CmdAlacon(MultiSyncModule):
     @defaultcmd
     def answer(self, cmd, sender, message):
         toall = self.bot.occupants.get_all(" ", [self.bot.name, sender])
-        replacement = {"__somebody__" : message, "__sender__" : sender, "_all_" : toall}
+        replacement = {"__somebody__": message, "__sender__": sender, "_all_": toall}
         if message.lower() == sender.lower():
             key = "toSender"
         elif message == '':

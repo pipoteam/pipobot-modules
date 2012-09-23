@@ -4,17 +4,18 @@ import os
 import sqlite3
 from pipobot.lib.modules import SyncModule, defaultcmd
 
+
 class CmdTrac(SyncModule):
     _config = (("db_path", str, None),)
 
     def __init__(self, bot):
         desc = "trac [num]\nListe les tickets trac actifs ou en affiche un en détail"
-        SyncModule.__init__(self, 
-                            bot, 
-                            desc = desc,
-                            command = "trac",
+        SyncModule.__init__(self,
+                            bot,
+                            desc=desc,
+                            command="trac",
                             )
-    
+
     @defaultcmd
     def answer(self, sender, message):
         send = "\n"
@@ -31,13 +32,13 @@ class CmdTrac(SyncModule):
                 send += "[%d] %s\n" % (id, summary)
             if send == "\n":
                 send = u"Pas de ticket ! Vous avez plus qu'à espérer ne pas vous faire contrôler"
-                
+
         else:
             try:
                 i = int(message)
             except:
                 return u"Merci de rentrer un numéro de ticket"
-            c.execute("SELECT id, priority, summary, description FROM ticket WHERE id=? ORDER BY priority",(i,))
+            c.execute("SELECT id, priority, summary, description FROM ticket WHERE id=? ORDER BY priority", (i,))
             id, p, summ, desc = c.fetchone()
             send += "[%d] %s\n%s\n" % (id, summ, desc)
         conn.commit()

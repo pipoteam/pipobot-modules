@@ -7,20 +7,21 @@ from sqlalchemy import func, and_, or_
 from pipobot.lib.modules import SyncModule, defaultcmd, answercmd
 from model import Dette
 
+
 class CmdDette(SyncModule):
     """ Gestion de Dettes """
     def __init__(self, bot):
-        desc = {"" : u"Gestionnaire de dettes",
-                "add" : u"""dette add [name1] [amount] [name2] [reason] : Ajoute une dette de [amount] que doit payer [name1] à [name2] à cause de [reason]
+        desc = {"": u"Gestionnaire de dettes",
+                "add": u"""dette add [name1] [amount] [name2] [reason] : Ajoute une dette de [amount] que doit payer [name1] à [name2] à cause de [reason]
 dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent tous [amount] à [name3] à cause de [reason]""",
-                "multiple" : u"dette multiple [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent se partager la dette [amount] à payer à [name3] à cause de [reason]",
-                "list" : u"dette list [name] : Liste les dettes de [name1]",
-                "remove" : u"dette remove [id1], [id2], [id3] : Supprime les dettes dont les id sont [id1], [id2], [id3]"
+                "multiple": u"dette multiple [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent se partager la dette [amount] à payer à [name3] à cause de [reason]",
+                "list": u"dette list [name] : Liste les dettes de [name1]",
+                "remove": u"dette remove [id1], [id2], [id3] : Supprime les dettes dont les id sont [id1], [id2], [id3]"
                 }
         SyncModule.__init__(self,
                             bot,
-                            desc = desc,
-                            command = "dette",
+                            desc=desc,
+                            command="dette",
                             )
 
     @defaultcmd
@@ -34,13 +35,13 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
             if tmp == []:
                 return "Pas de dettes…"
             else:
-                res = "\n " + 21*"_" + "\n"
+                res = "\n " + 21 * "_" + "\n"
                 res += "| Toutes les Dettes : |\n"
-                res += "|" + 21*"_" + "|" + 88*"_" + "\n"
+                res += "|" + 21 * "_" + "|" + 88 * "_" + "\n"
                 for elt in tmp:
                     res += u"| %s |\n" % elt
-                res += "|" + 110*"_" + "|"
-                return {"text": res, "monospace" : True}
+                res += "|" + 110 * "_" + "|"
+                return {"text": res, "monospace": True}
         else:
             try:
                 m = re.match(r"([^ ]+)(?: )*([^ ]+)*", message)
@@ -74,39 +75,40 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
             res = ""
 
             if name2 is None:
-                if p-n > 0:
-                    res += u"%s doit encore recevoir %s € en tout\n" % (name1, str(p-n))
+                if p - n > 0:
+                    res += u"%s doit encore recevoir %s € en tout\n" % (name1, str(p - n))
                 else:
-                    res += u"%s a un déficit de %s € en tout\n" % (name1, str(n-p))
+                    res += u"%s a un déficit de %s € en tout\n" % (name1, str(n - p))
                 if n != 0:
-                    res += " " + 12*"_" + "\n"
+                    res += " " + 12 * "_" + "\n"
                     res += "| Dette(s) : |\n"
-                    res += "|" + 12*"_" + "|" + 96*"_" + "\n"
+                    res += "|" + 12 * "_" + "|" + 96 * "_" + "\n"
                     res += res_debt
-                    res += "|" + 109*"_" + "|\n"
+                    res += "|" + 109 * "_" + "|\n"
                 if p != 0:
-                    res += " " + 13*"_" + "\n"
+                    res += " " + 13 * "_" + "\n"
                     res += u"| Crédit(s) : |\n"
-                    res += "|" + 13*"_" + "|" + 95*"_" + "\n"
+                    res += "|" + 13 * "_" + "|" + 95 * "_" + "\n"
                     res += res_credit
-                    res += "|" + 109*"_" + "|\n"
+                    res += "|" + 109 * "_" + "|\n"
 
             else:
-                if p-n > 0:
-                    res += u"%s doit recevoir %s € de %s\n" % (name1, str(p-n), name2)
+                if p - n > 0:
+                    res += u"%s doit recevoir %s € de %s\n" % (name1, str(p - n), name2)
                 else:
-                    res += u"%s doit %s € à %s\n" % (name1, str(n-p), name2)
-                res += " " + 109*"_" + "\n"
+                    res += u"%s doit %s € à %s\n" % (name1, str(n - p), name2)
+                res += " " + 109 * "_" + "\n"
                 res += res_debt
                 res += res_credit
-                res += "|" + 109*"_" + "|\n"
+                res += "|" + 109 * "_" + "|\n"
 
-            return {"text": res, "monospace" : True}
+            return {"text": res, "monospace": True}
 
     @answercmd("add")
     def add(self, sender, message):
         try:
-            m = re.match(r"([^ ]+(?: [^ ]+)*) ((?:\d+)(?:\.\d+)?) ([^ ]+) (.*)", message)
+            m = re.match(r"([^ ]+(?: [^ ]+)*) ((?:\d+)(?:\.\d+)?) ([^ ]+) (.*)",
+                         message)
             debtor = m.group(1).split(' ')
             amount = m.group(2)
             creditor = m.group(3)
@@ -120,9 +122,11 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
                 self.bot.session.add(dette)
                 self.bot.session.commit()
                 sum_res = func.sum(Dette.amount)
-                n = self.bot.session.query(sum_res).filter(and_(Dette.debtor == elt, Dette.creditor == creditor)).all()[0][0]
-                p = self.bot.session.query(sum_res).filter(and_(Dette.debtor == creditor, Dette.creditor == elt)).all()[0][0]
-                if n is not None and p is not None and (n-p) == 0:
+                n = self.bot.session.query(sum_res).filter(and_(Dette.debtor == elt,
+                                                                Dette.creditor == creditor)).first()[0]
+                p = self.bot.session.query(sum_res).filter(and_(Dette.debtor == creditor,
+                                                                Dette.creditor == elt)).first()[0]
+                if n is not None and p is not None and (n - p) == 0:
                     deleted = self.bot.session.query(Dette).filter(or_(and_(Dette.debtor == elt, Dette.creditor == creditor), and_(Dette.debtor == creditor, Dette.creditor == elt))).all()
                     for e in deleted:
                         self.bot.session.delete(e)
@@ -143,21 +147,22 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
         res = []
         for i in arg:
             n = int(i)
-            deleted = self.bot.session.query(Dette).filter(Dette.id == n).all()
-            if deleted == []:
-                res.append(u"Pas de dette d'id %s"%(n))
+            deleted = self.bot.session.query(Dette).filter(Dette.id == n).first()
+            if deleted is None:
+                res.append(u"Pas de dette d'id %s" % (n))
             else:
-                self.bot.session.delete(deleted[0])
-                res.append(u"%s a été supprimé"%(deleted[0]))
+                self.bot.session.delete(deleted)
+                res.append(u"%s a été supprimé" % (deleted))
         self.bot.session.commit()
         return "\n".join(res)
 
     @answercmd("multiple")
     def multiple(self, sender, message):
         try:
-            m = re.match(r"([^ ]+(?: [^ ]+)*) ((?:\d+)(?:\.\d+)?) ([^ ]+) (.*)", message)
+            m = re.match(r"([^ ]+(?: [^ ]+)*) ((?:\d+)(?:\.\d+)?) ([^ ]+) (.*)",
+                         message)
             debtor = m.group(1).split(' ')
-            amount = float(m.group(2))/float(len(debtor))
+            amount = float(m.group(2)) / float(len(debtor))
             creditor = m.group(3)
             reason = m.group(4)
         except AttributeError:
@@ -166,13 +171,15 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
         res = []
         for elt in debtor:
             if elt != creditor:
-                dette = Dette(elt, amount, creditor, reason, time.time()) 
+                dette = Dette(elt, amount, creditor, reason, time.time())
                 self.bot.session.add(dette)
                 self.bot.session.commit()
                 sum_res = func.sum(Dette.amount)
-                n = self.bot.session.query(sum_res).filter(and_(Dette.debtor == elt, Dette.creditor == creditor)).all()[0][0]
-                p = self.bot.session.query(sum_res).filter(and_(Dette.debtor == creditor, Dette.creditor == elt)).all()[0][0]
-                if n is not None and p is not None and (n-p) == 0:
+                n = self.bot.session.query(sum_res).filter(and_(Dette.debtor == elt, 
+                                                                Dette.creditor == creditor)).first()[0]
+                p = self.bot.session.query(sum_res).filter(and_(Dette.debtor == creditor,
+                                                                Dette.creditor == elt)).first()[0]
+                if n is not None and p is not None and (n - p) == 0:
                     deleted = self.bot.session.query(Dette).filter(or_(and_(Dette.debtor == elt, Dette.creditor == creditor), and_(Dette.debtor == creditor, Dette.creditor == elt))).all()
                     for e in deleted:
                         self.bot.session.delete(e)
@@ -183,5 +190,3 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
             else:
                 res.append(u"On ne peut pas avoir une dette avec soi-même...\n")
         return "\n".join(res)
-
-

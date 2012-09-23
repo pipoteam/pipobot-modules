@@ -3,7 +3,8 @@
 import time
 from mercurial import ui, hg
 
-def log(repodir, rev = -1):
+
+def log(repodir, rev=-1):
     u = ui.ui()
     repo = hg.repository(u, repodir)
     if rev == -1:

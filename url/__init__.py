@@ -23,7 +23,7 @@ class CmdUrl(ListenModule):
 
     def __init__(self, bot):
         desc = "Extracting title of page from URL"
-        ListenModule.__init__(self, bot,  name="url", desc=desc)
+        ListenModule.__init__(self, bot, name="url", desc=desc)
 
     def answer(self, sender, message):
         if HyperlinksScanner:
@@ -65,7 +65,9 @@ class CmdUrl(ListenModule):
                             send.append(u'Ce lien a déjà été posté %s fois depuis que %s l’a découvert, %s, sur %s…' % (res.count, first, first_date, res.chan))
                         res.count += 1
                     else:
-                        u = RepostUrl(url, self.bot.occupants.pseudo_to_jid(sender), self.bot.chatname)
+                        u = RepostUrl(url,
+                                      self.bot.occupants.pseudo_to_jid(sender),
+                                      self.bot.chatname)
                         self.bot.session.add(u)
                         self.bot.session.commit()
         return send

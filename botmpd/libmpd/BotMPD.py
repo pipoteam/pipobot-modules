@@ -6,10 +6,11 @@ import random
 import eyeD3
 import utils
 
+
 class BotMPD(mpd.MPDClient):
     def __init__(self, host, port, password, datadir=None):
         mpd.MPDClient.__init__(self)
-        CON_ID = {'host':host, 'port':port}
+        CON_ID = {'host': host, 'port': port}
         try:
             self.connect(**CON_ID)
             self.password(password)
@@ -30,13 +31,14 @@ class BotMPD(mpd.MPDClient):
         playlist = self.status()
 
         res = self.currentsongf() + "\n"
-        res += "[playing] #%s/%s"  % (song["pos"], playlist["playlistlength"])
+        res += "[playing] #%s/%s" % (song["pos"], playlist["playlistlength"])
         if 'time' in playlist.keys():
             current, total = playlist['time'].split(':')
-            pcentage = int(100* float(current) / float(total))
-            res += "  %s/%s (%s%%)"%(utils.humanize_time(current), utils.humanize_time(total), pcentage)
+            pcentage = int(100 * float(current) / float(total))
+            res += "  %s/%s (%s%%)" % (utils.humanize_time(current),
+                                       utils.humanize_time(total),
+                                       pcentage)
         return res
-
 
     def nextplaylist(self, nb=5):
         nb = int(nb)
@@ -49,7 +51,7 @@ class BotMPD(mpd.MPDClient):
         res = ""
         for i in range(nb):
             song = playlist[(deb + i) % end]
-            res += utils.format(song)+"\n"
+            res += utils.format(song) + "\n"
         return res[:-1]
 
     def search(self, args):
@@ -65,7 +67,7 @@ class BotMPD(mpd.MPDClient):
             return "Cherches un peu mieux que ça"
         res = ""
         for elt in req:
-            res += "%s\n"%(utils.format(elt))
+            res += "%s\n" % (utils.format(elt))
         return res[0:-1]
 
     def setnext(self, args):
@@ -77,19 +79,19 @@ class BotMPD(mpd.MPDClient):
             if iargs < icurrent:
                 newindex = icurrent
             else:
-                newindex = icurrent+1
+                newindex = icurrent + 1
             self.move(iargs, newindex)
             return self.nextplaylist(3)
         except:
             return "Argument invalide pour setnext..."
-    
+
     def nightmare(self, args=5):
-        try: 
+        try:
             nb = int(args)
             self.update()
             songs = self.lsinfo("nightmare")
             random.shuffle(songs)
-            if nb > 15: 
+            if nb > 15:
                 return "Merilestfou !!!"
             if nb < len(songs):
                 selection = songs[0:nb]
@@ -99,7 +101,7 @@ class BotMPD(mpd.MPDClient):
             deb = int(playlist["playlistlength"])
             for elt in selection:
                 self.add(elt["file"])
-            for i in range(deb, deb+nb):
+            for i in range(deb, deb + nb):
                 self.setnext(i)
             send = "/!\\/!\\/!\\/!\\"
             return send
@@ -107,7 +109,7 @@ class BotMPD(mpd.MPDClient):
             return "Argument invalide pour nightmare..."
 
     def coffee(self):
-        try: 
+        try:
             songs = self.lsinfo("cafe")
             random.shuffle(songs)
             toadd = songs[0]
@@ -122,12 +124,12 @@ class BotMPD(mpd.MPDClient):
             return "Argument invalide pour coffee..."
 
     def wakeup(self, args=5):
-        try: 
+        try:
             nb = int(args)
             self.update()
             songs = self.lsinfo("wakeup")
             random.shuffle(songs)
-            if nb > 15: 
+            if nb > 15:
                 return "Merilestfou !!!"
             if nb < len(songs):
                 selection = songs[0:nb]
@@ -137,7 +139,7 @@ class BotMPD(mpd.MPDClient):
             deb = int(playlist["playlistlength"])
             for elt in selection:
                 self.add(elt["file"])
-            for i in range(deb, deb+nb):
+            for i in range(deb, deb + nb):
                 self.setnext(i)
             send = "ALLER ON SE REVEILLE !!!"
             return send
@@ -151,11 +153,10 @@ class BotMPD(mpd.MPDClient):
             current = song["pos"]
             icurrent = int(current)
             self.move(icurrent, iargs)
-            return "On s'est déplacé en %s !"%(pos)
+            return "On s'est déplacé en %s !" % pos
         except:
             return "Et un goto foiré, un !"
-        
-    
+
     def clean(self):
         nightmare = self.lsinfo("nightmare")
         playlist = self.playlistinfo()
@@ -174,7 +175,7 @@ class BotMPD(mpd.MPDClient):
         clients = {}
         res = "Liste des clients connectés sur mpd:\n"
         for tr in soup.findAll("tr"):
-            hosts = tr.findAll("td",{"nowrap": "nowrap"})
+            hosts = tr.findAll("td", {"nowrap": "nowrap"})
             for host in hosts:
                 if "mpd.sleduc.fr" in host or "mpd.leduc.42" in host:
                     lst = tr.findAll("td")
@@ -182,13 +183,13 @@ class BotMPD(mpd.MPDClient):
                     ip = str(lst[10].text)
                     vhost = str(lst[11].text)
                     clients[ip] = (vhost, since)
-        for ip,couple in clients.iteritems():
-            vhost,since = couple
+        for ip, couple in clients.iteritems():
+            vhost, since = couple
             try:
                 reverse = socket.gethostbyaddr(ip)[0]
             except socket.herror:
                 reverse = "Moi y'en a pas savoir résoudre"
-            res += "\t- %s (%s)\n\t\tSur %s, depuis %s\n"%(ip, reverse, vhost, since)
+            res += "\t- %s (%s)\n\t\tSur %s, depuis %s\n" % (ip, reverse, vhost, since)
         return res[0:-1]
 
     def settag(self, args):

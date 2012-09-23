@@ -6,18 +6,19 @@ from threading import Timer
 import pipobot.lib.utils
 from pipobot.lib.modules import SyncModule, defaultcmd
 
+
 class CmdMute(SyncModule):
     def __init__(self, bot):
         desc = u"mute [nom]\n[nom] ne peut plus parler sur le salon !!!"
-        SyncModule.__init__(self, 
-                            bot, 
-                            command = "mute", 
-                            pm_allowed = False,
-                            desc = desc)
+        SyncModule.__init__(self,
+                            bot,
+                            command="mute",
+                            pm_allowed=False,
+                            desc=desc)
 
     def restore(self, name):
         pipobot.lib.utils.unmute(name, self.bot)
-    
+
     @defaultcmd
     def answer(self, sender, message):
         role_sender = self.bot.occupants.pseudo_to_role(sender)
@@ -35,7 +36,7 @@ class CmdMute(SyncModule):
             if lst[0] == "undo":
                 who = lst[1]
                 pipobot.lib.utils.unmute(who, self.bot)
-                return u"%s peut maintenant parler"%(who)
+                return u"%s peut maintenant parler" % who
 
         for muted in lst:
             authorised = False
@@ -46,7 +47,7 @@ class CmdMute(SyncModule):
             jidmuted = self.bot.occupants.pseudo_to_jid(muted)
             jidsender = self.bot.occupants.pseudo_to_jid(sender)
             if jidmuted == "":
-                rapport += u"%s n'est pas dans le salon\n"%(muted)
+                rapport += u"%s n'est pas dans le salon\n" % muted
                 continue
             if jidmuted == jidsender:
                 if muted == sender:
@@ -55,20 +56,24 @@ class CmdMute(SyncModule):
                 orNot = True
                 authorised = True
                 toMute = sender
-                rapport += u"%s n'a pas le droit de muter %s\n"%(sender, muted)
+                rapport += u"%s n'a pas le droit de muter %s\n" % (sender, muted)
             else:
                 authorised = True
                 toMute = muted
-                rapport += u"J'ai muté %s pour toi !\n"%(muted)
-                
+                rapport += u"J'ai muté %s pour toi !\n" % muted
+
             if authorised:
                 if self.bot.occupants.pseudo_to_role(toMute) == "moderator":
                     rapport = u"On ne peut pas muter quelqu'un ayant des droits aussi élevés\n"
                 else:
-                    t = Timer(30.0, lambda name=toMute : self.restore(name)) 
+                    t = Timer(30.0, lambda name=toMute: self.restore(name))
                     t.start()
                     if orNot:
-                        pipobot.lib.utils.mute(toMute,random.choice(reasonfail)%(toMute),self.bot)
+                        pipobot.lib.utils.mute(toMute,
+                                               random.choice(reasonfail) % toMute,
+                                               self.bot)
                     else:
-                        pipobot.lib.utils.mute(toMute,random.choice(reasonkick)%(toMute),self.bot)
+                        pipobot.lib.utils.mute(toMute,
+                                               random.choice(reasonkick) % toMute,
+                                               self.bot)
         return rapport.rstrip()

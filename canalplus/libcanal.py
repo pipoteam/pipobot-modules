@@ -4,12 +4,14 @@ import urllib
 from xml.dom import minidom
 import config
 
+
 class UnknownEmission(Exception):
     def __init__(self, name):
         self.name = name
 
     def __str__(self):
         return "Emission inconnue : %s" % self.name
+
 
 class QualityException(Exception):
     def __init__(self, quality, vid):
@@ -18,6 +20,7 @@ class QualityException(Exception):
 
     def __str__(self):
         return "Qualité inconnue pour la vidéo %s : %s " % (self.vid, self.msg)
+
 
 class Video:
     def __init__(self, id, title, subtitle):
@@ -60,8 +63,9 @@ class Video:
         except KeyError:
             raise QualityException(self.title, quality)
 
+
 class Emission:
-    def __init__(self, name, notif = False):
+    def __init__(self, name, notif=False):
         try:
             self.id = config.emissions_id[name]
             self.name = name

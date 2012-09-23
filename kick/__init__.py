@@ -5,16 +5,17 @@ import random
 import pipobot.lib.utils
 from pipobot.lib.modules import SyncModule, defaultcmd
 
+
 class CmdKick(SyncModule):
     def __init__(self, bot):
         desc = "kick [nom]\nKick quelqu'un du salon !"
         SyncModule.__init__(self,
-                            bot, 
-                            desc = desc,
-                            command = "kick",
-                            pm_allowed = False
+                            bot,
+                            desc=desc,
+                            command="kick",
+                            pm_allowed=False
                             )
-            
+
     @defaultcmd
     def answer(self, sender, message):
         role_sender = self.bot.occupants.pseudo_to_role(sender)
@@ -47,23 +48,25 @@ class CmdKick(SyncModule):
                 else:
                     authorised = True
                     toKick = kicked
-                    rapport.append(u"J'ai viré %s à la demande de %s car il semblerait que ce soit un imposteur"%(kicked, sender))
+                    rapport.append(u"J'ai viré %s à la demande de %s car il semblerait que ce soit un imposteur" % (kicked, sender))
             elif role_sender != "moderator":
                 orNot = True
                 authorised = True
                 toKick = sender
-                rapport.append(u"%s n'a pas le droit de virer %s"%(sender, kicked))
+                rapport.append(u"%s n'a pas le droit de virer %s" % (sender, kicked))
             else:
                 authorised = True
                 toKick = kicked
-                rapport.append(u"J'ai viré %s pour toi !"%(kicked))
+                rapport.append(u"J'ai viré %s pour toi !" % kicked)
 
             if authorised:
                 if self.bot.occupants.pseudo_to_role(toKick) == "moderator":
                     rapport.append(u"On ne peut pas kicker quelqu'un ayant des droits aussi élevés")
                 else:
                     if orNot:
-                        pipobot.lib.utils.kick(toKick,random.choice(reasonfail)%(toKick),self.bot)
+                        pipobot.lib.utils.kick(toKick,
+                                               random.choice(reasonfail) % toKick, self.bot)
                     else:
-                        pipobot.lib.utils.kick(toKick,random.choice(reasonkick)%(toKick),self.bot)
+                        pipobot.lib.utils.kick(toKick,
+                                               random.choice(reasonkick) % toKick, self.bot)
         return "\n".join(rapport)

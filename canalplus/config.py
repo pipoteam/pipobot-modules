@@ -2,10 +2,10 @@
 # -*- coding: UTF-8 -*-
 
 #CONSTANTS
-emissions_id = {"lpj" : 249,
-                "bref" : 627,
-                "guignols" : 48,
-                "sav" : 252,
+emissions_id = {"lpj": 249,
+                "bref": 627,
+                "guignols": 48,
+                "sav": 252,
                 }
 
 qualities = ["BAS_DEBIT", "HAUT_DEBIT", "HD"]

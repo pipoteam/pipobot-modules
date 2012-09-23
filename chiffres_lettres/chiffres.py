@@ -15,16 +15,19 @@ class CalcError(Exception):
         Exception.__init__(self, message)
 
 # supported operators
-def mysub(a, b) :
-    if a != b :
-        return op.sub(a, b)
-    else :
-        raise CalcError("%d-%d = 0, c'est pas super utile…" % (a,b))
 
-def mydiv(a, b) :
-    if a % b == 0 :
+
+def mysub(a, b):
+    if a != b:
+        return op.sub(a, b)
+    else:
+        raise CalcError("%d-%d = 0, c'est pas super utile…" % (a, b))
+
+
+def mydiv(a, b):
+    if a % b == 0:
         return op.div(a, b)
-    else :
+    else:
         raise CalcError("%d n'est pas divisible par %d, escroc" % (a, b))
 
 operators = {ast.Add: op.add, ast.Sub: mysub, ast.Mult: op.mul,
@@ -49,7 +52,7 @@ class Chiffres:
             """ Recursive auxiliary function to solve the problem """
 
             for digit in digits:
-                if digit.n == self.total :
+                if digit.n == self.total:
                     # Terminal case : if the total is in the list, it's ok
                     return digit
                 elif self.best is None or abs(self.total - digit.n) < abs(self.total - self.best.n):
@@ -64,15 +67,16 @@ class Chiffres:
                     # the two digits we are working on, as they will be replaced by the result of their operation
                     new_digits = digits[:]
                     new_digits.pop(idg)
-                    new_digits.pop(idg+idh) # There is an hidden +1-1 (-1 because we have removed one before)
+                    new_digits.pop(idg + idh) # There is an hidden +1-1 (-1 because we have removed one before)
                     i, j = max(g, h, key=lambda x: x.n), min(g, h, key=lambda x: x.n)
 
                     # Iterate over operators and recursion
-                    for astop, op in operators.iteritems() :
-                        try :
-                            r = compte(new_digits + [digit_ast(n=op(i.n,j.n), ast=ast.BinOp(i.ast, astop, j.ast))])
+                    for astop, op in operators.iteritems():
+                        try:
+                            r = compte(new_digits + [digit_ast(n=op(i.n, j.n), ast=ast.BinOp(i.ast, astop, j.ast))])
                             # Stop if we have found a solution
-                            if r : return r
+                            if r:
+                                return r
                         except CalcError:
                             pass
 
@@ -143,14 +147,15 @@ class Chiffres:
                                 u"que %s = %s ???" % (left, right))
         return eval_expr(right, False)
 
-if __name__ == '__main__' :
+if __name__ == '__main__':
     opstr = {ast.Add: u'+', ast.Sub: u'-', ast.Mult: u'×', ast.Div: u'÷'}
-    def pretty_lisp(astree) :
+
+    def pretty_lisp(astree):
         """ Print ast tree in algebra formula """
 
-        if isinstance(astree, ast.Num) :
+        if isinstance(astree, ast.Num):
             return unicode(astree.n)
-        elif isinstance(astree, ast.BinOp) :
+        elif isinstance(astree, ast.BinOp):
             return u'(%s%s%s)' % (pretty_lisp(astree.left), opstr[astree.op], pretty_lisp(astree.right))
 
     c = Chiffres()
@@ -158,7 +163,7 @@ if __name__ == '__main__' :
     c.digits = [4, 5, 9, 25, 50, 75]
     #c.digits = [700, 3, 2]
     #c.digits = [4, 703]
-    c.total  = 703
+    c.total = 703
     print c.digits
     print pretty_lisp(c.solve()[1].ast).encode('utf8')
 

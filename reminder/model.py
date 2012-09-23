@@ -4,9 +4,10 @@ import pipobot.lib.bdd
 import time
 from sqlalchemy import Column, Integer, String
 
+
 class Remind(pipobot.lib.bdd.Base):
     __tablename__ = "remind"
-    id = Column(Integer, primary_key = True, autoincrement = True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     owner = Column(String(250))
     description = Column(String(250))
     date = Column(Integer(250))

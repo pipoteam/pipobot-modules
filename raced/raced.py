@@ -7,15 +7,16 @@ import time
 from sqlalchemy import func
 from sqlalchemy.sql.expression import desc
 
+
 class CmdRaced(SyncModule):
     """ Ajoute un point-raced à un collègue lent"""
     def __init__(self, bot):
         desc = "raced pseudo\nAjoute un point raced à /me envers pseudo"
-        SyncModule.__init__(self, 
-                            bot, 
-                            desc = desc,
-                            pm_allowed = False,
-                            command = "raced",
+        SyncModule.__init__(self,
+                            bot,
+                            desc=desc,
+                            pm_allowed=False,
+                            command="raced",
                             )
 
     @defaultcmd
@@ -41,9 +42,10 @@ class CmdRaced(SyncModule):
         else:
             racer = res[0]
             ecart = temps - int(racer.submission)
-            if ecart>10:
+            if ecart > 10:
                 racer.score += 1
-                date_bl = time.strftime("le %d/%m/%Y a %H:%M", time.localtime(float(racer.submission)))
+                date_bl = time.strftime("le %d/%m/%Y a %H:%M",
+                                        time.localtime(float(racer.submission)))
                 send = u"Nouveau score - %s : %d\n%d secondes depuis la dernière fois que tu as battu %s (%s)" % (sender.strip(), racer.score, ecart, message, date_bl)
                 racer.submission = temps
         self.bot.session.commit()
@@ -61,7 +63,7 @@ class CmdRaced(SyncModule):
 
         if len(classement) != 0:
             sc = "\nRaced - scores :\n"
-            sc += " " + 60*"_"
+            sc += " " + 60 * "_"
             for racer in classement:
                 if racer[1] != 0:
                     sc += "\n| "
@@ -75,8 +77,8 @@ class CmdRaced(SyncModule):
                     sc += "a raced au total %-3s fois " % (racer[1])
                     sc += " |"
             sc += "\n"
-            sc +=  "|" + 59*"_" + "|"
-            return {"text": sc, "monospace" : True}
+            sc += "|" + 59 * "_" + "|"
+            return {"text": sc, "monospace": True}
         else:
             return "Aucun race, bande de nuls !"
 
@@ -85,7 +87,7 @@ class CmdRaced(SyncModule):
 
         if len(classement) != 0:
             sc = "\nRaced - scores :\n"
-            sc += " " + 82*"_"
+            sc += " " + 82 * "_"
             for racer in classement:
                 sc += "\n| "
                 pseudo_from = self.bot.occupants.jid_to_pseudo(racer.jid_from)
@@ -103,8 +105,7 @@ class CmdRaced(SyncModule):
                     sc += "%-30s " % (pseudo_to)
                 sc += " |"
             sc += "\n"
-            sc +=  "|" + 81*"_" + "|"
-            return {"text" : sc, "monospace" : True}
+            sc += "|" + 81 * "_" + "|"
+            return {"text": sc, "monospace": True}
         else:
             return "Aucun race, bande de nuls !"
-

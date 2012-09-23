@@ -3,24 +3,26 @@
 
 import csv
 import os
-import time 
+import time
 import urllib
 from pipobot.lib.modules import SyncModule, defaultcmd
 
 ROOT_URL = 'http://www.banque-france.fr/fileadmin/user_upload/banque_de_france/Economie_et_Statistiques/Changes_et_Taux/'
 CACHE_PATH = "/tmp"
-VALUES = {'CHF':'qs.d.ceurchci.csv', 'USD':'qs.d.ceurusci.csv', 'JPY':'qs.d.ceurjpci.csv', 'CAD':'qs.d.ceurcaci.csv'}
+VALUES = {'CHF': 'qs.d.ceurchci.csv', 'USD': 'qs.d.ceurusci.csv',
+          'JPY': 'qs.d.ceurjpci.csv', 'CAD': 'qs.d.ceurcaci.csv'}
 CACHE_LIMIT = 2 * 3600
+
 
 class CmdBourse(SyncModule):
     def __init__(self, bot):
         desc = u"""bourse [valeur [historique]]
 Affiche le taux de conversion d'une valeur boursière.
 Valeurs disponibles: %s""" % (', '.join(VALUES.keys()))
-        SyncModule.__init__(self, 
-                            bot, 
-                            desc = desc,
-                            command = "bourse")
+        SyncModule.__init__(self,
+                            bot,
+                            desc=desc,
+                            command="bourse")
 
     @defaultcmd
     def answer(self, sender, message):

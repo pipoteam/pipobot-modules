@@ -5,6 +5,7 @@ import os
 import random
 from pipobot.lib.modules import MultiSyncModule, defaultcmd
 
+
 class ListConfigParser(ConfigParser.RawConfigParser):
     def get(self, section, option):
         "Redéfinition du get pour gérer les listes"
@@ -14,13 +15,13 @@ class ListConfigParser(ConfigParser.RawConfigParser):
         else:
             return value
 
+
 class Kaamelott(MultiSyncModule):
     def __init__(self, bot):
         commands = self.readconf()
         MultiSyncModule.__init__(self,
                                  bot,
                                  commands=commands)
-
 
     def readconf(self):
         config_file = os.path.join(os.path.dirname(__file__), 'kaamelott.cfg')
@@ -32,7 +33,8 @@ class Kaamelott(MultiSyncModule):
         for c in self.genericCmd:
             self.dico[c] = {}
             self.dico[c]['desc'] = config.get(c, 'desc')
-            self.dico[c]['citation'] = config.get(c, 'citation') if type(config.get(c, 'citation')) == list else [config.get(c, 'citation')]
+            quote = config.get(c, 'citation')
+            self.dico[c]['citation'] = quote if type(quote) is list  else [config.get(c, 'citation')]
             commands[c] = self.dico[c]['desc']
         return commands
 

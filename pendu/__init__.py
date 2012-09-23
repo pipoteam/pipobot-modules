@@ -7,6 +7,7 @@ from pipobot.lib.modules import SyncModule, answercmd
 
 VALID_CAR = string.ascii_lowercase + "-'"
 
+
 class CmdPendu(SyncModule):
     def __init__(self, bot):
         desc = u"""Un superbe jeu de pendu
@@ -15,10 +16,10 @@ pendu init [word] : lance une partie avec 'word' comme mot à trouver
 pendu reset : pour interrompre une partie en cours
 pendu try [letter] : propose la lettre 'letter'
 pendu played : affiche la liste des lettres déjà jouées"""
-        SyncModule.__init__(self, 
-                                bot, 
-                                desc = desc,
-                                command = "pendu")
+        SyncModule.__init__(self,
+                            bot,
+                            desc=desc,
+                            command="pendu")
         self.bot.pendu = Pendu("")
 
     @answercmd("init")

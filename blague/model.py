@@ -3,9 +3,10 @@
 from sqlalchemy import Column, Integer, String
 from pipobot.lib.bdd import Base
 
+
 class Blagueur(Base):
     __tablename__ = "blagues"
-    pseudo = Column(String(250), primary_key = True)
+    pseudo = Column(String(250), primary_key=True)
     score = Column(Integer)
     submission = Column(Integer)
 

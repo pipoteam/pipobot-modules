@@ -6,22 +6,23 @@ import threading
 import random
 from pipobot.lib.modules import SyncModule, defaultcmd
 
+
 class CmdTaggle(SyncModule):
     _config = (("default", str, ""),)
 
     def __init__(self, bot):
         desc = "Ta gueule [nom]\nDit taggle à nom (valeur par défaut à mettre dans le fichier de configuration)"
-        SyncModule.__init__(self, 
-                            bot, 
-                            desc = desc,
-                            command = "tg",
+        SyncModule.__init__(self,
+                            bot,
+                            desc=desc,
+                            command="tg",
                             )
 
-    @defaultcmd 
+    @defaultcmd
     def answer(self, sender, message):
         if sender.lower() == self.default.lower() and message == '':
             toalmostall = self.bot.occupants.get_all(" ", [self.bot.name, sender])
-            return u"%s: Fermez tous voggle !!!"%(toalmostall)
+            return u"%s: Fermez tous voggle !!!" % toalmostall
         else:
             if message == '':
                 if self.default == "":
