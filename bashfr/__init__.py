@@ -1,11 +1,11 @@
 #-*- coding: utf-8 -*-
 """ A module to parse quote extracted from http://danstonchat.com/ """
 
+from BeautifulSoup import BeautifulSoup
 import random
 import pipobot.lib.utils
-from BeautifulSoup import BeautifulSoup
 from pipobot.lib.abstract_modules import FortuneModule
-from pipobot.lib.unittest import GroupUnitTest, ReTest, ExactTest
+from pipobot.lib.module_test import ModuleTest
 
 
 class CmdBashfr(FortuneModule):
@@ -44,18 +44,21 @@ bashfr [n] : Affiche la quote [n] de bashfr"""
             return "bashfr #%s :\n%s" % (quote_id, result)
 
 
-class BashfrTest(GroupUnitTest):
-    def __init__(self, bot):
-        tst1 = ReTest(cmd="!bashfr",
-                      expected=[r"bashfr #(\d+) :(.*)",
-                                r"La quote demandée n'existe pas.(.*)"],
-                      desc="Test random bashfr")
-        tst2 = ExactTest(cmd="!bashfr 42",
-                         expected="La quote demandée n'existe pas. (Erreur 404)",
-                         desc="Test erreur 404 sur bashfr")
-        tst3 = ExactTest(cmd="!bashfr 5",
-                         expected=("bashfr #5 :\n"
-                                   "(swatchtim) mac ? ca existe encore ca ?\n"
-                                   " * kick: (swatchtim) was kicked by (Cafmac) (Ouais. Les cons aussi.)"),
-                         desc="Test fonctionnement correct sur bashfr")
-        GroupUnitTest.__init__(self, [tst1, tst2, tst3], bot, "bashfr")
+class BashfrTest(ModuleTest):
+    def test_bashfr_5(self):
+        bot_rep = self.bot_answer("!bashfr 5")
+        expected=(u"bashfr #5 :\n"
+                  u"(swatchtim) mac ? ca existe encore ca ?\n"
+                  u" * kick: (swatchtim) was kicked by (Cafmac) (Ouais. Les cons aussi.)")
+        self.assertEqual(bot_rep, expected)
+
+    def test_bashfr_random(self):
+        bot_rep = self.bot_answer("!bashfr")
+        expected_re = [r"bashfr #(\d+) :(.*)",
+                       r"La quote demandée n'existe pas.(.*)"]
+        self.assertRegexpListMatches(bot_rep, expected_re)
+
+    def test_bashfr_404(self):
+        bot_rep = self.bot_answer("!bashfr 42")
+        expected = "La quote demandée n'existe pas. (Erreur 404)"
+        self.assertEqual(bot_rep, expected)

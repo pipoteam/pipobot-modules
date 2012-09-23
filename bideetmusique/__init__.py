@@ -7,7 +7,7 @@ import threading
 
 from pipobot.lib.modules import defaultcmd, answercmd
 from pipobot.lib.abstract_modules import NotifyModule
-from pipobot.lib.unittest import GroupUnitTest, ReTest, UnitTest, ExceptTest
+from pipobot.lib.module_test import ModuleTest
 import bandm_lib
 
 
@@ -88,22 +88,27 @@ class CmdBideEtMusique(NotifyModule):
         self.old = bandm_lib.current()
 
 
-class BandMTest(GroupUnitTest):
-    def __init__(self, bot):
-        tests = []
-        tests.append(ReTest(cmd="!b&m",
-                            expected="Titre en cours : (.*)"))
-        tests.append(UnitTest(cmd="!b&m next 3",
-                              tst_fct=lambda res: self.custom_test(res, 3)))
-        tests.append(UnitTest(cmd="!b&m prev 3",
-                              tst_fct=lambda res: self.custom_test(res, 3)))
-        tests.append(ExceptTest(cmd="!b&m prog"))
-        tests.append(ExceptTest(cmd="!b&m lyrics"))
-        GroupUnitTest.__init__(self, tests, bot, "b&m")
+class BandMTest(ModuleTest):
+    def test_current(self):
+        bot_rep = self.bot_answer("!b&m")
+        self.assertRegexpMatches(bot_rep, "Titre en cours : (.*)")
 
-    def custom_test(self, res, size):
-        error = res.count("\n") != size - 1
-        msg = ""
-        if error:
-            msg = "This test should return 3 lines of text !"
-        return error, msg
+    def test_lyrics(self):
+        self.bot_answer("!b&m lyrics")
+
+    def test_next_3(self):
+        nb = 3
+        bot_rep = self.bot_answer("!b&m next %s" % nb)
+        self.assertEqual(bot_rep.count("\n"),
+                         nb - 1,
+                         msg="Result %s should be a %s-line string" % (bot_rep, nb))
+
+    def test_prev_3(self):
+        nb = 3
+        bot_rep = self.bot_answer("!b&m prev %s" % nb)
+        self.assertEqual(bot_rep.count("\n"),
+                         nb - 1,
+                         msg="Result %s should be a %s-line string" % (bot_rep, nb))
+
+    def test_prog(self):
+        self.bot_answer("!b&m prog")

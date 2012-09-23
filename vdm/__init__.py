@@ -4,7 +4,8 @@
 import pipobot.lib.utils
 from BeautifulSoup import BeautifulSoup
 from pipobot.lib.abstract_modules import FortuneModule
-from pipobot.lib.unittest import GroupUnitTest, ReTest, ExactTest
+from pipobot.lib.module_test import ModuleTest
+
 
 ERROR_MSG = (u"Je n'arrive pas à parser la page : peut-être que l'html a changé, "
              u"ou la page cherchée n'existe pas, ou alors mon développeur est un boulet")
@@ -38,16 +39,15 @@ vdm [n] : Affiche la vdm [n]"""
         return res
 
 
-class VdmTest(GroupUnitTest):
-    def __init__(self, bot):
-        tests = []
-        tests.append(ReTest(cmd="!vdm",
-                            expected=[ERROR_MSG, r"VDM#(\d+) : .*"],
-                            desc="Test vdm random"))
-        tests.append(ExactTest(cmd="!vdm 442",
-                               expected=ERROR_MSG,
-                               desc="Erreur vdm"))
-        tests.append(ReTest(cmd="!vdm 45980",
-                            expected=r"VDM#(\d+) : .*",
-                            desc="Test fonctionnement correct vdm"))
-        GroupUnitTest.__init__(self, tests, bot, "vdm")
+class VdmTest(ModuleTest):
+    def test_random(self):
+        self.assertRegexpListMatches(self.bot_answer("!vdm"),
+                                     [ERROR_MSG, r"VDM#(\d+) : .*"])
+
+    def test_fail(self):
+        self.assertEqual(self.bot_answer("!vdm 442"),
+                         ERROR_MSG)
+
+    def test_ok(self):
+        self.assertRegexpMatches(self.bot_answer("!vdm 45980"),
+                                 r"VDM#(\d+) : .*")
