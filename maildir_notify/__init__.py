@@ -112,12 +112,15 @@ class MailNotify(AsyncModule, pyinotify.ProcessEvent):
         self._parser = Parser()
 
         pw_dir = pwd.getpwuid(os.getuid()).pw_dir
-        path = join(pw_dir, "Maildir", "new")
 
+        path = join(pw_dir, "Maildir", bot.chatname, "new")
+        self.destpath = join(pw_dir, "Maildir", bot.chatname, "cur")
+        if not isdir(path):
+            path = join(pw_dir, "Maildir", "new")
+            self.destpath = join(pw_dir, "Maildir", "cur")
         if not isdir(path):
             raise RuntimeError("%s is missing" % path)
 
-        self.destpath = join(pw_dir, "Maildir", "cur")
         for item in os.listdir(path):
             item_path = join(path, item)
             if isfile(item_path):
