@@ -113,9 +113,9 @@ class MailNotify(AsyncModule, pyinotify.ProcessEvent):
 
         pw_dir = pwd.getpwuid(os.getuid()).pw_dir
 
-        path = join(pw_dir, "Maildir", bot.chatname, "new")
-        self.destpath = join(pw_dir, "Maildir", bot.chatname, "cur")
-        if not isdir(path):
+        path = join(pw_dir, "Maildir", bot.chatname.split('@')[0], "new")
+        self.destpath = join(pw_dir, "Maildir", bot.chatname.split('@')[0], "cur")
+        if not isdir(path) or not isdir(self.destpath):
             path = join(pw_dir, "Maildir", "new")
             self.destpath = join(pw_dir, "Maildir", "cur")
         if not isdir(path):
