@@ -37,7 +37,7 @@ class ChiffresCmd(SyncModule):
         res = u"Nouvelle partie lancée\n"
         res += u"Total à trouver : %s\n" % self.game.total
         res += u"Nombres fournis : %s" % ', '.join(map(str, self.game.digits))
-        if hasattr(self, "timer"):
+        if self.timer is not None:
             self.timer.cancel()
 
         self.timer = threading.Timer(60, self.time_out)
