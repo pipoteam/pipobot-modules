@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import time
 from pipobot.lib.modules import SyncModule, answercmd
+from pipobot.lib.module_test import ModuleTest, string_gen
 from model import Todo
 
 
@@ -75,3 +76,73 @@ todo list [name] : affiche les todo de la liste [name]""",
                 send += "%s a été supprimé\n" % deleted[0]
         self.bot.session.commit()
         return send[0:-1]
+
+#########################################################################################################
+#                       UNIT TEST                                                                       #
+#########################################################################################################
+
+
+class TodoAdd(ModuleTest):
+    def test_todo_add(self):
+        """ !todo add """
+        self.todo_list = string_gen(8)
+        self.todo_msg = string_gen(50)
+        bot_rep = self.bot_answer("!todo add %s %s" % (self.todo_list, self.todo_msg))
+        self.assertEqual(bot_rep, u"TODO ajouté")
+
+    def tearDown(self):
+        """ In case of failure, we manually remove the todo we added """
+        remove = self.bot.session.query(Todo).filter(Todo.content.like("%" + self.todo_msg + "%")).first()
+        if remove is not None:
+            self.bot.session.delete(remove)
+            self.bot.session.commit()
+
+
+class TodoRemove(ModuleTest):
+    def setUp(self):
+        """ Creates 3 random todo we add manually to the database """
+        self.todos = []
+        todos = {string_gen(8): string_gen(50),
+                 string_gen(8): string_gen(50),
+                 string_gen(8): string_gen(50)}
+        for list_name, todo in todos.iteritems():
+            todo = Todo(list_name, todo, "sender", time.time())
+            self.bot.session.add(todo)
+            self.bot.session.commit()
+            self.todos.append(todo)
+
+    def test_todo_remove(self):
+        """ !todo remove """
+        bot_rep = self.bot_answer("!todo remove %s" % ",".join([str(elt.id) for elt in self.todos]))
+        expected = "\n".join(["%s a été supprimé" % todo for todo in self.todos])
+        self.assertEqual(bot_rep, expected)
+
+    def tearDown(self):
+        """ In case of failure, we manually remove the todo we added """
+        for todo in self.todos:
+            remove = self.bot.session.query(Todo).filter(Todo.id == todo.id).first()
+            if remove is not None:
+                self.bot.session.delete(remove)
+                self.bot.session.commit()
+
+
+class TodoSearch(ModuleTest):
+    def setUp(self):
+        """ Creates a random todo we add manually to the database """
+        todo_list = string_gen(8)
+        todo_msg = string_gen(50)
+        self.todo = Todo(todo_list, todo_msg, "sender", time.time())
+        self.bot.session.add(self.todo)
+        self.bot.session.commit()
+
+    def test_search(self):
+        """ !todo search """
+        bot_rep = self.bot_answer("!todo search %s" % self.todo.content)
+        expected = str(self.todo)
+        self.assertEqual(bot_rep, expected)
+
+    def tearDown(self):
+        """ We manually remove the todo we added """
+        remove = self.bot.session.query(Todo).filter(Todo.id == self.todo.id).first()
+        self.bot.session.delete(remove)
+        self.bot.session.commit()
