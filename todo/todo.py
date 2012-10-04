@@ -20,7 +20,7 @@ todo list [name] : affiche les todo de la liste [name]""",
                             desc=desc,
                             command="todo")
 
-    @answercmd("list", "list (?<listname>\S+)")
+    @answercmd("list", "list (?P<listname>\S+)")
     def list(self, sender, listname=""):
         if listname == "":
             tmp = self.bot.session.query(Todo).group_by(Todo.name).all()
