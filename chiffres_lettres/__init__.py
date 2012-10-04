@@ -29,10 +29,10 @@ class ChiffresCmd(SyncModule):
         self.printers = {'br': ChiffresCmd.pretty_br,
                          'lisp': ChiffresCmd.pretty_lisp,
                          'tiles': ChiffresCmd.pretty_tiles}
-        self.default_printer = 'tiles'
+        self.timer = None
 
     @answercmd("init")
-    def init(self, sender, args):
+    def init(self, sender):
         self.game = Chiffres()
         res = u"Nouvelle partie lancée\n"
         res += u"Total à trouver : %s\n" % self.game.total
@@ -44,15 +44,15 @@ class ChiffresCmd(SyncModule):
         self.timer.start()
         return res
 
-    @answercmd("solve")
-    def solve(self, sender, args):
+    @answercmd("solve", "solve (?P<sprinter>\S+)")
+    def solve(self, sender, sprinter='tiles'):
         if self.game is None:
             return u"Aucune partie lancée"
         exact, res = self.game.solve()
 
-        printer = self.printers[self.default_printer]
-        if args and self.printers.get(args):
-            printer = self.printers[args]
+        printer = self.printers.get(sprinter)
+        if printer is None :
+            return u"Printer inconnu"
 
         self.timer.cancel()
 
@@ -61,17 +61,17 @@ class ChiffresCmd(SyncModule):
         else:
             return u"Pas de solution exacte… voici ce que j'ai de mieux : \n%s" % printer(res.ast, exact)
 
-    @answercmd("check")
-    def check(self, sender, args):
+    @answercmd("check (?P<tocheck>.*)")
+    def check(self, sender, tocheck):
         if self.game is None:
             return u"Aucune partie lancée"
 
         try:
-            verdict = self.game.check(args)
+            verdict = self.game.check(tocheck)
             if verdict:
                 if verdict == self.game.total:
-                    return u"%s : Le compte est bon !!" % sender
                     self.timer.cancel()
+                    return u"%s : Le compte est bon !!" % sender
                 else:
                     return u"%s : Les calculs sont bons, tu trouves %s au lieu de %s, soit une erreur de %s" % (sender,
                                                                                     verdict,
@@ -201,7 +201,7 @@ class LettresCmd(SyncModule):
                             command="lettres")
 
     @answercmd("init")
-    def init(self, sender, args):
+    def init(self, sender):
         self.game.tirage()
         res = u"Nouvelle partie lancée\n"
         res += u"Liste des lettres fournies : %s" % ", ".join(self.game.letters)
@@ -210,7 +210,7 @@ class LettresCmd(SyncModule):
         return res
 
     @answercmd("solve")
-    def solve(self, sender, args):
+    def solve(self, sender):
         if self.game.letters == []:
             return u"Aucune partie lancée"
 

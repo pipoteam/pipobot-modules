@@ -26,7 +26,7 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
 
     @defaultcmd
     def answer(self, sender, message):
-        return self.desc
+        return "\n".join("%s: %s" % e for e in self.desc.iteritems())
 
     @answercmd("list")
     def list(self, sender, message):
@@ -104,17 +104,12 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
 
             return {"text": res, "monospace": True}
 
-    @answercmd("add")
-    def add(self, sender, message):
-        try:
-            m = re.match(r"([^ ]+(?: [^ ]+)*) ((?:\d+)(?:\.\d+)?) ([^ ]+) (.*)",
-                         message)
-            debtor = m.group(1).split(' ')
-            amount = m.group(2)
-            creditor = m.group(3)
-            reason = m.group(4)
-        except AttributeError:
-            return "usage : !dette add [name1] [amount] [name2] [reason] : Ajoute une dette de [amount] que doit payer [name1] à [name2] à cause de [reason]"
+    @answercmd(r"(?<dtype>add|multiple) (?P<debtor>\S+(?: \S+)*) (?<amount>(?:\d+)(?:\.\d+)?) (?<creditor>\S+) (?<reason>.*)")
+    def add(self, sender, dtype, debtor, amount, creditor, reason):
+        debtor = debtor.split(' ')
+        amount = float(amount)
+        if dtype == 'multiple' :
+            amount = amount/len(debtor)
         res = ""
         for elt in debtor:
             if elt != creditor:
@@ -138,14 +133,10 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
                 res += u"On ne peut pas avoir une dette avec soi-même...\n"
         return res.rstrip()
 
-    @answercmd("remove", "delete", "rm", "del")
-    def remove(self, sender, message):
-        if message == "":
-            return "usage !dette remove id1,id2,id3,…"
-        else:
-            arg = message.split(",")
+    @answercmd("(remove|delete|rm|del) (?P<ids>\d+,?)+)")
+    def remove(self, sender, ids):
         res = []
-        for i in arg:
+        for i in ids.split(","):
             n = int(i)
             deleted = self.bot.session.query(Dette).filter(Dette.id == n).first()
             if deleted is None:
@@ -154,39 +145,4 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
                 self.bot.session.delete(deleted)
                 res.append(u"%s a été supprimé" % (deleted))
         self.bot.session.commit()
-        return "\n".join(res)
-
-    @answercmd("multiple")
-    def multiple(self, sender, message):
-        try:
-            m = re.match(r"([^ ]+(?: [^ ]+)*) ((?:\d+)(?:\.\d+)?) ([^ ]+) (.*)",
-                         message)
-            debtor = m.group(1).split(' ')
-            amount = float(m.group(2)) / float(len(debtor))
-            creditor = m.group(3)
-            reason = m.group(4)
-        except AttributeError:
-            return u"usage : dette multiple [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent se partager la dette [amount] à payer à [name3] à cause de [reason]"
-
-        res = []
-        for elt in debtor:
-            if elt != creditor:
-                dette = Dette(elt, amount, creditor, reason, time.time())
-                self.bot.session.add(dette)
-                self.bot.session.commit()
-                sum_res = func.sum(Dette.amount)
-                n = self.bot.session.query(sum_res).filter(and_(Dette.debtor == elt, 
-                                                                Dette.creditor == creditor)).first()[0]
-                p = self.bot.session.query(sum_res).filter(and_(Dette.debtor == creditor,
-                                                                Dette.creditor == elt)).first()[0]
-                if n is not None and p is not None and (n - p) == 0:
-                    deleted = self.bot.session.query(Dette).filter(or_(and_(Dette.debtor == elt, Dette.creditor == creditor), and_(Dette.debtor == creditor, Dette.creditor == elt))).all()
-                    for e in deleted:
-                        self.bot.session.delete(e)
-                    self.bot.session.commit()
-                    res.append(u"Les dettes entre %s et %s sont effacées" % (elt, creditor))
-                else:
-                    res.append(u"Ajout de la dette entre %s et %s" % (elt, creditor))
-            else:
-                res.append(u"On ne peut pas avoir une dette avec soi-même...\n")
         return "\n".join(res)

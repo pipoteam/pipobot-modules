@@ -22,16 +22,17 @@ pendu played : affiche la liste des lettres déjà jouées"""
                             command="pendu")
         self.bot.pendu = Pendu("")
 
-    @answercmd("init")
-    def init(self, sender, args):
+    @answercmd("init", "init (?<word>\w+)")
+    def init(self, sender, word=""):
         if self.bot.pendu.word != "":
             return u"Il y a déjà une partie en cours… tu peux la finir, ou au pire 'reset' si tppt"
-        if args == "":
+
+        if word == "":
             word_list = os.path.join(os.path.dirname(__file__), "wordlist.cfg")
             self.bot.pendu.word = self.bot.pendu.create_word(word_list)
             return u"Et c'est parti pour un pendu ! On cherche un mot de %s caractères" % len(self.bot.pendu.word)
         else:
-            word = args.strip().lower()
+            word = word.strip().lower()
             if all([letter in VALID_CAR for letter in word]):
                 self.bot.pendu.word = word
                 self.bot.say(u"Et c'est parti pour un pendu ! On cherche un mot de %s caractères" % len(self.bot.pendu.word))
@@ -39,21 +40,22 @@ pendu played : affiche la liste des lettres déjà jouées"""
                 return u"Le mot choisi n'est pas valide ! (caractères acceptés : %s)" % VALID_CAR
 
     @answercmd("reset")
-    def reset(self, sender, args):
+    def reset(self, sender):
         self.bot.pendu.word = ""
         return u"Reset effectué, plus qu'à utiliser init pour lancer une nouvelle partie"
 
-    @answercmd("try", "guess")
-    def guess(self, sender, args):
+    @answercmd("(try|guess) (?<letter>\w)")
+    def guess(self, sender, letter):
         if self.bot.pendu.word == "":
             return "Euh, il faudrait lancer une partie…"
-        if len(args) == 1 and args in VALID_CAR:
-            return self.bot.pendu.propose(args)
+
+        if letter in VALID_CAR:
+            return self.bot.pendu.propose(letter)
         else:
             return "Il faut proposer une lettre !"
 
-    @answercmd("played", "histo")
-    def played(self, sender, args):
+    @answercmd("(played|histo)")
+    def played(self, sender):
         if self.bot.pendu.word == "":
             return "Euh, il faudrait lancer une partie…"
         return self.bot.pendu.playedtostr()

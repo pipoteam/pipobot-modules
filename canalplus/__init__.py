@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 import libcanal
 import config
-from pipobot.lib.modules import defaultcmd, answercmd
+from pipobot.lib.modules import defaultcmd
 from pipobot.lib.abstract_modules import NotifyModule
 
 DEFAULT_TIMER = 60

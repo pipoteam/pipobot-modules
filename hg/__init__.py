@@ -20,23 +20,20 @@ hg [repo] [rev] : affiche la révision [rev] du repo [repo]""" % (self.default)
                             desc=desc,
                             command="hg")
 
-    @answercmd(r"^$")
+    @answercmd(r"")
     def answer_default(self, sender, message):
         repo = self.default
         return self.get_log(repo, -1)
 
-    @answercmd(r"^(?P<name>\w+)$")
-    def answer_repo(self, sender, message):
-        repo = message.group("name")
+    @answercmd(r"^(?P<repo>\w+)$")
+    def answer_repo(self, sender, repo):
         if repo == "repos":
             return "Liste des repos connus : %s" % (", ".join(self.repos))
         return self.get_log(repo, -1)
 
-    @answercmd(r"^(?P<name>\w+)\s+(?P<rev>\d+)$")
-    def answer_repo_rev(self, sender, message):
-        repo = message.group("name")
-        rev = message.group("rev")
-        return self.get_log(repo, rev)
+    @answercmd(r"^(?P<repo>\w+)\s+(?P<rev>\d+)$")
+    def answer_repo_rev(self, sender, repo, rev):
+        return self.get_log(repo, int(rev))
 
     def get_log(self, repo, rev):
         if not repo in self.repos:

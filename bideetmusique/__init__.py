@@ -35,35 +35,28 @@ class CmdBideEtMusique(NotifyModule):
 #####################   Current-like operations   #####################
 #######################################################################
 
-    @answercmd("^$")
-    def default(self, sender, message):
+    @answercmd("", "current")
+    def default(self, sender):
         current = bandm_lib.current()
         res = u"Titre en cours : %s" % (current)
         return res
 
-    @answercmd("current")
-    def current(self, sender, message):
-        return self.default(sender, message)
-
 #######################################################################
 #####################   List operations ###############################
 #######################################################################
-    @answercmd("next")
-    def list(self, sender, message):
-        nb = 1 if message == "" else int(message)
-        res = bandm_lib.get_next(nb)
+    @answercmd("next", "next (?P<n>\d+)")
+    def list(self, sender, n=1):
+        res = bandm_lib.get_next(int(n))
         return res
 
-    @answercmd("prev")
-    def listprev(self, sender, message):
-        nb = 1 if message == "" else int(message)
-        res = bandm_lib.get_prev(nb)
+    @answercmd("prev", "prev (?P<n>\d+)")
+    def listprev(self, sender, n=1):
+        res = bandm_lib.get_prev(int((n)))
         return res
 
-    @answercmd("prog")
-    def prog(self, sender, message):
-        nb = 0 if message == "" else int(message)
-        res = bandm_lib.get_shows(nb)
+    @answercmd("prog", "prog (?P<n>\d+)")
+    def prog(self, sender, n=0):
+        res = bandm_lib.get_shows(int(n))
         return res
 
 #######################################################################
@@ -71,7 +64,7 @@ class CmdBideEtMusique(NotifyModule):
 #######################################################################
 
     @answercmd("lyrics")
-    def lyrics(self, sender, message):
+    def lyrics(self, sender):
         return bandm_lib.lyrics()
 
 #######################################################################

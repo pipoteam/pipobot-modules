@@ -23,8 +23,8 @@ remind list all : affiche toutes les alertes""",
         self.lastcheck = time.time()
         self.mute = False
 
-    @answercmd("list$")
-    def list(self, sender, args):
+    @answercmd("list")
+    def list(self, sender):
         owners = self.bot.session.query(Remind).group_by(Remind.owner).order_by(Remind.owner).all()
         owners = [remind.owner for remind in owners]
         if owners == []:
@@ -34,8 +34,7 @@ remind list all : affiche toutes les alertes""",
         return send
 
     @answercmd("list (?P<who>\S+)")
-    def list_someone(self, sender, args):
-        who = args.group("who")
+    def list_someone(self, sender, who):
         if who == "all":
             res = self.bot.session.query(Remind).order_by(Remind.owner).all()
             error_msg = u"Aucun remind dans la base"
@@ -45,12 +44,9 @@ remind list all : affiche toutes les alertes""",
         send = u"\n".join([unicode(elt) for elt in res]) if res != [] else error_msg
         return send
 
-    @answercmd("add (?P<owner>\S+) (?P<date>\S+) (?P<desc>.*)")
-    def add(self, sender, args):
+    @answercmd("add (?P<owner>\S+) (?P<date>\S+) (?P<msg>.*)")
+    def add(self, sender, owner, date, msg):
         #!remind add [owner] [date] [desc] : crée une alerte pour [owner] à la date [date] décrite par [desc]
-        owner = args.group("owner")
-        date = args.group("date")
-        msg = args.group("desc")
         try:
             datestruct = parseall(date)
             date = time.mktime(datestruct)
@@ -68,9 +64,9 @@ remind list all : affiche toutes les alertes""",
         return send
 
     @answercmd("(remove|delete) (?P<ids>(\d+,?)+)")
-    def remove(self, sender, args):
+    def remove(self, sender, ids):
         send = ""
-        for i in args.group("ids").split(","):
+        for i in ids.split(","):
             n = int(i)
             deleted = self.bot.session.query(Remind).filter(Remind.id == n).all()
             if deleted == []:

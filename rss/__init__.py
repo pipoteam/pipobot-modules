@@ -32,45 +32,40 @@ class RSSNotifier(NotifyModule):
     def action(self):
         self.manager.update(self.mute)
 
-    @answercmd("^$")
-    def answer(self, sender, message):
+    @answercmd("")
+    def answer(self, sender):
         return self.desc
 
-    @answercmd(r"disable ([^ ]+)")
-    def feed_disable(self, sender, message):
-        feed_name = message.group(1)
+    @answercmd(r"disable (?P<feed_name>[^ ]+)")
+    def feed_disable(self, sender, feed_name):
         if self.manager.mute(feed_name):
             return u"%s désactivé avec succès" % feed_name
         else:
             return u"Aucun flux %s" % feed_name
 
-    @answercmd(r"enable ([^ ]+)")
-    def feed_enable(self, sender, message):
-        feed_name = message.group(1)
+    @answercmd(r"enable (?P<feed_name>[^ ]+)")
+    def feed_enable(self, sender, feed_name):
         if self.manager.enable(feed_name):
             return u"%s activé avec succès" % feed_name
         else:
             return u"Aucun flux %s" % feed_name
 
-    @answercmd(r"add ([^ ]+) (http[s]?://(?:[a-zA-Z]|[0-9]|[$-/_=?:;]|[!*\(\),~@]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)")
-    def add(self, sender, message):
-        entry = message.group(1)
-        url = message.group(2)
+    @answercmd(r"add (?P<entry>[^ ]+) (?P<url>http[s]?://(?:[a-zA-Z]|[0-9]|[$-/_=?:;]|[!*\(\),~@]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)")
+    def add(self, sender, entry, url):
         if self.manager.add_feed(url, entry):
             return u"Flux ajouté avec succès"
         else:
             return u"Erreur lors de l'ajout du flux : il existe déjà !!!"
 
-    @answercmd("remove ([^ ]+)", "delete ([^ ]+)", "rm ([^ ]+)", "del ([^ ]+)")
-    def remove(self, sender, message):
-        feed_name = message.group(1)
+    @answercmd("(remove|rm|del|delete) (?P<feed_name>[^ ]+)")
+    def remove(self, sender, feed_name):
         if self.manager.rm_feed(feed_name):
             return u"Flux supprimé avec succès"
         else:
             return u"Erreur lors de la suppression du flux : il n'existe pas !!!"
 
     @answercmd("list")
-    def list(self, sender, args):
+    def list(self, sender):
         all_feeds = self.manager.list_all()
         if all_feeds == []:
             return u"Aucun flux"

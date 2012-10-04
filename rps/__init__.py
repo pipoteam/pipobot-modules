@@ -7,7 +7,7 @@ from pipobot.lib.modules import SyncModule, answercmd, defaultcmd
 class CmdRPS(SyncModule):
     def __init__(self, bot):
         desc = """Rock Paper Scissors:
-rps init : lance une nouvelle partie
+rps init <n> : lance une nouvelle partie avec <n> joueurs
 rps bot : pour se mesurer au bot !!!
 rps (Rock|Paper|Scissor) : pour jouer"""
         SyncModule.__init__(self,
@@ -20,20 +20,19 @@ rps (Rock|Paper|Scissor) : pour jouer"""
         self.bot.rps = self
 
     #TODO split module to user decorators
-    @answercmd("init")
-    def init(self, sender, args):
-        args = args.split()
+    @answercmd("init (?<n>\d+)")
+    def init(self, sender, n):
         try:
-            if int(args[0]) > len(self.bot.occupants.users.keys()):
+            if int(n) > len(self.bot.occupants.users):
                 return "Not enough players in the room"
-            self.players = int(args[0])
+            self.players = int(n)
             self.manche = {}
-            return "Game initialized with %s players" % (int(args[0]))
+            return "Game initialized with %d players" % (self.players)
         except (ValueError, IndexError):
             return "You should see the man…"
 
     @answercmd("bot")
-    def bot_play(self, sender, args):
+    def bot_play(self, sender):
         self.manche[self.bot.name] = random.choice(self.choices)
         left = self.players - len(self.manche.keys())
         if left == 0:
@@ -47,16 +46,16 @@ rps (Rock|Paper|Scissor) : pour jouer"""
         else:
             self.bot.say("I have played, %s answers are expected" % left)
 
-    @defaultcmd
-    def default(self, sender, message):
-        if message in self.choices:
+    @answercmd("(?<play>Rock|Paper|Scissor)")
+    def default(self, sender, play):
+        if play in self.choices:
             if sender in self.manche.keys():
                 l = ["You must be stupid.", "What else?!"]
                 return "You have already played... " + random.choice(l)
             elif self.players == 0:
                 return "There is no game launched"
             else:
-                self.manche[sender] = message
+                self.manche[sender] = play
                 left = self.players - len(self.manche.keys())
                 if left == 0:
                     l = ["%s: You were very looooooooooong to answer..." % sender,

@@ -10,7 +10,7 @@ class HighLight(SyncModule):
     def __init__(self, bot):
         desc = _("hl <people>: Highligh <people> (whom can be registerd users, pseudos or list of people)")
         desc += _("\nhl <people> :<message>: Highligh <people>, and shows <message>")
-        desc += _("\nhl show [<list>]: Shows <list> list of people (default: all)")
+        desc += _("\nhl show : Shows list of people")
         desc += _("\nhl set <list> <people>: Add <people> to <list>")
         desc += _("\nhl rm <list> <people>: Remove <people> from <list>")
         desc += _("\nhl rm <list>: Remove <list>")
@@ -20,18 +20,18 @@ class HighLight(SyncModule):
                 desc=desc,
                 command='hl')
 
-    @answercmd(r'^show (?P<list>\w+)')
-    def aswer_show(self, sender, message):
-        hllist = self.bot.session.query(HlList).filter(HlList.name == message.group('list')).first()
+    @answercmd(r'^show (?P<plist>\w+)')
+    def aswer_show(self, sender, plist):
+        hllist = self.bot.session.query(HlList).filter(HlList.name == plist).first()
         if not hllist:
-            return _('I don\'t know that "%s" list' % message.group('list'))
-        ret = _('list "%s"\'s members:' % message.group('list'))
+            return _('I don\'t know that "%s" list' % plist)
+        ret = _('list "%s"\'s members:' % plist)
         for user in hllist.members:
             ret += ' %s' % user.user
         return ret
 
     @answercmd(r'^show')
-    def answer_showall(self, sender, message):
+    def answer_showall(self, sender):
         hllists = self.bot.session.query(HlList).all()
         if not hllists:
             return _("%s: There is no HighLight List… Maybe you can create one, before trying that ?" % sender)
@@ -42,16 +42,12 @@ class HighLight(SyncModule):
                 ret += ' %s' % user.user
         return ret
 
-    @answercmd(r'^set')
-    def answer_set(self, sender, message):
+    @answercmd(r'^set (?P<hllist>\w+) (?P<users>.*)')
+    def answer_set(self, sender, hllist, users):
         ret = ''
-        message = message.string.split(' ')
-        if len(message) < 3:
-            return _("%s: You must provide at least a list and a member" % sender)
-        hllist = message[1]
-        users = message[2:]
         knownusers = []
         unknownusers = []
+        users = users.strip().split()
 
         for user in users:
             knownuser = KnownUser.get(user, self.bot)
@@ -86,15 +82,16 @@ class HighLight(SyncModule):
         self.bot.session.commit()
         return ret.strip()
 
-    @answercmd(r'^rm (?P<list>\w+)')
+    @answercmd(r'^rm (?P<plist>\w+) (?P<users>.*)')
     @minpermlvl(2)
-    def answer_rm(self, sender, message):
-        hllistname = message.group('list')
+    def answer_rm(self, sender, plist, users):
+        hllistname = plist
         hllist = self.bot.session.query(HlList).filter(HlList.name == hllistname).first()
         if not hllist:
             return _("%s: There is no such HighLight List" % sender)
-        users = message.string.split(' ')[2:]
         ret = ''
+
+        users = users.strip().split()
         if users:
             for user in users:
                 knownuser = KnownUser.get(user, self.bot)
@@ -103,7 +100,7 @@ class HighLight(SyncModule):
                     continue
                 hllistmember = self.bot.session.query(HlListMembers).filter(HlListMembers.hlid == hllist.hlid).filter(HlListMembers.kuid == knownuser.kuid).first()
                 if not hllistmember:
-                    ret += _('user "%s" is not a member of this list\n' % knowuser)
+                    ret += _('user "%s" is not a member of this list\n' % knownuser)
                     continue
                 self.bot.session.delete(hllistmember)
                 ret += _('user "%s" has been deleted from list "%s"\n' % (knownuser, hllistname))

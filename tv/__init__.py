@@ -16,7 +16,7 @@ Les chaînes disponibles sont les suivantes :
                             command="tv")
 
     @answercmd("channels")
-    def channels(self, sender, message):
+    def channels(self, sender):
         return u"Les chaînes valides sont les suivantes :\n%s" % (", ".join(sorted(extract(requete.TNT).keys())))
 
     @defaultcmd

@@ -30,7 +30,7 @@ def get_content(entry):
 def get_id(entry):
     if "id" in entry and entry.id:
         if type(entry.id) is dict:
-            return entri.id.values()[0]
+            return entry.id.values()[0]
         return entry.id
 
     content = get_content(entry)

@@ -20,39 +20,36 @@ todo list [name] : affiche les todo de la liste [name]""",
                             desc=desc,
                             command="todo")
 
-    @answercmd("list")
-    def list(self, sender, args):
-        if args == "":
+    @answercmd("list", "list (?<listname>\S+)")
+    def list(self, sender, listname=""):
+        if listname == "":
             tmp = self.bot.session.query(Todo).group_by(Todo.name).all()
             if tmp == []:
                 return "Pas de todolist…"
             else:
                 return "Toutes les TODO-lists: \n%s" % ("\n".join([todo.name for todo in tmp]))
         else:
-            liste = args
-            if liste == "all":
+            if listname == "all":
                 tmp = self.bot.session.query(Todo).order_by(Todo.name).all()
-                listname = ""
+                llistname = ""
                 send = "\n"
                 for elt in tmp:
-                    if elt.name != listname:
+                    if elt.name != llistname:
                         send += "%s: \n" % (elt.name)
-                        listname = elt.name
+                        llistname = elt.name
                     send += "\t%s \n" % elt
             else:
-                tmp = self.bot.session.query(Todo).filter(Todo.name == liste).all()
+                tmp = self.bot.session.query(Todo).filter(Todo.name == listname).all()
                 if tmp == []:
                     send = ""
                 else:
-                    send = u"%s :\n%s" % (liste, "\n".join(map(unicode, tmp)))
+                    send = u"%s :\n%s" % (listname, "\n".join(map(unicode, tmp)))
             if send.strip() == "":
                 return "TODO-list vide"
             return send
 
-    @answercmd("add (?P<list_name>\S+) (?P<desc>.*)")
-    def add(self, sender, args):
-        liste = args.group("list_name")
-        msg = args.group("desc")
+    @answercmd("add (?P<liste>\S+) (?P<msg>.*)")
+    def add(self, sender, liste, msg):
         if liste == "all":
             return "On ne peut pas nommer une liste 'all'"
         todo = Todo(liste, msg, sender, time.time())
@@ -61,16 +58,14 @@ todo list [name] : affiche les todo de la liste [name]""",
         return "TODO ajouté"
 
     @answercmd("search (?P<query>.*)")
-    def search(self, sender, args):
-        query = args.group("query")
+    def search(self, sender, query):
         found = self.bot.session.query(Todo).filter(Todo.content.like("%" + query + "%"))
         return "\n".join(map(str, found))
 
     @answercmd("(remove|delete) (?P<ids>(\d+,?)+)")
-    def remove(self, sender, args):
+    def remove(self, sender, ids):
         send = ""
-        arg = args.group("ids").split(",")
-        for i in arg:
+        for i in ids.split(','):
             n = int(i)
             deleted = self.bot.session.query(Todo).filter(Todo.id == n).all()
             if deleted == []:
