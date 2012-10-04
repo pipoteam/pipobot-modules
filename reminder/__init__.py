@@ -21,7 +21,7 @@ remind list all : affiche toutes les alertes""",
                               command="remind",
                               delay=10)
         self.lastcheck = time.time()
-        self.mute = False
+        self._mute = False
 
     @answercmd("list")
     def list(self, sender):

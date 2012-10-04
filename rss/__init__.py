@@ -27,10 +27,10 @@ class RSSNotifier(NotifyModule):
                               desc=desc,
                               delay=60)
         self.manager.update(silent=True)
-        self.mute = False
+        self._mute = False
 
     def action(self):
-        self.manager.update(self.mute)
+        self.manager.update(self._mute)
 
     @answercmd("")
     def answer(self, sender):

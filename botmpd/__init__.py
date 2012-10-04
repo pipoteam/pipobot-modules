@@ -40,7 +40,6 @@ class CmdMpd(NotifyModule):
                               command="mpd",
                               delay=0)
 
-        self.mute = True
         # To limit flood in logs : if the bot can't connect to the server, it will only be notified
         # once in the logfile
         self.error_notified = False
@@ -98,10 +97,7 @@ class CmdMpd(NotifyModule):
         mpd.disconnect()
         return send
 
-    def action(self):
-        # Here we redefine action (and not do_action as we are supposed to)
-        # This is due to the fact that the "async" part here is handled by the idle()
-        # function of the mpd library and not by a loop with sleep(delay) as usual
+    def do_action(self):
         try:
             mpd = BotMPD(self.host, self.port, self.pwd)
             self.error_notified = False
@@ -129,7 +125,7 @@ class CmdMpd(NotifyModule):
 |  ()  |
 |  ||  |
 |__/\__| """
-            if r is not None and 'player' in r and not self.mute:
+            if r is not None and 'player' in r and not self._mute:
                 title = mpd.currentsongf()
                 self.bot.say("Nouvelle chanson : %s" % title)
                 for c in repDict:

@@ -37,7 +37,7 @@ class CmdCanalPlus(NotifyModule):
         name = args[0]
         if name in self.shows:
             show = self.shows[name]
-            if self.mute:
+            if self._mute:
                 show.update()
         else:
             try:

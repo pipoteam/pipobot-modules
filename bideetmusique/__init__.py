@@ -29,7 +29,6 @@ class CmdBideEtMusique(NotifyModule):
                               delay=10,
                               )
         self.old = ""
-        self.mute = True
 
 #######################################################################
 #####################   Current-like operations   #####################
