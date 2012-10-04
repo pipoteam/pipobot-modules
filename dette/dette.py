@@ -28,9 +28,9 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
     def answer(self, sender, message):
         return "\n".join("%s: %s" % e for e in self.desc.iteritems())
 
-    @answercmd("list")
-    def list(self, sender, message):
-        if message == "":
+    @answercmd("list", "list (?P<name1>\S+)(?: )*(?P<name2>\S+)?")
+    def list(self, sender, name1=None, name2=None):
+        if name1 is None:
             tmp = self.bot.session.query(Dette).order_by(Dette.id).all()
             if tmp == []:
                 return "Pas de dettes…"
@@ -43,12 +43,6 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
                 res += "|" + 110 * "_" + "|"
                 return {"text": res, "monospace": True}
         else:
-            try:
-                m = re.match(r"([^ ]+)(?: )*([^ ]+)*", message)
-                name1 = m.group(1)
-                name2 = m.group(2)
-            except AttributeError:
-                return "usage !dette list ou !dette list <name> ou !dette list <name1> <name2>"
             if name2 is None:
                 debt_list = self.bot.session.query(Dette, Dette.amount).filter(Dette.debtor == name1).all()
                 credit_list = self.bot.session.query(Dette, Dette.amount).filter(Dette.creditor == name1).all()
@@ -104,7 +98,7 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
 
             return {"text": res, "monospace": True}
 
-    @answercmd(r"(?<dtype>add|multiple) (?P<debtor>\S+(?: \S+)*) (?<amount>(?:\d+)(?:\.\d+)?) (?<creditor>\S+) (?<reason>.*)")
+    @answercmd(r"(?P<dtype>add|multiple) (?P<debtor>\S+(?: \S+)*) (?P<amount>(?:\d+)(?:\.\d+)?) (?P<creditor>\S+) (?P<reason>.*)")
     def add(self, sender, dtype, debtor, amount, creditor, reason):
         debtor = debtor.split(' ')
         amount = float(amount)
@@ -133,7 +127,7 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
                 res += u"On ne peut pas avoir une dette avec soi-même...\n"
         return res.rstrip()
 
-    @answercmd("(remove|delete|rm|del) (?P<ids>\d+,?)+)")
+    @answercmd("(remove|delete|rm|del) (?P<ids>(\d+,?)+)")
     def remove(self, sender, ids):
         res = []
         for i in ids.split(","):
