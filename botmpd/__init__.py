@@ -97,7 +97,18 @@ class CmdMpd(NotifyModule):
         mpd.disconnect()
         return send
 
-    def do_action(self):
+    def action(self):
+        # Here we redefine action (and not do_action as we are supposed to)
+        # This is due to the fact that the "async" part here is handled by the idle()
+        # function of the mpd library and not by a loop with sleep(delay) as usual
+        # Since the delay is fixed to 0, then the 'run' method of NotifyModule becomes
+        # def run(self):
+        #     while self.alive:
+        #         time.sleep(0)
+        #         if not self._mute:
+        #             self.do_action()
+        # If the bot is muted, the action() does not block so there is no block at all !
+
         try:
             mpd = BotMPD(self.host, self.port, self.pwd)
             self.error_notified = False
