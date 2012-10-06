@@ -6,6 +6,7 @@ import urllib
 from BeautifulSoup import BeautifulSoup
 import pipobot.lib.utils
 from pipobot.lib.abstract_modules import FortuneModule
+from pipobot.lib.module_test import ModuleTest
 
 
 class CmdScmb(FortuneModule):
@@ -51,5 +52,17 @@ scmb [n] : Affiche l'information [n]"""
             if details != []:
                 summary = u"%s\n%s" % (summary, details[0].text)
             full_quote = pipobot.lib.utils.xhtml2text(unicode(summary))
-            result = u"scmb#%s:\n%s" % (nb, full_quote)
+            result = u"scmb#%s : \n%s" % (nb, full_quote)
             return result.rstrip()
+
+
+class ScmbTest(ModuleTest):
+    def test_random(self):
+        self.assertRegexpListMatches(self.bot_answer("!scmb"),
+                                     ["scmb invalide !!", r"scmb#(\d+) : .*"])
+
+    def test_fail(self):
+        self.assertEqual(self.bot_answer("!scmb 42"), "scmb invalide !!")
+
+    def test_ok(self):
+        self.assertRegexpMatches(self.bot_answer("!scmb 133"), r"scmb#(\d+) : .*")
