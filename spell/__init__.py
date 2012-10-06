@@ -38,5 +38,5 @@ spell suggest : donne les mots approchants"""
 
 class SpellTest(ModuleTest):
     def test_spell(self):
-        self.assertEqual(self.bot_answer("!spell pipo"),
-                         "Suggestions possibles pour pipo : pipeau; pipi; pipe; sipo; pipa; pipé")
+        self.assertRegexpMatches(self.bot_answer("!spell pipo"),
+                         r"Suggestions possibles pour pipo :( \w+;?)")

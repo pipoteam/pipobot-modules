@@ -2,10 +2,12 @@
 #-*- coding: utf-8 -*-
 
 import csv
+import datetime
 import os
 import time
 import urllib
 from pipobot.lib.modules import SyncModule, defaultcmd
+from pipobot.lib.module_test import ModuleTest
 
 ROOT_URL = 'http://www.banque-france.fr/fileadmin/user_upload/banque_de_france/Economie_et_Statistiques/Changes_et_Taux/'
 CACHE_PATH = "/tmp"
@@ -59,7 +61,28 @@ Valeurs disponibles: %s""" % (', '.join(VALUES.keys()))
                 data.append((line[0], line[1]))
 
         #Extracting last (histo) values
-        output = [u"Denières valeurs: "]
+        output = [u"Dernières valeurs: "]
         output += [u"%s : %s %s / 1€" % (date, value, valeur) for date, value in data[-histo::]]
 
         return "\n".join(output)
+
+
+class BourseTest(ModuleTest):
+    def test_ok(self):
+        days = []
+        today = datetime.date.today()
+        regexp = u"Dernières valeurs: "
+        for i in range(3, 0, -1):
+            day = today + datetime.timedelta(days=-i)
+            regexp += u"\n%s : (\d+)(,\d+)? %s / 1€" % (day.strftime("%d/%m/%Y"), "%(currency)s")
+
+        for currency in VALUES:
+            bot_rep = self.bot_answer("!bourse %s" % currency)
+            self.assertRegexpMatches(bot_rep, regexp % {"currency": currency})
+
+    def test_fail(self):
+        bot_rep = self.bot_answer("!bourse PIPO")
+        desc = u"""bourse [valeur [historique]]
+Affiche le taux de conversion d'une valeur boursière.
+Valeurs disponibles: %s""" % (', '.join(VALUES.keys()))
+        self.assertEqual(bot_rep, desc)
