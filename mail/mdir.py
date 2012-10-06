@@ -30,12 +30,15 @@ class MdirNotify(pyinotify.ProcessEvent):
         if path == "":
             pw_dir = pwd.getpwuid(os.getuid()).pw_dir
 
-        path = join(pw_dir, "Maildir", "new")
 
+        path = join(pw_dir, "Maildir", bot.chatname.split('@')[0], "new")
+        self.destpath = join(pw_dir, "Maildir", bot.chatname.split('@')[0], "cur")
+        if not isdir(path) or not isdir(self.destpath):
+            path = join(pw_dir, "Maildir", "new")
+            self.destpath = join(pw_dir, "Maildir", "cur")
         if not isdir(path):
             raise RuntimeError("%s is missing" % path)
 
-        self.destpath = join(pw_dir, "Maildir", "cur")
         for item in os.listdir(path):
             item_path = join(path, item)
             if isfile(item_path):
