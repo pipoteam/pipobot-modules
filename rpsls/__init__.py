@@ -52,7 +52,7 @@ rpsls (Rock|Paper|Scissor|Lizard|Spock) : pour jouer"""
             self.p1 = Player(sender)
             self.p2 = Player(self.bot.name)
             self.p2.choice = random.choice(choices)
-            self.thread = threading.Thread(target=self.start_game)
+            self.thread = threading.Thread(target=self.wait_for_it)
             self.thread.start()
             return u"%s: OK je veux bien t'affronter !" % sender
         elif who == sender:
@@ -64,6 +64,9 @@ rpsls (Rock|Paper|Scissor|Lizard|Spock) : pour jouer"""
 
     @answercmd("accept (?P<who>\S+)")
     def accept(self, sender, who):
+        if self.p1 is None or self.p2 is None:
+            return u"Il faut lancer un défi avant d'accepter !"
+
         if self.p1.name == who and self.p2.name == sender:
             self.p2.ready = True
             self.thread = threading.Thread(target=self.wait_for_it)
