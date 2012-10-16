@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 #-*- coding: utf8 -*-
+import BeautifulSoup
 import urllib
 import simplejson
 from pipobot.lib.modules import SyncModule, defaultcmd
-import pipobot.lib.utils
+from pipobot.lib.utils import xhtml2text
 
 #API for duckduckgo : http://pypi.python.org/pypi/duckduckgo2
 import duckduckgo
@@ -27,8 +28,30 @@ def ddg_request(msg):
                 res.append("%s - %s" % (result.topics[0].text,
                                         result.topics[0].url))
         return "\n".join(res[:MAX_RESULT])
-    return u"Aucun résultat intéressant"
+    # If the API does not have return any usefull result, we do a real search in ddg
+    return html_request(msg)
 
+
+def html_request(msg):
+    site = urllib.urlopen('http://duckduckgo.com/html/?q=%s' % msg)
+    data = site.read()
+    soup = BeautifulSoup.BeautifulSoup(data)
+    site.close()
+
+    links = soup.findAll('div', {'class': "links_main links_deep"})
+    results = ""
+    for link in links[:MAX_RESULT]:
+        url = link.find("a").get("href")
+        contents = link.find("a").contents
+        title = ""
+        for data in contents:
+            if isinstance(data, BeautifulSoup.Tag):
+                title += " %s" % data.getString()
+            else:
+                title += " %s" % str(xhtml2text(data))
+        results += "%s - %s\n" % (title.strip(), url)
+
+    return results.strip()
 
 class CmdDDG(SyncModule):
     def __init__(self, bot):
