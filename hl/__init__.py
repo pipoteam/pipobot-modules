@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 #-*- coding: utf-8 -*-
 
-from model import HlList
+from model import HlList, HlListMembers
 from pipobot.lib.modules import SyncModule, defaultcmd, answercmd
 from pipobot.lib.known_users import KnownUser, minpermlvl
 
@@ -20,16 +20,17 @@ class HighLight(SyncModule):
                 desc=desc,
                 command='hl')
 
-    @answercmd(r'show (?P<plist>\w+)')
+    @answercmd(r'^show (?P<plist>\w+)')
     def aswer_show(self, sender, plist):
         hllist = self.bot.session.query(HlList).filter(HlList.name == plist).first()
         if not hllist:
             return _('I don\'t know that "%s" list' % plist)
         ret = _('list "%s"\'s members:' % plist)
-        ret += ", ".join(map(str, hllist.members))
+        for user in hllist.members:
+            ret += ' %s' % user.user
         return ret
 
-    @answercmd(r'show')
+    @answercmd(r'^show')
     def answer_showall(self, sender):
         hllists = self.bot.session.query(HlList).all()
         if not hllists:
@@ -37,7 +38,8 @@ class HighLight(SyncModule):
         ret = _("HighLight Lists:")
         for hllist in hllists:
             ret += "\n  %-31s" % hllist.name
-            ret += ", ".join(map(str, hllist.members))
+            for user in hllist.members:
+                ret += ' %s' % user.user
         return ret
 
     @answercmd(r'^set (?P<hllist>\w+) (?P<users>.*)')
@@ -47,115 +49,99 @@ class HighLight(SyncModule):
         unknownusers = []
         users = users.strip().split()
 
-        # We first check if users in the input users list are valid or not
         for user in users:
-            knownuser = KnownUser.get(user, self.bot, authviapseudo=True, in_live=False)
-            if knownuser is not None:
+            knownuser = KnownUser.get(user, self.bot)
+            if knownuser:
                 knownusers.append(knownuser)
             else:
                 unknownusers.append(user)
 
-        # If there are some invalid users
         if unknownusers:
-            ret += _("\nunknown users: %s" % " ".join(unknownusers))
-
-        # If we have no valid user to add
+            ret += _("\nunknown users: %s" % unknownusers)
         if not knownusers:
             ret += _("\n%s: You must provide at least one valid registered user" % sender)
             return ret.strip()
 
-        # Now we must add all knownusers to the hllist
-
-
         hllistentry = self.bot.session.query(HlList).filter(HlList.name == hllist).first()
-
-        # If the hllist does not exist, we create it
         if not hllistentry:
             hllistentry = HlList(hllist)
             self.bot.session.add(hllistentry)
-            ret += _('\nlist "%s" created' % hllist)
             self.bot.session.commit()
+            hllistentry = self.bot.session.query(HlList).filter(HlList.name == hllist).first()
+            ret += _('\nlist "%s" added' % hllist)
 
-        # Then we add all knownusers to the list
         for user in knownusers:
-            if user in hllistentry.members:
+            hllistmember = self.bot.session.query(HlListMembers).filter(HlListMembers.hlid == hllistentry.hlid).filter(HlListMembers.kuid == user.kuid).first()
+            if hllistmember:
                 ret += _('\n"%s" is already in list "%s"' % (user, hllistentry))
             else:
-                hllistentry.members.append(user)
-                self.bot.session.commit()
+                hllistmember = HlListMembers(hllistentry.hlid, user.kuid)
+                self.bot.session.add(hllistmember)
                 ret += _('\n"%s" added in list "%s"' % (user, hllistentry))
 
         self.bot.session.commit()
         return ret.strip()
 
-    @answercmd(r'rm (?P<hllist>\w+)', r'rm (?P<hllist>\w+) (?P<users>.*)')
+    @answercmd(r'^rm (?P<plist>\w+) (?P<users>.*)')
     @minpermlvl(2)
-    def answer_rm(self, sender, hllist, users=""):
-        ret = ''
-        # We search for the list <hllist>
-        hllist = self.bot.session.query(HlList).filter(HlList.name == hllist).first()
-
-        # If the list does not exist
+    def answer_rm(self, sender, plist, users):
+        hllistname = plist
+        hllist = self.bot.session.query(HlList).filter(HlList.name == hllistname).first()
         if not hllist:
             return _("%s: There is no such HighLight List" % sender)
+        ret = ''
 
         users = users.strip().split()
-        # If we want to remove users from the list
         if users:
             for user in users:
-                # We search the knownuser associated to the username "user"
-                knownuser = KnownUser.get(user, self.bot, authviapseudo=True, in_live=True)
-                # If there is no result
+                knownuser = KnownUser.get(user, self.bot)
                 if not knownuser:
                     ret += _('user "%s" is not even registered…\n' % user)
-                # if the user is not in the list
-                elif not knownuser in hllist.members:
+                    continue
+                hllistmember = self.bot.session.query(HlListMembers).filter(HlListMembers.hlid == hllist.hlid).filter(HlListMembers.kuid == knownuser.kuid).first()
+                if not hllistmember:
                     ret += _('user "%s" is not a member of this list\n' % knownuser)
                     continue
-                #if the user is in the list
-                else:
-                    hllist.members.delete(knownuser)
-                    ret += _('user "%s" has been deleted from list "%s"\n' % (knownuser, hllist))
-        # We remove the list
+                self.bot.session.delete(hllistmember)
+                ret += _('user "%s" has been deleted from list "%s"\n' % (knownuser, hllistname))
         else:
-            self.bot.session.delte(hllist)
+            for member in hllist.members:
+                self.bot.session.delete(member)
+                ret += _('user "%s" has been deleted from list "%s"\n' % (member.user, hllistname))
+            self.bot.session.delete(hllist)
             ret += _('list "%s" has been deleted' % hllistname)
-
         self.bot.session.commit()
         return ret.strip()
 
     @defaultcmd
     def answer(self, sender, message):
-        # !hl some people (: some messages)
         if not message:
             return self.desc
-
         knownusers = []
         unknownusers = []
-        hllistnames = []
         hllists = self.bot.session.query(HlList).all()
+        hllistnames = []
         for hllist in hllists:
             hllistnames.append(hllist.name)
         ret = 'HL:'
-        user_list, message = message.partition(":")[::2]
-        for user in user_list.split():
+        for user in message.split(':')[0].split(' '):
             if user in hllistnames:
                 for hllist in hllists:
                     if hllist.name == user:
-                        knownusers.extend(hllist.members)
+                        for knownuser in hllist.members:
+                            knownusers.append(knownuser.user)
                         break
             else:
-                knownuser = KnownUser.get(user, self.bot, authviapseudo=True, in_live=True)
+                knownuser = KnownUser.get(user, self.bot)
                 if knownuser:
                     knownusers.append(knownuser)
                 else:
                     unknownusers.append(user)
-
         for user in self.bot.occupants.users:
-            if KnownUser.get(user, self.bot, authviapseudo=True, in_live=True) in knownusers:
-                ret += ' %s ' % user
-        ret += " ".join(unknownusers)
-
-        if message.strip():
-            ret += u' → ' + message.strip()
+            if KnownUser.get(user, self.bot) in knownusers:
+                ret += ' %s' % user
+        for user in unknownusers:
+            ret += ' %s' % user
+        if ':' in message:
+            ret += ' => ' + message.split(':', 1)[1].strip()
         return ret
