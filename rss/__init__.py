@@ -17,7 +17,8 @@ class RSSNotifier(NotifyModule):
                 "remove": "rss remove [nom] : supprime totalement un flux RSS.",
                 "(dis/en)able [flux]": "active/désactive un flux",
                 "(un)mute": "affiche/n'affiche plus les nouvelles entrées RSS",
-                "list": "rss list : affiche tous les flux RSS"
+                "list": "rss list : affiche tous les flux RSS",
+                "twitter add": "twitter add [nom] : suit les messages de [nom] sur twitter"
                 }
 
         self.manager = Manager(self.db_path, bot)
