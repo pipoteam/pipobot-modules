@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import feedparser
+import twitter
 from parser import get_id, get_time
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -21,8 +22,12 @@ class Manager(object):
         Base.query = self.db_session.query_property()
         Base.metadata.create_all(bind=engine)
 
-    def add_feed(self, url, name):
-        f = Feed(url, name)
+
+    def add_feed(self, url, name, twitter=False):
+        if twitter:
+            f = Feed(name, name, twitter=True)
+        else:
+            f = Feed(url, name)
         self.db_session.add(f)
         try:
             self.db_session.commit()
@@ -39,20 +44,40 @@ class Manager(object):
         result = request.all()
 
         for feed in result:
-            parsed = feedparser.parse(feed.url)
-            for entry in parsed.entries:
-                id = get_id(entry)
-                t = get_time(entry)
-                e = Entry(id, entry.link, t, entry.title)
-                self.db_session.add(e)
-                feed.entries.append(e)
-                try:
-                    self.db_session.commit()
-                    if not silent:
-                        msg = "[%s] %s : %s" % (feed.name, entry.title, entry.link)
-                        self.bot.say(msg)
-                except (FlushError, IntegrityError):
-                    self.db_session.rollback()
+            if feed.twitter:
+                api = twitter.Api()
+                twits = api.GetUserTimeline(feed.name)
+                for twit in twits:
+                    # we discard answers to other twits
+                    if not twit.in_reply_to_user_id:
+                        txt = twit.GetText()
+                        id = "%s_%s" % (feed.name, twit.GetId())
+                        e = Entry(id, "", txt, "")
+                        self.db_session.add(e)
+                        feed.entries.append(e)
+                        try:
+                            self.db_session.commit()
+                            if not silent:
+                                msg = "[twitter: %s] %s" % (feed.name, txt)
+                                self.bot.say(msg)
+                        except (FlushError, IntegrityError):
+                            self.db_session.rollback()
+
+            else:
+                parsed = feedparser.parse(feed.url)
+                for entry in parsed.entries:
+                    id = "%s_%s" % (feed.name, get_id(entry))
+                    t = get_time(entry)
+                    e = Entry(id, entry.link, t, entry.title)
+                    self.db_session.add(e)
+                    feed.entries.append(e)
+                    try:
+                        self.db_session.commit()
+                        if not silent:
+                            msg = "[%s] %s : %s" % (feed.name, entry.title, entry.link)
+                            self.bot.say(msg)
+                    except (FlushError, IntegrityError):
+                        self.db_session.rollback()
 
     def add_entry(self, eid, url, date, title, feed):
         f = self.db_session.query(Feed).filter(Feed.name == feed).all()

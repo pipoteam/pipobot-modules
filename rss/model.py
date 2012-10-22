@@ -12,14 +12,19 @@ class Feed(Base):
     name = Column(String(250))
     active = Column(Boolean)
     entries = relationship("Entry", backref="feed_owner")
+    twitter = Column(Boolean)
 
-    def __init__(self, url, name):
+    def __init__(self, url, name, twitter=False):
         self.url = url
         self.name = name
+        self.twitter = twitter
         self.active = True
 
     def __str__(self):
-        return "%s : %s" % (self.name, self.url)
+        if self.twitter:
+            return "%s : Flux twitter https://twitter.com/%s" % (self.name, self.name)
+        else:
+            return "%s : %s" % (self.name, self.url)
 
 
 class Entry(Base):
