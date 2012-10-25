@@ -1,10 +1,9 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 
 import random
 import urllib
-from BeautifulSoup import BeautifulSoup
 import pipobot.lib.utils
+from BeautifulSoup import BeautifulSoup
 from pipobot.lib.abstract_modules import FortuneModule
 from pipobot.lib.module_test import ModuleTest
 

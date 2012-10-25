@@ -1,8 +1,8 @@
 #-*- coding: utf-8 -*-
 
+import wrapi
 from pipobot.lib.modules import SyncModule, answercmd
 from pipobot.lib.module_test import ModuleTest
-import wrapi
 
 class CmdWordRef(SyncModule):
     def __init__(self, bot):

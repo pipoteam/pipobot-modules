@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
+import datetime
 from sqlalchemy import Column, String, Integer, DateTime
 from pipobot.lib.bdd import Base
-import datetime
 
 
 class RepostUrl(Base):

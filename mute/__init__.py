@@ -1,9 +1,8 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 import xmpp
 import random
-from threading import Timer
 import pipobot.lib.utils
+from threading import Timer
 from pipobot.lib.modules import SyncModule, defaultcmd
 
 

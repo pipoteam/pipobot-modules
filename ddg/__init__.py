@@ -3,11 +3,9 @@
 import BeautifulSoup
 import urllib
 import simplejson
+import duckduckgo
 from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.utils import xhtml2text
-
-#API for duckduckgo : http://pypi.python.org/pypi/duckduckgo2
-import duckduckgo
 
 MAX_RESULT = 5
 

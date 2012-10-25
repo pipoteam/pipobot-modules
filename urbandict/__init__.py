@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from collections import deque
 import json
 import urllib
 from pipobot.lib.modules import SyncModule, answercmd
+from collections import deque
 
 BASE_URL = "http://www.urbandictionary.com/iphone/search/define"
 MAX_CACHE = 10 

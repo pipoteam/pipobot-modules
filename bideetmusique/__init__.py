@@ -1,14 +1,12 @@
-#! /usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 import urllib
-from BeautifulSoup import BeautifulSoup
 import threading
-
+import bandm_lib
+from BeautifulSoup import BeautifulSoup
 from pipobot.lib.modules import defaultcmd, answercmd
 from pipobot.lib.abstract_modules import NotifyModule
 from pipobot.lib.module_test import ModuleTest
-import bandm_lib
 
 
 class CmdBideEtMusique(NotifyModule):

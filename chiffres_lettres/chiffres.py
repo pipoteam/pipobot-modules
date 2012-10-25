@@ -2,8 +2,8 @@
 """ Module to define the 'countdown' game """
 import ast
 import operator as op
-from collections import namedtuple
 import random
+from collections import namedtuple
 
 CHOICES = range(1, 10) + [10, 25, 50, 75, 100]
 NB_OPERANDS = 6

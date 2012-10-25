@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """ Some functions used to parse content from www.bide-et-musique.com/ """
-from BeautifulSoup import BeautifulSoup
 import urllib
+from BeautifulSoup import BeautifulSoup
 from datetime import date
-
 from pipobot.lib.utils import xhtml2text
 
 

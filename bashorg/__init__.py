@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 """ A module to parse quotes from http://bash.org """
 

@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from mpd import CommandError, ConnectionError
 import pipobot.lib.exceptions
+from mpd import CommandError, ConnectionError
 from pipobot.lib.modules import defaultcmd
 from pipobot.lib.abstract_modules import NotifyModule
 from libmpd.BotMPD import BotMPD

@@ -1,9 +1,9 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
+import time
 from model import Blagueur
 from pipobot.lib.modules import SyncModule, defaultcmd
-import time
 
 
 class AbstractBlague(SyncModule):

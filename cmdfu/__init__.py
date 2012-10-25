@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 import urllib
 from pipobot.lib.modules import SyncModule, defaultcmd

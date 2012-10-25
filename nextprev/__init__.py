@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
+import core
 from pipobot.lib.modules import MultiSyncModule, defaultcmd
 from pipobot.lib.module_test import ModuleTest
-import core
 
 
 class CmdNextPrev(MultiSyncModule):
