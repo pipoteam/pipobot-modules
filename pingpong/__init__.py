@@ -29,7 +29,7 @@ class CmdPingPong(MultiSyncModule):
                     if self.known_ping.has_key(ping_name + "_" + sender):
                         time_ping = self.known_ping.pop(ping_name + "_" + sender)
                         t = time.time() - time_ping
-                        ret.add("Tu as mis %s secondes pour répondre au ping de %s." % (str(int(t)), ping_name))
+                        ret.append("Tu as mis %s secondes pour répondre au ping de %s." % (str(int(t)), ping_name))
                 if ret:
                     return "%s: %s" % (sender, "\n".join(ret))
             return "%s: !help pong" % (sender)

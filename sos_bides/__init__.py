@@ -19,7 +19,7 @@ class CmdSosBides(SyncModule):
     def answer(self, sender, message):
         url = urllib.urlopen("http://www.blaguemarrante.com/Blague")
         soup = BeautifulSoup(url.read())
-        html = soup.find('p').prettify()
+        html = soup.findAll('p')[1].prettify()
         html = re.sub('<[^>]*p>', '', html)
         html = re.sub('<br />', '\n', html)
         html = re.sub('(\n)+', '\n', html)

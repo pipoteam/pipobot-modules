@@ -21,7 +21,9 @@ class Haddock(SyncModule):
     def answer(self, sender, message):
         insult = random.choice(self.quotes).decode("utf-8")
         if message == self.bot.name:
-            res = u"%s: c'est toi qui est un %s" % (sender, insult)
+            res = u"%s: c'est toi qui es un %s" % (sender, insult)
         elif message != '':
             res = u"%s: %s" % (message, insult)
+        else:
+            res = insult
         return res
