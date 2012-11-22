@@ -17,12 +17,13 @@ class CmdSosBides(SyncModule):
 
     @defaultcmd
     def answer(self, sender, message):
-        url = urllib.urlopen("http://www.blaguemarrante.com/Blague")
+        url = urllib.urlopen("http://www.blablagues.net/hasard.html")
         soup = BeautifulSoup(url.read())
-        html = soup.findAll('p')[1].prettify()
-        html = re.sub('<[^>]*p>', '', html)
-        html = re.sub('<br />', '\n', html)
-        html = re.sub('(\n)+', '\n', html)
-        joke = html.split("<a")[0]
-        return xhtml2text(joke.strip())
+        html = soup.find("div", {"class": "blague"}).findAll("div")
+        res = u""
+        for div in html:
+            res += u"\n" + div.renderContents()
+        res = re.sub(u"<br />\r\n", u"\n", res)
+        res = re.sub(u"<[^>]*>", "", res)
+        return res.strip()
 
