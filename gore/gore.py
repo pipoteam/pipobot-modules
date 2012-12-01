@@ -11,7 +11,7 @@ from sqlalchemy.sql.expression import desc
 class CmdGore(SyncModule):
     """ Ajoute un point-gore à une personne présente sur le salon"""
     def __init__(self, bot):
-        desc = "gore <pseudo>\nAjoute un point gore à <pseudo> (10 s minimum d'intervalle)"
+        desc = u"gore <pseudo>\nAjoute un point gore à <pseudo> (10 s minimum d'intervalle)"
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
@@ -30,7 +30,7 @@ class CmdGore(SyncModule):
             return u"%s n'est pas là..." % message
 
         if sjid == jid:
-            return "On ne peut pas se donner des points gore !"
+            return u"On ne peut pas se donner des points gore !"
 
         temps = int(time.time())
         res = self.bot.session.query(GoreBase).filter(GoreBase.jid == jid).all()
