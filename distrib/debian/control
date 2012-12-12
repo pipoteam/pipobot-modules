@@ -1,0 +1,15 @@
+Source: pipobot-modules
+Section: net
+Priority: extra
+Maintainer: Vincent Duvert (VinDuv) <vincent@duvert.net>
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.9.1
+Homepage: https://github.com/pipoteam/pipobot-modules/
+
+Package: pipobot-modules
+Architecture: all
+Depends: pipobot (= 1.0.0), ${misc:Depends}
+Recommends: python-beautifulsoup
+Description: Modules for Pipobot
+ This package contains the main modules for the Pipobot
+ XMPP bot.

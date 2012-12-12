@@ -28,3 +28,11 @@ pip-log.txt
 
 #temp file
 *.swp
+
+# Debian packaging
+/debian
+*.debhelper
+*.substvars
+/distrib/debian/pipobot/
+/distrib/debian/*stamp*
+/distrib/debian/files
