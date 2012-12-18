@@ -15,7 +15,7 @@ class UrbanDict(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="urban")
+                            name="urban")
         self._cache = deque()
 
     def add_cache(self, request, result):

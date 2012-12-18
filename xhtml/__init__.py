@@ -11,7 +11,7 @@ class CmdXhtml(SyncModule):
                             bot,
                             desc=desc,
                             pm_allowed=False,
-                            command="xhtml",
+                            name="xhtml",
                             )
 
     @defaultcmd

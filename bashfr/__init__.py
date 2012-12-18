@@ -18,7 +18,7 @@ bashfr [n] : Affiche la quote [n] de bashfr"""
         FortuneModule.__init__(self,
                                bot,
                                desc=desc,
-                               command="bashfr",
+                               name="bashfr",
                                url_random="http://danstonchat.com/random.html",
                                url_indexed='http://danstonchat.com/%s.html',
                                lock_time=2,

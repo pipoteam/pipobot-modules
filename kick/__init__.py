@@ -11,7 +11,7 @@ class CmdKick(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="kick",
+                            name="kick",
                             pm_allowed=False
                             )
 

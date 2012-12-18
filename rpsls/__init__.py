@@ -38,7 +38,7 @@ rpsls (Rock|Paper|Scissor|Lizard|Spock) : pour jouer"""
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="rpsls")
+                            name="rpsls")
         self.p1 = None
         self.p2 = None
         self.running = False

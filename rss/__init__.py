@@ -24,7 +24,7 @@ class RSSNotifier(NotifyModule):
         self.manager = Manager(self.db_path, bot)
         NotifyModule.__init__(self,
                               bot,
-                              command="rss",
+                              name="rss",
                               desc=desc,
                               delay=300)
         self.manager.update(silent=True)

@@ -19,7 +19,7 @@ todo list [name] : affiche les todo de la liste [name]""",
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="todo")
+                            name="todo")
 
     @answercmd("list", "list (?P<listname>\S+)")
     def list(self, sender, listname=""):

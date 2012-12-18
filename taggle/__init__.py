@@ -14,7 +14,7 @@ class CmdTaggle(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="tg",
+                            name="tg",
                             )
 
     @defaultcmd

@@ -10,7 +10,7 @@ class CmdText2Ascii(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="t2a")
+                            name="t2a")
 
     @defaultcmd
     def answer(self, sender, message):
@@ -33,13 +33,20 @@ class CmdText2Ascii(SyncModule):
                 return {"text": asc, "monospace": True}
 
     def replace_accent(self, text):
-        to_replace = { 'a': ['à', 'â'],
+        to_replace = { 'a': ['à', 'â', 'ä'],
                     'e': ['é', 'è', 'ê', 'ë'],
                     'i': ['î', 'ï'],
                     'u': ['ù', 'ü', 'û'],
                     'o': ['ô', 'ö'],
                     'c': ['ç'],
                     'ae': ['æ'],
+                    'A': ['Â', 'Ä', 'À'],
+                    'E': ['Ê', 'Ë', 'É', 'È'],
+                    'I': ['Ï', 'Î'],
+                    'U': ['Û', 'Ü', 'Ù'],
+                    'O': ['Ô', 'Ö'],
+                    'C': ['Ç'],
+                    'AE': ['Æ'],
                     ' ': ['\'']}
         for (ch, wrong_ch) in to_replace.iteritems():
             for w_ch in wrong_ch:

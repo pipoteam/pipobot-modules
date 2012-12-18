@@ -13,7 +13,7 @@ class CmdTrac(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="trac",
+                            name="trac",
                             )
 
     @defaultcmd

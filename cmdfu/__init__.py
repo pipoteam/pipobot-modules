@@ -11,7 +11,7 @@ cmdfu : Retourne une commande aléatoire"""
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="cmdfu",
+                            name="cmdfu",
                             )
 
     @defaultcmd

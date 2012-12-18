@@ -12,7 +12,7 @@ roll [x,y,z] : renvoie un choix aléatoire entre x, y et z"""
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="roll"
+                            name="roll"
                             )
 
     @defaultcmd

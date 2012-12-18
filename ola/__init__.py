@@ -14,7 +14,7 @@ class Ola(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc="Fait la ola.",
-                            command="ola")
+                            name="ola")
 
     @defaultcmd
     def answer(self, sender, message):

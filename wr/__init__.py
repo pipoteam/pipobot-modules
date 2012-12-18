@@ -10,7 +10,7 @@ class CmdWordRef(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="wr")
+                            name="wr")
         self.wordref = wrapi.WordRef()
 
     @answercmd("lang")

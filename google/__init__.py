@@ -12,7 +12,7 @@ class CmdGoogle(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="google")
+                            name="google")
 
     @defaultcmd
     def answer(self, sender, message):

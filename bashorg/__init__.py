@@ -17,9 +17,9 @@ bashorg [n] : Show the quote [n] from bash.org"""
         FortuneModule.__init__(self,
                                bot,
                                desc=desc,
-                               command="bashorg",
+                               name="bashorg",
                                url_random="http://bash.org/?random",
-                               url_indexed='http://bash.org/?quote=%s',
+                               url_indexed='http://bash.org/?%s',
                                lock_time=2,
                                )
 

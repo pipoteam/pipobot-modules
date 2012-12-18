@@ -11,24 +11,24 @@ class Link(MultiSyncModule):
     _config = (("config_path", str, DEFAULT_CONFIG),)
 
     def __init__(self, bot):
-        commands = self.readconf(bot)
+        names = self.readconf(bot)
         MultiSyncModule.__init__(self,
                                  bot,
-                                 commands=commands)
+                                 names=names)
 
     def readconf(self, bot):
         #name, description and url associated to each link
         self.dico = {}
-        commands = {}
+        names = {}
 
         config = ConfigParser.RawConfigParser()
         config.read(self.config_path)
         for c in config.sections():
             self.dico[c] = {}
             self.dico[c]['desc'] = config.get(c, 'desc')
-            commands[c] = self.dico[c]['desc']
+            names[c] = self.dico[c]['desc']
             self.dico[c]['url'] = config.get(c, 'url')
-        return commands
+        return names
 
     @defaultcmd
     def answer(self, cmd, sender, message):

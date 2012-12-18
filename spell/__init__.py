@@ -13,7 +13,7 @@ spell suggest : donne les mots approchants"""
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="spell")
+                            name="spell")
 
     @defaultcmd
     def answer(self, sender, message):

@@ -8,12 +8,12 @@ from pipobot.lib.modules import SyncModule, defaultcmd
 
 class AbstractBlague(SyncModule):
     """ Modifie les scores de blague """
-    def __init__(self, bot, desc, command, autocongratulation, premier, operation):
+    def __init__(self, bot, desc, name, autocongratulation, premier, operation):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
                             pm_allowed=False,
-                            command=command,
+                            name=name,
                             )
         self.autocongratulation = autocongratulation
         self.premier = premier  # S’utilise avec un %s pour le pseudo

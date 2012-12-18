@@ -10,7 +10,7 @@ class Haddock(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="haddock")
+                            name="haddock")
         self.quotes = []
         path = os.path.join(os.path.dirname(__file__), 'bdd.txt')
         with open(path, 'r') as fichier:

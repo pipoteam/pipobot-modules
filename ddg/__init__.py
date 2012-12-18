@@ -57,7 +57,7 @@ class CmdDDG(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="ddg")
+                            name="ddg")
 
     @defaultcmd
     def answer(self, sender, message):

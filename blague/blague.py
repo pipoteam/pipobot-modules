@@ -17,7 +17,7 @@ class CmdBlague(AbstractBlague):
         AbstractBlague.__init__(self,
                                 bot,
                                 desc=desc,
-                                command="blague",
+                                name="blague",
                                 autocongratulation="Un peu de modestie, merde",
                                 premier=u"Félicitations %s, c'est ta première blague !",
                                 operation=operator.add)

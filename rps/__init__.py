@@ -13,7 +13,7 @@ rps (Rock|Paper|Scissor) : pour jouer"""
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="rps")
+                            name="rps")
         self.choices = ["Rock", "Paper", "Scissors"]
         self.players = 0
         self.manche = {}

@@ -16,7 +16,7 @@ class CmdRaced(SyncModule):
                             bot,
                             desc=desc,
                             pm_allowed=False,
-                            command="raced",
+                            name="raced",
                             )
 
     @defaultcmd

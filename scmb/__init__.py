@@ -16,7 +16,7 @@ scmb [n] : Affiche l'information [n]"""
         FortuneModule.__init__(self,
                                bot,
                                desc=desc,
-                               command="scmb",
+                               name="scmb",
                                url_random="http://www.secouchermoinsbete.fr/au-hasard",
                                url_indexed='http://www.secouchermoinsbete.fr/%s-content',
                                lock_time=5,

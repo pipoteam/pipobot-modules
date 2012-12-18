@@ -10,7 +10,7 @@ class CmdPioche(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="pioche")
+                            name="pioche")
 
     @defaultcmd
     def answer(self, sender, message):

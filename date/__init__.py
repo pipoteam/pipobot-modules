@@ -12,7 +12,7 @@ class CmdDate(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="date")
+                            name="date")
 
     @defaultcmd
     def answer(self, sender, message):

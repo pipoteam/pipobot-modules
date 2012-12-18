@@ -18,7 +18,7 @@ hg [repo] [rev] : affiche la révision [rev] du repo [repo]""" % (self.default)
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="hg")
+                            name="hg")
 
     @answercmd(r"")
     def answer_default(self, sender, message):

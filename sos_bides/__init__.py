@@ -13,7 +13,7 @@ class CmdSosBides(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="sos_bides")
+                            name="sos_bides")
 
     @defaultcmd
     def answer(self, sender, message):

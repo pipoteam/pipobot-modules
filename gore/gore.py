@@ -16,7 +16,7 @@ class CmdGore(SyncModule):
                             bot,
                             desc=desc,
                             pm_allowed=False,
-                            command="gore",
+                            name="gore",
                             )
 
     @defaultcmd
@@ -73,3 +73,4 @@ class CmdGore(SyncModule):
             return {"text": sc, "monospace": True}
         else:
             return "Aucun point gore..."
+

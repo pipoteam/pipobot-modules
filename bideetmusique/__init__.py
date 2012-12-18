@@ -23,7 +23,7 @@ class CmdBideEtMusique(NotifyModule):
         NotifyModule.__init__(self,
                               bot,
                               desc=desc,
-                              command=u"b&m",
+                              name=u"b&m",
                               delay=10,
                               )
         self.old = ""

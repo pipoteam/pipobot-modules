@@ -10,7 +10,7 @@ class CmdGetjid(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="getjid",
+                            name="getjid",
                             )
 
     @defaultcmd

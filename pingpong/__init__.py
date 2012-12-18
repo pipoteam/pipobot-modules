@@ -6,9 +6,9 @@ from pipobot.lib.modules import MultiSyncModule, defaultcmd
 
 class CmdPingPong(MultiSyncModule):
     def __init__(self, bot):
-        commands = {"ping": "ping [pseudo]\nPing quelqu'un qui est sur le salon",
+        names = {"ping": "ping [pseudo]\nPing quelqu'un qui est sur le salon",
                     "pong": "pong [pseudo]\nRépond au ping de [pseudo]"}
-        MultiSyncModule.__init__(self, bot, commands=commands)
+        MultiSyncModule.__init__(self, bot, names=names)
         self.known_ping = {}
 
     @defaultcmd

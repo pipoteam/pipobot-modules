@@ -11,7 +11,7 @@ class CmdMute(SyncModule):
         desc = u"mute [nom]\n[nom] ne peut plus parler sur le salon !!!"
         SyncModule.__init__(self,
                             bot,
-                            command="mute",
+                            name="mute",
                             pm_allowed=False,
                             desc=desc)
 

@@ -10,16 +10,16 @@ class CmdScores(SyncModule):
         desc = "score [module] [params]\nConsulte les scores pour le module [module]"
         SyncModule.__init__(self,
                             bot,
-                            desc=desc,
-                            command="score",
+                            desc,
+                            "score",
                             )
         self.avail_mods = {}
 
     def init_mods(self):
         if self.avail_mods == {}:
-            for module in self.bot.sync_mods:
+            for module in self.bot.modules:
                 if hasattr(module, "cmd_score"):
-                    self.avail_mods[module.command] = module.cmd_score
+                    self.avail_mods[module.name] = module.cmd_score
             self.desc += "\nModules disponibles : %s" % (", ".join(self.avail_mods.keys()))
 
     @defaultcmd

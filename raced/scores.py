@@ -13,7 +13,7 @@ class CmdRacedScores(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="racedres",
+                            name="racedres",
                             )
 
     @defaultcmd

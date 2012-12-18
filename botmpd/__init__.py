@@ -37,7 +37,7 @@ class CmdMpd(NotifyModule):
                               bot,
                               desc=desc,
                               pm_allowed=False,
-                              command="mpd",
+                              name="mpd",
                               delay=0)
 
         # To limit flood in logs : if the bot can't connect to the server, it will only be notified

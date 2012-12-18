@@ -27,7 +27,7 @@ unicode nom
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="unicode")
+                            name="unicode")
 
     @defaultcmd
     def answer(self, sender, message):

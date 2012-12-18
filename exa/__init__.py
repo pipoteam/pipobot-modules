@@ -13,7 +13,7 @@ class CmdExa(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="exa",
+                            name="exa",
                             )
 
     @defaultcmd

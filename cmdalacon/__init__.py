@@ -34,10 +34,10 @@ class CmdAlacon(MultiSyncModule):
     _config = (("config_path", str, DEFAULT_CONFIG),)
 
     def __init__(self, bot):
-        commands = self.readconf(bot)
+        names = self.readconf(bot)
         MultiSyncModule.__init__(self,
                                  bot,
-                                 commands=commands)
+                                 names=names)
 
     def extract_to(self, config, cmd, value, backup):
         try:
@@ -52,7 +52,7 @@ class CmdAlacon(MultiSyncModule):
         #name, description and actions associated to each command
         self.dico = {}
         #To initialize MultiSyncModule
-        commands = {}
+        names = {}
 
         config = ListConfigParser()
         config.read(self.config_path)
@@ -60,12 +60,12 @@ class CmdAlacon(MultiSyncModule):
             command_name = c.decode("utf-8")
             self.dico[command_name] = {}
             self.dico[command_name]['desc'] = config.get(c, 'desc')
-            commands[command_name] = self.dico[command_name]['desc']
+            names[command_name] = self.dico[command_name]['desc']
             self.dico[command_name]['toNobody'] = config.get(c, 'toNobody') if type(config.get(c, 'toNobody')) == list else [config.get(c, 'toNobody')]
             self.extract_to(config, c, "toSender", "toNobody")
             self.extract_to(config, c, "toBot", "toNobody")
             self.extract_to(config, c, "toSomebody", "toNobody")
-        return commands
+        return names
 
     @defaultcmd
     def answer(self, cmd, sender, message):
