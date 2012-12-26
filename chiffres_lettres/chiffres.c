@@ -4,6 +4,8 @@ Implementation in C of the algorithm to solve "Le compte est bon"
 With python interface
 
 */
+//#include <Python.h>
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -19,7 +21,11 @@ struct ast {
     int n;
 }; /* Basic ast structure */
 
-/* Intermediate function to generate ast for operation */
+/*
+ * Intermediate functions to manuipulate ast structures
+ */
+
+/* Generate an ast structure suitable for an operation */
 struct ast* gen_ast_op(struct ast* left, struct ast* right, enum operator op, int result)
 {
     struct ast* ast ; 
@@ -30,16 +36,58 @@ struct ast* gen_ast_op(struct ast* left, struct ast* right, enum operator op, in
     ast->n = result ;
     return ast ;
 }
+
+/* Recursive free of an ast structure and its left and right childs */
+void free_ast(struct ast* ast)
+{
+    if (ast->left != NULL) {
+        free_ast(ast->left) ;
+    }
+
+    if (ast->right != NULL) {
+        free_ast(ast->right) ;
+    }
+
+    free(ast) ;
+}
  
-// Solving function
-void solve(struct ast* digits[], int num_digit, int total, struct ast* best)
+/* Recursive copy of an ast structure and its left and right childs */
+struct ast* cpy_ast(struct ast* src)
+{
+    struct ast* left ;
+    struct ast* right ;
+    struct ast* dest ;
+    left = (struct ast*) NULL ;
+    right = (struct ast*) NULL ;
+
+    if (src->left != NULL)
+        left = cpy_ast(src->left) ;
+
+    if (src->right != NULL)
+        right = cpy_ast(src->right) ;
+
+    dest = malloc(sizeof(struct ast)) ;
+    memcpy(dest, src, sizeof(struct ast)) ; 
+    dest->left = (void*) left ;
+    dest->right = (void*) right ;
+
+    return dest ;
+}
+
+/* 
+ * Solving function 
+ */
+void solve(struct ast* digits[], int num_digit, int total, struct ast** best)
 {
     int i, j, k, l, r;
 
     /* Keep trace of the best result found */
     for (i=0; i < num_digit; i++) {
-        if (best->n == -1 || abs(digits[i]->n -total) < abs(best->n - total)) {
-            memcpy(best, digits[i], sizeof(struct ast)) ;
+        if (*best == NULL || abs(digits[i]->n - total) < abs((*best)->n - total)) {
+            if (*best != NULL) {
+                free_ast(*best) ;
+            }
+            *best = cpy_ast(digits[i]) ;
         }
     }
 
@@ -76,19 +124,25 @@ void solve(struct ast* digits[], int num_digit, int total, struct ast* best)
             /* Test for operations */
             ndigits[l] = gen_ast_op(a, b, ADD, a->n+b->n) ;
             solve(ndigits, (num_digit-1), total, best) ;
+            free(ndigits[l]) ;
 
             if (a->n != b->n) {
                 ndigits[l] = gen_ast_op(a, b, SUB, a->n-b->n) ;
                 solve(ndigits, (num_digit-1), total, best) ;
+                free(ndigits[l]) ;
             }
             
             ndigits[l] = gen_ast_op(a, b, MULT, a->n*b->n) ;
             solve(ndigits, (num_digit-1), total, best) ;
+            free(ndigits[l]) ;
 
             if (a->n % b->n == 0) {
-                ndigits[l] = gen_ast_op(a, b, ADD, a->n+b->n) ;
+                ndigits[l] = gen_ast_op(a, b, DIV, a->n/b->n) ;
                 solve(ndigits, (num_digit-1), total, best) ;
+                free(ndigits[l]) ;
             }
+
+            free(ndigits) ;
         }
     }
 }
@@ -122,16 +176,17 @@ void printer_lisp(struct ast* ast) {
             
 int main(int argc, char* argv[])
 {
-    int i ;
-    struct ast best ;
-    best.n = -1 ;
+    /* Initial numbers */
     int chiffres[] = {4, 5, 9, 25, 50, 75} ;
     int total = 703 ;
     int nchiffres  = 6 ;
 
+    /* Prepare structures for solve */
     struct ast** digits = malloc(nchiffres * sizeof(struct ast*)) ;
     struct ast* digit ;
+    struct ast* best = NULL;
 
+    int i ;
     for (i=0; i<nchiffres; i++) {
         digit = malloc(sizeof(struct ast)) ;
         digit->left  = NULL ;
@@ -141,9 +196,19 @@ int main(int argc, char* argv[])
         digits[i] = digit ;
     }
 
+    /* Solve ! */
     solve(digits, nchiffres, total, &best) ;
+
+    /* Show the results */
     printf("A fini\n") ;
-    printf("Best : %d\n", best.n) ;
-    printer_lisp(&best) ;
+    printf("Best : %d\n", best->n) ;
+    printer_lisp(best) ;
     printf("\n") ;
+
+    /* Free digits and best */
+    for (i=0; i<nchiffres; i++) {
+        free(digits[i]) ;
+    }
+    free(digits) ;
+    free_ast(best) ;
 }
