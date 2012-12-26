@@ -5,6 +5,7 @@
 from pipobot.lib.utils import xhtml2text
 from BeautifulSoup import BeautifulSoup
 from pipobot.lib.abstract_modules import FortuneModule
+from pipobot.lib.module_test import ModuleTest
 
 
 class CmdBashorg(FortuneModule):
@@ -38,4 +39,23 @@ bashorg [n] : Show the quote [n] from bash.org"""
                 nb = xhtml2text(unicode(elt.findAll("b")[0].text))
                 break
 
-        return "%s :\n %s" % (nb, content)
+        return "bashorg %s :\n%s" % (nb, content)
+
+
+class BashfOrgTest(ModuleTest):
+    def test_bashorg_ok(self):
+        bot_rep = self.bot_answer("!bashorg 1729")
+        expected=(u"bashorg #1729 :\n"
+                  u"<blinkchik> can i become a bot and how??")
+        self.assertEqual(bot_rep, expected)
+
+    def test_bashorg_random(self):
+        bot_rep = self.bot_answer("!bashorg")
+        expected_re = [r"bashorg #(\d+) :(.*)",
+                       r"The quote does not exist !"]
+        self.assertRegexpListMatches(bot_rep, expected_re)
+
+    def test_bashorg_404(self):
+        bot_rep = self.bot_answer("!bashorg 42")
+        expected = "The quote does not exist !"
+        self.assertEqual(bot_rep, expected)

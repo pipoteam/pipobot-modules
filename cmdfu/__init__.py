@@ -2,6 +2,7 @@
 #-*- coding: utf-8 -*-
 import urllib
 from pipobot.lib.modules import SyncModule, defaultcmd
+from pipobot.lib.module_test import ModuleTest
 
 
 class CmdCmdFu(SyncModule):
@@ -20,3 +21,8 @@ cmdfu : Retourne une commande aléatoire"""
         url = urllib.urlopen(url)
         contenu = url.read()
         return "\n".join(contenu.strip().split("\n")[2:])
+
+
+class TestCmdfu(ModuleTest):
+    def test_cmdfu(self):
+        self.assertNotEqual(self.bot_answer("!cmdfu"), "")

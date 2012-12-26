@@ -2,6 +2,8 @@
 #-*- coding: utf-8 -*-
 
 from pipobot.lib.modules import ListenModule
+from pipobot.lib.module_test import ModuleTest
+
 orig_ducks = [u"\_°<", u">°_/"]
 
 
@@ -18,3 +20,14 @@ class CmdCoin(ListenModule):
         if coins > 0:
             pans = (" *PAN*" * coins).strip()
             return u"%s : %s" % (sender, pans)
+
+
+class TestCoin(ModuleTest):
+    def test_ok(self):
+        rep = self.bot_answer("\_°< \_O< >o_/ \_+<", "bob")
+        self.assertEqual(rep,
+                         u"bob : *PAN* *PAN* *PAN* *PAN*")
+
+    def test_none(self):
+        rep = self.bot_answer("a duck-free message")
+        self.assertEqual(rep, "")

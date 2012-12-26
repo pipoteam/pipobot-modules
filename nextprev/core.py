@@ -3,92 +3,49 @@
 import re
 import urllib
 import datetime
-import urllib2
-import gzip
-from StringIO import StringIO
+
+alias = { 'himym': 'how i met your mother' }
+baseurl = "http://services.tvrage.com/tools/quickinfo.php?show=%s"
 
 
-class AppURLopener(urllib.FancyURLopener):
-    def prompt_user_passwd(self, host, realm):
-        return ('', '')
-
-    version = "Mozilla/5.0 (X11; U; Linux; fr-fr) AppleWebKit/531+ (KHTML, like Gecko) Safari/531.2+ Midori/0.2"
-urllib._urlopener = AppURLopener()
-
-alias = {'sgu': 'stargate-universe',
-         'tbbt': 'the-big-bang-theory',
-         'itcrowd': 'the-it-crowd',
-         'southpark': 'south-park',
-         'fma': 'fullmetal-alchemist-brotherhood',
-         'himym': 'how-i-met-your-mother',
-         'to': 'the-office-us',
-         'simpsons': 'the-simpsons',
-         'seeker': 'legend-of-the-seeker',
-         'sp': 'south-park',
-         'clonewars': 'star-wars-the-clone-wars'
-         }
+def convert_episode(raw):
+    match = re.match("(?P<season>\d+)x(?P<episode>\d+)\^(?P<title>[^\^]*)\^(?P<date>.*)", raw)
+    res = match.groupdict()
+    try:
+        res["date"] = datetime.datetime.strptime(res["date"], "%b/%d/%Y")
+        res["date"] = res["date"].strftime("%d/%m/%y")
+    except ValueError:
+        #If we can't convert the date, we keep it as it was
+        pass
+    return "%(season)sx%(episode)s: %(title)s le %(date)s" % res
 
 
 def getdata(message, isnext):
     res = ""
-    precornext = u"suivant" if isnext else u"précédent"
+    if message in alias:
+        message = alias[message]
+    show_url = baseurl % (message.replace(" ", "%20"))
+    response = urllib.urlopen(show_url)
+    content = response.readlines()
+    response.close()
+    data = {}
+    if content == ['No Show Results Were Found For "%s"' % message]:
+        return u"Je n'ai aucune information sur la série %s" % message
+    for line in content:
+        key, value = line.split("@", 1)
+        data[key] = value.strip()
+
     if isnext:
-        reep = re.compile('Next episode: </strong>[^<]*<span class="a2"><a href="http://[^>]*" target="_blank" rel="nofollow">([^<]*)', re.M)
-        redate = re.compile('Date:</td>[^<td]*<td nowrap class="nextEpInfo" width="300">([^</]*)', re.M)
-        reseason = re.compile('Season:</td>[^<td]*<td class="nextEpInfo"  width="300">([^</]*)', re.M)
-        renum = re.compile('Number:</td>[^<td]*<td class="nextEpInfo"  width="300">([^</]*)', re.M)
-        reparachute = re.compile('However, our last information about it is: <br><br><b>([^<]*)', re.M)
+        if data["Status"] == "Canceled/Ended":
+            return u"Désolé mais la série %s est terminée." % (data["Show Name"])
+        if "Next Episode" in data:
+            data_episode = convert_episode(data["Next Episode"])
+            return u"Prochain épisode de %s: %s." % (data["Show Name"], data_episode)
+        else:
+            return u"Aucune date pour un prochain épisode :s."
     else:
-        reep = re.compile('Previous episode: </strong>[^<]*<span class="a2"><a href="http://[^>]*" target="_blank" rel="nofollow">([^<]*)', re.M)
-        redate = re.compile('Date:</td>[^<td]*<td nowrap class="nextEpInfo"  width="300">([^</]*)', re.M)
-        reseason = re.compile('Season:</td>[^<td]*<td class="nextEpInfo"  width="300">([^</]*)', re.M)
-        renum = re.compile('Number:</td>[^<td]*<td class="nextEpInfo" width="300">([^</]*)', re.M)
-        reparachute = re.compile('However, our last information about it is: <br><br><b>([^<]*)', re.M)
-    for sh in message.split(';'):
-        sh = sh.strip()
-        try:
-            show = alias[sh].lower()
-        except KeyError:
-            show = sh
-        show = show.replace(' ', '-').lower()
-        if show == "":
-            continue
-        try:
-            response = urllib2.urlopen("http://next-episode.net/%s" % show)
-            if response.info().get("Content-Encoding") == "gzip":
-                buf = StringIO(response.read())
-                f = gzip.GzipFile(fileobj=buf)
-                html = f.read()
-            else:
-                html = response.read()
-            response.close()
-
-            title = 'Pas de titre'
-            if html == u"Sorry. The url you are looking for is non existent.":
-                res += u"Le show %s n'existe pas\n" % sh
-
-            date = redate.search(html).group(1)
-            # Format : Thu Sep 23, 2010
-            date = datetime.datetime.strptime(date, "%a %b %d, %Y")
-            date = date.strftime("%d/%m/%Y")
-
-            res += u"Episode %s de %s : %sx%s : %s diffusé le %s\n" %  \
-                (precornext,
-                   sh,
-                   reseason.search(html).group(1),
-                   renum.search(html).group(1).zfill(2),
-                   reep.search(html).group(1),
-                   date)
-        except IOError:
-            res += u"Le show %s n'existe pas\n" % sh
-        except AttributeError:
-            # Ptet que c'est le show qui diffuse plus
-            t = reparachute.search(html)
-            if t:
-                res += u"Rien de prévu pour %s… Dernières infos : %s\n" % (sh, t.group(1))
-            else:
-                res += u"Beenn euh ca existe mais la page de %s est pas correcte\n" % sh
-    if res != "":
-        return res[0:-1]
-    else:
-        return ""
+        if "Latest Episode" in data:
+            data_episode = convert_episode(data["Latest Episode"])
+            return u"Précédent épisode de %s: %s." % (data["Show Name"], data_episode)
+        else:
+            return u"Aucune info disponible."

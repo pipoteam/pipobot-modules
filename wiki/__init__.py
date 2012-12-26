@@ -4,7 +4,10 @@
 import json
 import urllib
 from pipobot.lib.modules import SyncModule, defaultcmd
+from pipobot.lib.module_test import ModuleTest
 from pipobot.lib.utils import xhtml2text
+
+NOT_FOUND = u"Rien de trouvé :'("
 
 
 class CmdWiki(SyncModule):
@@ -26,6 +29,17 @@ class CmdWiki(SyncModule):
             snippet = xhtml2text(js["query"]["search"][0]["snippet"])
             #Removing prononciation
             splitted = snippet
-            return snippet.replace("  ", " ")
-        except KeyError, IndexError:
-            return u"Rien de trouvé :'("
+            clean = snippet.replace("  ", " ")
+            return clean if clean != "" else NOT_FOUND
+        except (KeyError, IndexError):
+            return NOT_FOUND
+
+
+class TestWiki(ModuleTest):
+    def test_ok(self):
+        rep = self.bot_answer("!wiki pipo")
+        self.assertIn("pipo", rep)
+
+    def test_ko(self):
+        rep = self.bot_answer("!wiki pipoteam")
+        self.assertEqual(rep, u"Rien de trouvé :'(")

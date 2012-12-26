@@ -2,6 +2,7 @@
 #-*- coding: utf-8 -*-
 import random
 from pipobot.lib.modules import SyncModule, defaultcmd
+from pipobot.lib.module_test import ModuleTest
 
 
 class CmdPioche(SyncModule):
@@ -18,3 +19,9 @@ class CmdPioche(SyncModule):
         couleurs = ["pique", "coeur", "carreau", "trèfle"]
         noms = [str(i) for i in range(2, 11)] + ["Valet", "Dame", "Roi", "As"]
         return noms[n % 13] + " de " + couleurs[n / 13]
+
+
+class TestPioche(ModuleTest):
+    def test_pioche(self):
+        rep = self.bot_answer("!pioche")
+        self.assertRegexpMatches(rep, "\S+ de (pique|coeur|trèfle|carreau)")
