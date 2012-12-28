@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 import os
 import string
@@ -22,7 +21,7 @@ pendu played : affiche la liste des lettres déjà jouées"""
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="pendu")
+                            name="pendu")
         self.pendu = Pendu("")
 
     @answercmd("init", "init (?P<word>\w+)")

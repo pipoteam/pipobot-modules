@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 
 import time
@@ -13,7 +12,7 @@ class CmdDate(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="date")
+                            name="date")
 
     @defaultcmd
     def answer(self, sender, message):

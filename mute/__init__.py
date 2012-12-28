@@ -1,9 +1,8 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 import xmpp
 import random
-from threading import Timer
 import pipobot.lib.utils
+from threading import Timer
 from pipobot.lib.modules import SyncModule, defaultcmd
 
 
@@ -12,7 +11,7 @@ class CmdMute(SyncModule):
         desc = u"mute [nom]\n[nom] ne peut plus parler sur le salon !!!"
         SyncModule.__init__(self,
                             bot,
-                            command="mute",
+                            name="mute",
                             pm_allowed=False,
                             desc=desc)
 

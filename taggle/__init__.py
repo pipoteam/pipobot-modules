@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 import sys
 import time
@@ -15,7 +14,7 @@ class CmdTaggle(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="tg",
+                            name="tg",
                             )
 
     @defaultcmd

@@ -1,15 +1,16 @@
 #-*- coding: utf-8 -*-
 """ A module to parse quote extracted from http://danstonchat.com/ """
 
-from BeautifulSoup import BeautifulSoup
 import random
 import pipobot.lib.utils
+from BeautifulSoup import BeautifulSoup
 from pipobot.lib.abstract_modules import FortuneModule
 from pipobot.lib.module_test import ModuleTest
 
 
 class CmdBashfr(FortuneModule):
     """A module to parse bashfr quotes"""
+
     def __init__(self, bot):
         desc = """Pour lire des quotes bashfr
 bashfr : Retourne une quote aléatoire de bashfr.
@@ -17,7 +18,7 @@ bashfr [n] : Affiche la quote [n] de bashfr"""
         FortuneModule.__init__(self,
                                bot,
                                desc=desc,
-                               command="bashfr",
+                               name="bashfr",
                                url_random="http://danstonchat.com/random.html",
                                url_indexed='http://danstonchat.com/%s.html',
                                lock_time=2,

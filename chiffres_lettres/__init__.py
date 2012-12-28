@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 import logging
@@ -23,7 +22,7 @@ class ChiffresCmd(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="chiffres")
+                            name="chiffres")
 
         # Activated printers and their names
         self.printers = {'br': ChiffresCmd.pretty_br,
@@ -198,7 +197,7 @@ class LettresCmd(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="lettres")
+                            name="lettres")
 
     @answercmd("init")
     def init(self, sender):

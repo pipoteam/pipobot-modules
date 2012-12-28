@@ -21,7 +21,7 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="dette",
+                            name="dette",
                             )
 
     @defaultcmd

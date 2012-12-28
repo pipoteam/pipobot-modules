@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 
 import pipobot.lib.utils
@@ -20,7 +19,7 @@ vdm [n] : Affiche la vdm [n]"""
         FortuneModule.__init__(self,
                                bot,
                                desc=desc,
-                               command="vdm",
+                               name="vdm",
                                url_random="http://www.viedemerde.fr/aleatoire",
                                url_indexed="http://www.viedemerde.fr/travail/%s",
                                lock_time=2,

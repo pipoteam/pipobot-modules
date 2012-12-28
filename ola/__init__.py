@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 import random
 from pipobot.lib.modules import SyncModule, defaultcmd
@@ -15,7 +14,7 @@ class Ola(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc="Fait la ola.",
-                            command="ola")
+                            name="ola")
 
     @defaultcmd
     def answer(self, sender, message):

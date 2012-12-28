@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """ Some functions used to parse content from www.bide-et-musique.com/ """
-from BeautifulSoup import BeautifulSoup
 import urllib
+from BeautifulSoup import BeautifulSoup
 from datetime import date
-
 from pipobot.lib.utils import xhtml2text
 
 
@@ -17,8 +16,8 @@ class AppURLopener(urllib.FancyURLopener):
 PLAYLIST = 'http://www.bide-et-musique.com/playlist.rss'
 PROGS = "http://www.bide-et-musique.com/programme-webradio.html"
 SHOWS = "http://www.bide-et-musique.com/grille.html"
-PROG_ID = {"next": 1,
-           "prev": 2}
+PROG_ID = {"next": 2,
+           "prev": 3}
 HOME_PAGE = "http://www.bide-et-musique.com/programme-webradio.html"
 
 

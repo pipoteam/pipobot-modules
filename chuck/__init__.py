@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 
 import pipobot.lib.utils
@@ -14,7 +13,7 @@ chuck [n] : Affiche le fact [n]"""
         FortuneModule.__init__(self,
                                bot,
                                desc=desc,
-                               command="chuck",
+                               name="chuck",
                                url_random="http://www.chucknorrisfacts.fr/index.php?p=parcourir&tri=aleatoire",
                                url_indexed="http://www.chucknorrisfacts.fr/index.php?p=detail_fact&fact=%s",
                                lock_time=2,

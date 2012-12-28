@@ -1,19 +1,19 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
+import time
 from model import Blagueur
 from pipobot.lib.modules import SyncModule, defaultcmd
-import time
 
 
 class AbstractBlague(SyncModule):
     """ Modifie les scores de blague """
-    def __init__(self, bot, desc, command, autocongratulation, premier, operation):
+    def __init__(self, bot, desc, name, autocongratulation, premier, operation):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
                             pm_allowed=False,
-                            command=command,
+                            name=name,
                             )
         self.autocongratulation = autocongratulation
         self.premier = premier  # S’utilise avec un %s pour le pseudo

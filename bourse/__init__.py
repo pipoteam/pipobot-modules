@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 
 import csv
@@ -24,7 +23,7 @@ Valeurs disponibles: %s""" % (', '.join(VALUES.keys()))
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="bourse")
+                            name="bourse")
 
     @defaultcmd
     def answer(self, sender, message):

@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 
 import json
@@ -16,7 +15,7 @@ class CmdWiki(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="wiki")
+                            name="wiki")
 
     @defaultcmd
     def answer(self, sender, message):

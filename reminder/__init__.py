@@ -18,7 +18,7 @@ remind list all : affiche toutes les alertes""",
                 }
         NotifyModule.__init__(self, bot,
                               desc=desc,
-                              command="remind",
+                              name="remind",
                               delay=10)
         self.lastcheck = time.time()
         self._mute = False

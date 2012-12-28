@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 import re
-from email.errors import HeaderParseError
-from email.parser import Parser
 import binascii
 import email.base64mime
 import email.quoprimime
+from email.errors import HeaderParseError
+from email.parser import Parser
 
 # The following code is from the email.header file, modified to correctly
 # handle the decoding of some specific headers. (See Python bug #1079,

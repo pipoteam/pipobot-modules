@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 import urllib
-from xml.dom import minidom
 import config
+from xml.dom import minidom
 
 
 class UnknownEmission(Exception):

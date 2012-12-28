@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 
 from model import HlList, HlListMembers
@@ -18,7 +17,7 @@ class HighLight(SyncModule):
         SyncModule.__init__(self,
                 bot,
                 desc=desc,
-                command='hl')
+                name='hl')
 
     @answercmd(r'^show (?P<plist>\w+)')
     def aswer_show(self, sender, plist):

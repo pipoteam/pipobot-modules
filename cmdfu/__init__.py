@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 import urllib
 from pipobot.lib.modules import SyncModule, defaultcmd
@@ -12,7 +11,7 @@ cmdfu : Retourne une commande aléatoire"""
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="cmdfu",
+                            name="cmdfu",
                             )
 
     @defaultcmd

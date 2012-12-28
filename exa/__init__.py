@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 
 import BeautifulSoup
@@ -14,7 +13,7 @@ class CmdExa(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="exa",
+                            name="exa",
                             )
 
     @defaultcmd

@@ -14,7 +14,7 @@ class CmdBlame(AbstractBlague):
         AbstractBlague.__init__(self,
                                 bot,
                                 desc=desc,
-                                command="blame",
+                                name="blame",
                                 autocongratulation="Oui, c’est bien de reconnaitre ses erreurs. Mais tu ferais mieux de juste de taire ;)",
                                 premier=u"Ah, ben bravo %s, tu commences fort…",
                                 operation=operator.sub)

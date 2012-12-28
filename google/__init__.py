@@ -1,11 +1,9 @@
-#!/usr/bin/env python
 #-*- coding: utf8 -*-
 import urllib
 import simplejson
+import pipobot.lib.utils
 from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.module_test import ModuleTest
-
-import pipobot.lib.utils
 
 
 class CmdGoogle(SyncModule):
@@ -14,7 +12,7 @@ class CmdGoogle(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="google")
+                            name="google")
 
     @defaultcmd
     def answer(self, sender, message):

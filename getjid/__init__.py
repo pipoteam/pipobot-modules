@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.module_test import ModuleTest
@@ -11,7 +10,7 @@ class CmdGetjid(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="getjid",
+                            name="getjid",
                             )
 
     @defaultcmd

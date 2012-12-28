@@ -1,9 +1,9 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
+import time
 from model import Racer
 from pipobot.lib.modules import SyncModule, defaultcmd
-import time
 from sqlalchemy import func
 from sqlalchemy.sql.expression import desc
 
@@ -16,7 +16,7 @@ class CmdRaced(SyncModule):
                             bot,
                             desc=desc,
                             pm_allowed=False,
-                            command="raced",
+                            name="raced",
                             )
 
     @defaultcmd

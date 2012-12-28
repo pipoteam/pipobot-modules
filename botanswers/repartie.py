@@ -23,7 +23,8 @@ Aujourd'hui, j'ai mangé une pomme.
 Cela ne me touche même pas.
 I see your lips moving but all I hear is blah blah blah.
 Putain, ce que tu peux être chiant des fois.
-Hum désolé, t'étais en train de me dire quelquechose ?"""
+Hum désolé, t'étais en train de me dire quelquechose ?
+Je comprends tout à fait tes arguments mais je m'en tape"""
 
 indirect = u"""N'essaye pas de parler de moi dans mon dos !
 Taggle !
@@ -34,7 +35,8 @@ Moi tu sais que je fais que ce que l'on me demande de faire
 On parle de moi ?
 T'as pas l'impression de parler dans le vide ?
 Tu vois ça, c'est ta mère et ça, c'est ma bite.
-Hé les gars, qui a laissé entrer ce boulet ? """
+Hé les gars, qui a laissé entrer ce boulet ?
+Je vais faire comme si je n'avais rien entendu"""
 
 question = u"""Oui oui oui !!!
 Je ne sais pas du tout.
@@ -46,4 +48,7 @@ Tu pourrais poser des questions compréhensibles la prochaine fois ?
 C'est tellement évident que je ne répondrai même pas !
 Rien à secouer.
 Demande à ta mère.
-Est-ce que je te demande comment on fait les enfants moi ?"""
+Est-ce que je te demande comment on fait les enfants moi ?
+Je t'en pose des questions ?
+Non
+Pas du tout"""

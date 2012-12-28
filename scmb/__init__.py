@@ -1,10 +1,9 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 
 import random
 import urllib
-from BeautifulSoup import BeautifulSoup
 import pipobot.lib.utils
+from BeautifulSoup import BeautifulSoup
 from pipobot.lib.abstract_modules import FortuneModule
 from pipobot.lib.module_test import ModuleTest
 
@@ -17,7 +16,7 @@ scmb [n] : Affiche l'information [n]"""
         FortuneModule.__init__(self,
                                bot,
                                desc=desc,
-                               command="scmb",
+                               name="scmb",
                                url_random="http://www.secouchermoinsbete.fr/au-hasard",
                                url_indexed='http://www.secouchermoinsbete.fr/%s-content',
                                lock_time=5,

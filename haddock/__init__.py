@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 import random
 import os
@@ -11,7 +10,7 @@ class Haddock(SyncModule):
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="haddock")
+                            name="haddock")
         self.quotes = []
         path = os.path.join(os.path.dirname(__file__), 'bdd.txt')
         with open(path, 'r') as fichier:
@@ -22,7 +21,9 @@ class Haddock(SyncModule):
     def answer(self, sender, message):
         insult = random.choice(self.quotes).decode("utf-8")
         if message == self.bot.name:
-            res = u"%s: c'est toi qui est un %s" % (sender, insult)
+            res = u"%s: c'est toi qui es un %s" % (sender, insult)
         elif message != '':
             res = u"%s: %s" % (message, insult)
+        else:
+            res = insult
         return res

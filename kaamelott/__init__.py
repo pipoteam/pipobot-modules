@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 import ConfigParser
 import os
@@ -18,14 +17,14 @@ class ListConfigParser(ConfigParser.RawConfigParser):
 
 class Kaamelott(MultiSyncModule):
     def __init__(self, bot):
-        commands = self.readconf()
+        names = self.readconf()
         MultiSyncModule.__init__(self,
                                  bot,
-                                 commands=commands)
+                                 names=names)
 
     def readconf(self):
         config_file = os.path.join(os.path.dirname(__file__), 'kaamelott.cfg')
-        commands = {}
+        names = {}
         self.dico = {}
         config = ListConfigParser()
         config.read(config_file)
@@ -35,8 +34,8 @@ class Kaamelott(MultiSyncModule):
             self.dico[c]['desc'] = config.get(c, 'desc')
             quote = config.get(c, 'citation')
             self.dico[c]['citation'] = quote if type(quote) is list  else [config.get(c, 'citation')]
-            commands[c] = self.dico[c]['desc']
-        return commands
+            names[c] = self.dico[c]['desc']
+        return names
 
     @defaultcmd
     def answer(self, cmd, sender, message):

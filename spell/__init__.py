@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 import enchant
 from pipobot.lib.modules import SyncModule, defaultcmd
@@ -14,7 +13,7 @@ spell suggest : donne les mots approchants"""
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="spell")
+                            name="spell")
 
     @defaultcmd
     def answer(self, sender, message):

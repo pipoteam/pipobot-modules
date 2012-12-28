@@ -13,7 +13,7 @@ Les chaînes disponibles sont les suivantes :
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
-                            command="tv")
+                            name="tv")
 
     @answercmd("channels")
     def channels(self, sender):

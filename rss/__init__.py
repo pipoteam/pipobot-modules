@@ -17,15 +17,16 @@ class RSSNotifier(NotifyModule):
                 "remove": "rss remove [nom] : supprime totalement un flux RSS.",
                 "(dis/en)able [flux]": "active/désactive un flux",
                 "(un)mute": "affiche/n'affiche plus les nouvelles entrées RSS",
-                "list": "rss list : affiche tous les flux RSS"
+                "list": "rss list : affiche tous les flux RSS",
+                "twitter add": "twitter add [nom] : suit les messages de [nom] sur twitter"
                 }
 
         self.manager = Manager(self.db_path, bot)
         NotifyModule.__init__(self,
                               bot,
-                              command="rss",
+                              name="rss",
                               desc=desc,
-                              delay=60)
+                              delay=300)
         self.manager.update(silent=True)
         self._mute = False
 
@@ -49,6 +50,14 @@ class RSSNotifier(NotifyModule):
             return u"%s activé avec succès" % feed_name
         else:
             return u"Aucun flux %s" % feed_name
+
+    @answercmd(r"twitter add (?P<entry>[^ ]+)")
+    def add_twitter(self, sender, entry):
+        if self.manager.add_feed(entry, entry, twitter=True):
+            return u"Flux twitter suivi avec succès"
+        else:
+            return u"Erreur lors de l'ajout du flux twitter %s" % entry
+
 
     @answercmd(r"add (?P<entry>[^ ]+) (?P<url>http[s]?://(?:[a-zA-Z]|[0-9]|[$-/_=?:;]|[!*\(\),~@]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)")
     def add(self, sender, entry, url):

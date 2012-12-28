@@ -20,7 +20,7 @@ class CmdCanalPlus(NotifyModule):
         NotifyModule.__init__(self,
                               bot,
                               desc=desc,
-                              command="canal",
+                              name="canal",
                               delay=self.timer)
         self.shows = {}
         for show in config.emissions_id.keys():
