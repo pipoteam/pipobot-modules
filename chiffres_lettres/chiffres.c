@@ -149,6 +149,30 @@ void solve(struct ast* digits[], int num_digit, int total, struct ast** best)
 }
 
 #ifndef NOPYTHON
+/* Recursive convertion of an ast structure and its left and right childs
+   to a tuple-based python object */
+static PyObject* py_ast(struct ast* src)
+{
+    PyObject* left = NULL;
+    PyObject* right = NULL ;
+
+    if (src->left != NULL)
+        left = py_ast(src->left) ;
+
+    if (src->right != NULL)
+        right = py_ast(src->right) ;
+
+    if (left == NULL && right == NULL) {
+        return Py_BuildValue("sisi", left, src->op, right, src->n) ;
+    } else if (left == NULL) {
+        return Py_BuildValue("siOi", left, src->op, right, src->n) ;
+    } else if (right == NULL) {
+        return Py_BuildValue("Oisi", left, src->op, right, src->n) ;
+    } else {
+        return Py_BuildValue("OiOi", left, src->op, right, src->n) ;
+    }
+}
+
 
 static PyObject* solve6(PyObject *self, PyObject *args)
 {
@@ -187,7 +211,8 @@ static PyObject* solve6(PyObject *self, PyObject *args)
     }
     free(digits) ;
 
-    ret = Py_BuildValue("i", best->n);
+    ret = Py_BuildValue("O&", py_ast, best);
+
     free_ast(best) ;
 
     return ret ;

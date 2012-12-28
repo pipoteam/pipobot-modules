@@ -11,6 +11,7 @@ logger = logging.getLogger("pipobot.chiffres_lettres.chiffres")
 try :
     import chiffresc
     CHIFFRESC = True
+    CHIFFRESC_OP = {0: ast.Add, 1: ast.Sub, 2: ast.Mult, 3: ast.Div, 4: None}
 except ImportError:
     logger.info("Unable to find C implementation for chiffres solving, falling back to python one")
     CHIFFRESC = False
@@ -62,8 +63,18 @@ class Chiffres:
 
         digit_ast = namedtuple('digit_ast', ['n', 'ast'])
         if CHIFFRESC :
-            n = chiffresc.solve6(self.total, *self.digits)
-            return n==self.total, digit_ast(n, ast.Num(n))
+            r = chiffresc.solve6(self.total, *self.digits)
+ 
+            def transform_ast(tuple_ast) :
+                """ Transform a tuple ast from C to digit_ast """
+
+                left, op, right, total = tuple_ast
+                if CHIFFRESC_OP[op] is None :
+                    return ast.Num(total)
+                else :
+                    return ast.BinOp(transform_ast(left), CHIFFRESC_OP[op], transform_ast(right))
+
+            return r[3] == self.total, digit_ast(n=r[3], ast=transform_ast(r))
         else :
             def compte(digits):
                 """ Recursive auxiliary function to solve the problem """
@@ -173,6 +184,8 @@ if __name__ == '__main__':
             return unicode(astree.n)
         elif isinstance(astree, ast.BinOp):
             return u'(%s%s%s)' % (pretty_lisp(astree.left), opstr[astree.op], pretty_lisp(astree.right))
+        else :
+            raise Exception("WTF is %s (type : %s)" % (astree, type(astree)))
 
     c = Chiffres()
     #c.digits = [5, 9, 25, 50, 75, 4, 143554545]
@@ -182,7 +195,8 @@ if __name__ == '__main__':
     #c.digits = [4, 703]
     c.total = 703
     print c.digits
-    print pretty_lisp(c.solve()[1].ast).encode('utf8')
+    s = c.solve()[1]
+    print pretty_lisp(s.ast).encode('utf8')
 
 
     #c.digits = [ 788, 900, 102, 79, 77, 8765]
