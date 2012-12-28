@@ -16,8 +16,8 @@ With python interface
 enum operator { ADD, SUB, MULT, DIV, NUL } ;
 
 struct ast {
-    void* left;
-    void* right;
+    struct ast* left;
+    struct ast* right;
     enum operator op ;
     int n;
 }; /* Basic ast structure */
@@ -31,8 +31,8 @@ struct ast* gen_ast_op(struct ast* left, struct ast* right, enum operator op, in
 {
     struct ast* ast ; 
     ast = malloc(sizeof(struct ast)) ;
-    ast->left  = (void*) left ;
-    ast->right = (void*) right ;
+    ast->left  = left ;
+    ast->right = right ;
     ast->op = op ;
     ast->n = result ;
     return ast ;
@@ -55,11 +55,9 @@ void free_ast(struct ast* ast)
 /* Recursive copy of an ast structure and its left and right childs */
 struct ast* cpy_ast(struct ast* src)
 {
-    struct ast* left ;
-    struct ast* right ;
+    struct ast* left = NULL;
+    struct ast* right = NULL;
     struct ast* dest ;
-    left = (struct ast*) NULL ;
-    right = (struct ast*) NULL ;
 
     if (src->left != NULL)
         left = cpy_ast(src->left) ;
@@ -69,8 +67,8 @@ struct ast* cpy_ast(struct ast* src)
 
     dest = malloc(sizeof(struct ast)) ;
     memcpy(dest, src, sizeof(struct ast)) ; 
-    dest->left = (void*) left ;
-    dest->right = (void*) right ;
+    dest->left = left ;
+    dest->right = right ;
 
     return dest ;
 }
