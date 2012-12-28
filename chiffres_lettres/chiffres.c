@@ -4,10 +4,11 @@ Implementation in C of the algorithm to solve "Le compte est bon"
 With python interface
 
 */
-//#include <Python.h>
+#ifndef NOPYTHON
+#include <Python.h>
+#endif
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 
 /* Structures needed by the algorithm */
@@ -79,7 +80,7 @@ struct ast* cpy_ast(struct ast* src)
  */
 void solve(struct ast* digits[], int num_digit, int total, struct ast** best)
 {
-    int i, j, k, l, r;
+    int i, j, k, l;
 
     /* Keep trace of the best result found */
     for (i=0; i < num_digit; i++) {
@@ -147,6 +148,82 @@ void solve(struct ast* digits[], int num_digit, int total, struct ast** best)
     }
 }
 
+#ifndef NOPYTHON
+
+static PyObject* solve6(PyObject *self, PyObject *args)
+{
+    PyObject* ret;
+    /* Initial numbers */
+    int nchiffres = 6 ;
+    int chiffres[6] ;
+    int total ;
+
+    if (!PyArg_ParseTuple(args, "iiiiiii", &total, &chiffres[0], &chiffres[1], 
+                          &chiffres[2], &chiffres[3], &chiffres[4], &chiffres[5]))
+        return NULL;
+
+
+    /* Prepare structures for solve */
+    struct ast** digits = malloc(nchiffres * sizeof(struct ast*)) ;
+    struct ast* digit ;
+    struct ast* best = NULL;
+
+    int i ;
+    for (i=0; i<nchiffres; i++) {
+        digit = malloc(sizeof(struct ast)) ;
+        digit->left  = NULL ;
+        digit->op    = NUL ;
+        digit->right = NULL ;
+        digit->n     = chiffres[i] ;
+        digits[i] = digit ;
+    }
+
+    /* Solve ! */
+    solve(digits, nchiffres, total, &best) ;
+
+    /* Free digits and best */
+    for (i=0; i<nchiffres; i++) {
+        free(digits[i]) ;
+    }
+    free(digits) ;
+
+    ret = Py_BuildValue("i", best->n);
+    free_ast(best) ;
+
+    return ret ;
+}
+
+
+static PyMethodDef ChiffrecMethods[] = {
+    {"solve6",  solve6, METH_VARARGS,
+     "Solve chiffres with 6 numbers"},
+    {NULL, NULL, 0, NULL}        /* Sentinel */
+};
+
+void
+initchiffresc(void)
+{
+    (void) Py_InitModule("chiffresc", ChiffrecMethods);
+}
+
+int main(int argc, char *argv[])
+{
+    /* Pass argv[0] to the Python interpreter */
+    Py_SetProgramName(argv[0]);
+
+    /* Initialize the Python interpreter.  Required. */
+    Py_Initialize();
+
+    /* Add a static module */
+    initchiffresc() ;
+
+    return 0 ;
+}
+
+#else /* NOPYTHON */
+
+#include <stdio.h>
+
 /* Simple ast printer */
 void printer_lisp(struct ast* ast) {
     if (ast == NULL) { return ; }
@@ -211,4 +288,8 @@ int main(int argc, char* argv[])
     }
     free(digits) ;
     free_ast(best) ;
+
+    return 0 ;
 }
+
+#endif /* NOPYTHON */

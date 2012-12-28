@@ -5,6 +5,17 @@ import operator as op
 import random
 from collections import namedtuple
 
+import logging
+logger = logging.getLogger("pipobot.chiffres_lettres.chiffres")
+
+try :
+    import chiffresc
+    CHIFFRESC = True
+except ImportError:
+    logger.info("Unable to find C implementation for chiffres solving, falling back to python one")
+    CHIFFRESC = False
+    
+
 CHOICES = range(1, 10) + [10, 25, 50, 75, 100]
 NB_OPERANDS = 6
 
@@ -48,45 +59,50 @@ class Chiffres:
 
     def solve(self):
         """ Finds the best solution for the game """
-        def compte(digits):
-            """ Recursive auxiliary function to solve the problem """
-
-            for digit in digits:
-                if digit.n == self.total:
-                    # Terminal case : if the total is in the list, it's ok
-                    return digit
-                elif self.best is None or abs(self.total - digit.n) < abs(self.total - self.best.n):
-                    # We keep trace of the closest result found
-                    self.best = digit
-
-            for idg, g in enumerate(digits):
-                for idh, h in enumerate(digits[idg + 1:]):
-                    # We test all the combinations (not permutations). All we miss are
-                    # not commutative operations (- and /), but only the case where g > h
-                    # are significative, so we reorder them. We also copy the digit list and remove
-                    # the two digits we are working on, as they will be replaced by the result of their operation
-                    new_digits = digits[:]
-                    new_digits.pop(idg)
-                    new_digits.pop(idg + idh) # There is an hidden +1-1 (-1 because we have removed one before)
-                    i, j = max(g, h, key=lambda x: x.n), min(g, h, key=lambda x: x.n)
-
-                    # Iterate over operators and recursion
-                    for astop, op in operators.iteritems():
-                        try:
-                            r = compte(new_digits + [digit_ast(n=op(i.n, j.n), ast=ast.BinOp(i.ast, astop, j.ast))])
-                            # Stop if we have found a solution
-                            if r:
-                                return r
-                        except CalcError:
-                            pass
-
-            return None
 
         digit_ast = namedtuple('digit_ast', ['n', 'ast'])
-        self.best = None
+        if CHIFFRESC :
+            n = chiffresc.solve6(self.total, *self.digits)
+            return n==self.total, digit_ast(n, ast.Num(n))
+        else :
+            def compte(digits):
+                """ Recursive auxiliary function to solve the problem """
 
-        r = compte([digit_ast(d, ast.Num(d)) for d in self.digits])
-        return r is not None, r if r is not None else self.best
+                for digit in digits:
+                    if digit.n == self.total:
+                        # Terminal case : if the total is in the list, it's ok
+                        return digit
+                    elif self.best is None or abs(self.total - digit.n) < abs(self.total - self.best.n):
+                        # We keep trace of the closest result found
+                        self.best = digit
+
+                for idg, g in enumerate(digits):
+                    for idh, h in enumerate(digits[idg + 1:]):
+                        # We test all the combinations (not permutations). All we miss are
+                        # not commutative operations (- and /), but only the case where g > h
+                        # are significative, so we reorder them. We also copy the digit list and remove
+                        # the two digits we are working on, as they will be replaced by the result of their operation
+                        new_digits = digits[:]
+                        new_digits.pop(idg)
+                        new_digits.pop(idg + idh) # There is an hidden +1-1 (-1 because we have removed one before)
+                        i, j = max(g, h, key=lambda x: x.n), min(g, h, key=lambda x: x.n)
+
+                        # Iterate over operators and recursion
+                        for astop, op in operators.iteritems():
+                            try:
+                                r = compte(new_digits + [digit_ast(n=op(i.n, j.n), ast=ast.BinOp(i.ast, astop, j.ast))])
+                                # Stop if we have found a solution
+                                if r:
+                                    return r
+                            except CalcError:
+                                pass
+
+                return None
+
+            self.best = None
+
+            r = compte([digit_ast(d, ast.Num(d)) for d in self.digits])
+            return r is not None, r if r is not None else self.best
 
     def check(self, answer):
         """ Checks if a solution is valid """
@@ -161,6 +177,7 @@ if __name__ == '__main__':
     c = Chiffres()
     #c.digits = [5, 9, 25, 50, 75, 4, 143554545]
     c.digits = [4, 5, 9, 25, 50, 75]
+    #c.digits = [4, 5, 9, 1, 1, 1]
     #c.digits = [700, 3, 2]
     #c.digits = [4, 703]
     c.total = 703
