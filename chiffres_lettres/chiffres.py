@@ -56,7 +56,7 @@ class Chiffres:
                     # Terminal case : if the total is in the list, it's ok
                     return digit
                 elif self.best is None or abs(self.total - digit.n) < abs(self.total - self.best.n):
-                    # We keep trace of the clothest result found
+                    # We keep trace of the closest result found
                     self.best = digit
 
             for idg, g in enumerate(digits):
