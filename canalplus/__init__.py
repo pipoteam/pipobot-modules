@@ -1,12 +1,14 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 import libcanal
+import logging
+import traceback
 import config
 from pipobot.lib.modules import defaultcmd
 from pipobot.lib.abstract_modules import NotifyModule
 
 DEFAULT_TIMER = 60
-
+logger = logging.getLogger("Canalplus module")
 
 class CmdCanalPlus(NotifyModule):
     _config = (("timer", int, DEFAULT_TIMER), ("notify", list, []))
@@ -24,9 +26,12 @@ class CmdCanalPlus(NotifyModule):
                               delay=self.timer)
         self.shows = {}
         for show in config.emissions_id.keys():
-            em = libcanal.Emission(show, notif=(show in self.notify))
-            em.update()
-            self.shows[show] = em
+            try:
+                em = libcanal.Emission(show, notif=(show in self.notify))
+                em.update()
+                self.shows[show] = em
+            except:
+                logger.error("Error loading show %s : %s" % (show, traceback.format_exc().decode("utf-8")))
 
     @defaultcmd
     def answer(self, sender, message):
@@ -45,6 +50,9 @@ class CmdCanalPlus(NotifyModule):
                 self.shows[name] = show
             except libcanal.UnknownEmission:
                 return u"Je ne connais pas l'émission %s" % name
+            except:
+                logger.error("Error loading show %s : %s" % (name, traceback.format_exc().decode("utf-8")))
+                return u"L'émission %s n'est pas disponible" % name
 
         if len(args) > 1:
             quality = args[1]
