@@ -6,6 +6,7 @@ emissions_id = {"lpj": 249,
                 "bref": 627,
                 "guignols": 48,
                 "sav": 252,
+                "zapping": 201,
                 }
 
 qualities = ["BAS_DEBIT", "HAUT_DEBIT", "HD"]
