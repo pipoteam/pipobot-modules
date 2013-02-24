@@ -1,7 +1,7 @@
 # Maintainer: Sébastien Leduc <sebastien@sleduc.fr>
 pkgname=pipobot-modules-git
 _projectname=pipobot-modules
-pkgver=20121212
+pkgver=20130221
 pkgrel=1
 pkgdesc="Some modules for Pipobot, a bot for XMPP MUCs"
 arch=("any")
@@ -10,8 +10,8 @@ license=('GPL')
 depends=('python2' 'pipobot-git')
 conflicts=('pipobot-modules')
 optdepends=('python2-beautifulsoup3: for modules parsing online content'
-            'python-mpd: for the MPD module'
-            'python2-eyed3: to edit tags in the MPD module'
+            'python2-mpd: for the MPD module'
+            'mutagen: to edit ID3 tags in the MPD module'
             'python-simplejson: for google module'
             'python2-pyinotify: for mail module'
             'mercurial: for the mercurial module'

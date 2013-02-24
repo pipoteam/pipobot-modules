@@ -2,7 +2,8 @@
 import mpd
 import os
 import random
-import eyeD3
+from mutagen.easyid3 import EasyID3
+from mutagen.mp3 import MP3
 import utils
 
 
@@ -195,26 +196,26 @@ class BotMPD(mpd.MPDClient):
         if self.datadir is None:
             return "Impossible, datadir non spécifié"
         mess = []
+        song = self.currentsong()["file"]
+        f = os.path.join(self.datadir, song)
+        try:
+            mp3 = MP3(f, ID3=EasyID3)
+        except IOError as e:
+            if e.errno == 13:
+                return u"Je n'ai pas le droit de lire ce fichier :'("
         for couple in args.split('&&'):
             try:
                 key, val = couple.strip().split('=')
-                key = "setArtist" if key.lower() in ["artist", "artiste", "chanteur", "inteprete", "chose qui chante"] else key
-                key = "setTitle" if key.lower() in ["title", "titre", "nom", "denomination du bruit"] else key
-                if key in ["setArtist", "setTitle"]:
-                    song = self.currentsong()["file"]
+                key = "artist" if key.lower() in ["artist", "artiste", "chanteur", "inteprete", "chose qui chante"] else key
+                key = "title" if key.lower() in ["title", "titre", "nom", "denomination du bruit"] else key
+                if key in ["artist", "title"]:
                     try:
-                        f = os.path.join(self.datadir, song)
-                        t = eyeD3.Mp3AudioFile(f).getTag()
-                        if t is None:
-                            t = eyeD3.Tag()
-                            t.link(f)
-                            t.header.setVersion(eyeD3.ID3_V2_3)
-                        getattr(t, key)(val)
-                        t.update()
+                        mp3[key] = val
+                        mp3.save()
                         self.update()
-                        mess.append("Règle %s en %s" % (key[3:], val))
-                    except (eyeD3.tag.InvalidAudioFormatException, IOError):
-                        return "Pas mp3 ou permission fail !"
+                        mess.append("Règle %s en %s" % (key, val))
+                    except IOError:
+                        return "Je n'ai pas le droit d'éditer ce fichier :'("
             except ValueError:
                 return "Ouiiii, la graMMaire n'est pas respectéee"
         return "\n".join(mess)
