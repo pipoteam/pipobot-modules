@@ -10,6 +10,7 @@ from libmpd.BotMPD import BotMPD
 
 
 logger = logging.getLogger("pipobot.botmpd")
+DEFAULT_CMD = "current"
 
 
 class CmdMpd(NotifyModule):
@@ -82,6 +83,7 @@ class CmdMpd(NotifyModule):
                 'coffee': 'coffee',
                 'wakeup': 'wakeup',
                 'connected': 'connected',
+                '': DEFAULT_CMD,
                 }
         if cmd in cmds:
             try:
