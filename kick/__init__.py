@@ -1,5 +1,4 @@
 #-*- coding: utf-8 -*-
-import xmpp
 import random
 import pipobot.lib.utils
 from pipobot.lib.modules import SyncModule, defaultcmd
