@@ -1,6 +1,7 @@
 #! /usr/bin/python2
 # -*- coding: utf-8 -*-
 import time
+import re
 from pipobot.lib.modules import SyncModule, answercmd
 from pipobot.lib.module_test import ModuleTest, string_gen
 from model import Todo
@@ -13,7 +14,7 @@ class CmdTodo(SyncModule):
                 "list": """todo list : affiche la liste des todolist existantes.
 todo list [name] : affiche les todo de la liste [name]""",
                 "add": "todo add [name] [msg] : crée le nouveau todo [msg] dans la liste [name]",
-                "remove": "todo remove [n,...] : supprime les todos d'id [n,...]",
+                "remove/delete/rm": "todo remove [n,...] : supprime les todos d'id [n,...]",
                 "search": "todo search [element]: recherche un TODO qui contient [element]",
                 }
         SyncModule.__init__(self,
@@ -63,10 +64,10 @@ todo list [name] : affiche les todo de la liste [name]""",
         found = self.bot.session.query(Todo).filter(Todo.content.like("%" + query + "%"))
         return "\n".join(map(str, found))
 
-    @answercmd("(remove|delete) (?P<ids>(\d+,?)+)")
+    @answercmd("(remove|delete|rm) (?P<ids>(\d+,? ?)+)")
     def remove(self, sender, ids):
         send = ""
-        for i in ids.split(','):
+        for i in re.split('[ ,]+', ids):
             n = int(i)
             deleted = self.bot.session.query(Todo).filter(Todo.id == n).all()
             if deleted == []:
