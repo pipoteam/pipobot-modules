@@ -16,8 +16,8 @@ class AppURLopener(urllib.FancyURLopener):
 PLAYLIST = 'http://www.bide-et-musique.com/playlist.rss'
 PROGS = "http://www.bide-et-musique.com/programme-webradio.html"
 SHOWS = "http://www.bide-et-musique.com/grille.html"
-PROG_ID = {"next": 2,
-           "prev": 3}
+PROG_ID = {"next": 1,
+           "prev": 2}
 HOME_PAGE = "http://www.bide-et-musique.com/programme-webradio.html"
 
 
