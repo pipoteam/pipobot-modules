@@ -1,23 +1,19 @@
 # -*- coding: utf-8 -*-
-import mpd
 import os
 import random
+from mpd import MPDClient, ConnectionError, CommandError
 from mutagen.easyid3 import EasyID3
 from mutagen.mp3 import MP3
 import utils
 
 
-class BotMPD(mpd.MPDClient):
+class BotMPD(MPDClient):
     def __init__(self, host, port, password, datadir=None):
-        mpd.MPDClient.__init__(self)
-        CON_ID = {'host': host, 'port': port}
-        try:
-            self.connect(**CON_ID)
-            self.password(password)
-        except:
+        MPDClient.__init__(self)
+        if not self.connection(host, port, password):
             self.disconnect()
             raise NameError("Mauvais hôte ou mot de passe MPD")
-        if datadir is None or datadir == "":
+        if not datadir:
             self.datadir = None
         else:
             self.datadir = datadir
@@ -40,10 +36,7 @@ class BotMPD(mpd.MPDClient):
                                        pcentage)
         return res
 
-    def nextplaylist(self, nb=5):
-        nb = int(nb)
-        if nb > 15:
-            return "Non mais oh, faudrait pas trop exagérer..."
+    def nextplaylist(self, nb):
         current = self.currentsong()
         playlist = self.playlistinfo()
         deb = int(current['pos'])
@@ -54,15 +47,15 @@ class BotMPD(mpd.MPDClient):
             res += utils.format(song) + "\n"
         return res[:-1]
 
-    def search(self, args):
-        l = args.split(' ')
-        if len(l) == 2:
-            filter = l[0]
-            field = l[1]
-            req = self.playlistsearch(filter, field)
-        else:
-            req = self.playlistsearch("Artist", l[0])
-            req.extend(self.playlistsearch("Title", l[0]))
+    def search(self, search, title, artist):
+        req = []
+        if search:
+            req = self.playlistsearch("Artist", search)
+            req.extend(self.playlistsearch("Title", search))
+        elif title:
+            req = self.playlistsearch("Title", title)
+        elif artist:
+            req = self.playlistsearch("Artist", artist)
         if req == []:
             return "Cherches un peu mieux que ça"
         res = ""
@@ -70,91 +63,68 @@ class BotMPD(mpd.MPDClient):
             res += "%s\n" % (utils.format(elt))
         return res[0:-1]
 
-    def setnext(self, args):
+    def setnext(self, nb):
+        song = self.currentsong()
+        current = song["pos"]
+        icurrent = int(current)
+        if nb < icurrent:
+            newindex = icurrent
+        else:
+            newindex = icurrent + 1
         try:
-            iargs = int(args)
-            song = self.currentsong()
-            current = song["pos"]
-            icurrent = int(current)
-            if iargs < icurrent:
-                newindex = icurrent
-            else:
-                newindex = icurrent + 1
-            self.move(iargs, newindex)
+            self.move(nb, newindex)
             return self.nextplaylist(3)
-        except:
-            return "Argument invalide pour setnext..."
+        except CommandError:
+            return "Bad song index"
 
-    def nightmare(self, args=5):
+    def nightmare(self, nb):
+        self.update()
         try:
-            nb = int(args)
-            self.update()
             songs = self.lsinfo("nightmare")
-            random.shuffle(songs)
-            if nb > 15:
-                return "Merilestfou !!!"
-            if nb < len(songs):
-                selection = songs[0:nb]
-            else:
-                selection = songs
-            playlist = self.status()
-            deb = int(playlist["playlistlength"])
-            for elt in selection:
-                self.add(elt["file"])
-            for i in range(deb, deb + nb):
-                self.setnext(i)
-            send = "/!\\/!\\/!\\/!\\"
-            return send
-        except ValueError:
-            return "Argument invalide pour nightmare..."
+        except CommandError:
+            return "No directory named nightmare"
+        self.add_mpd(songs, nb)
+        return "/!\\/!\\/!\\/!\\"
 
-    def coffee(self):
+    def coffee(self, nb):
+        self.update()
         try:
-            songs = self.lsinfo("cafe")
-            random.shuffle(songs)
-            toadd = songs[0]
-            selection = songs[0]
-            playlist = self.status()
-            deb = int(playlist["playlistlength"])
-            self.add(songs[0]["file"])
-            self.setnext(deb)
-            send = "Coffee en préparation"
-            return send
-        except ValueError:
-            return "Argument invalide pour coffee..."
+            songs = self.lsinfo("coffee")
+        except CommandError:
+            return "No directory named coffee"
+        self.add_mpd(songs, nb)
+        return "Coffee en préparation"
 
-    def wakeup(self, args=5):
+    def wakeup(self, nb):
+        self.update()
         try:
-            nb = int(args)
-            self.update()
             songs = self.lsinfo("wakeup")
-            random.shuffle(songs)
-            if nb > 15:
-                return "Merilestfou !!!"
-            if nb < len(songs):
-                selection = songs[0:nb]
-            else:
-                selection = songs
-            playlist = self.status()
-            deb = int(playlist["playlistlength"])
-            for elt in selection:
-                self.add(elt["file"])
-            for i in range(deb, deb + nb):
-                self.setnext(i)
-            send = "ALLER ON SE REVEILLE !!!"
-            return send
-        except ValueError:
-            return "Argument invalide pour nightmare..."
+        except CommandError:
+            return "No directory named wakeup"
+        self.add_mpd(songs, nb)
+        return "ON SE REVEILLE !!!"
+
+    def add_mpd(self, l, nb):
+        random.shuffle(l)
+        if nb < len(l):
+            selection = l[0:nb]
+        else:
+            selection = l
+        playlist = self.status()
+        deb = int(playlist["playlistlength"])
+        for elt in selection:
+            self.add(elt["file"])
+        for i in range(deb, deb + nb):
+            self.setnext(i)
 
     def goto(self, pos):
         try:
-            iargs = int(pos)
             song = self.currentsong()
             current = song["pos"]
             icurrent = int(current)
-            self.move(icurrent, iargs)
+            self.move(icurrent, pos)
             return "On s'est déplacé en %s !" % pos
-        except:
+        except CommandError:
             return "Et un goto foiré, un !"
 
     def clean(self):
@@ -166,33 +136,7 @@ class BotMPD(mpd.MPDClient):
                     self.deleteid(eltplaylist["id"])
         return "Sauvé...mais pour combien de temps..."
 
-    def connected(self):
-        import urllib
-        import BeautifulSoup
-        import socket
-        f = urllib.urlopen("http://admin:pipo@www.sleduc.fr/server-status")
-        soup = BeautifulSoup.BeautifulSoup(f.read())
-        clients = {}
-        res = "Liste des clients connectés sur mpd:\n"
-        for tr in soup.findAll("tr"):
-            hosts = tr.findAll("td", {"nowrap": "nowrap"})
-            for host in hosts:
-                if "mpd.sleduc.fr" in host or "mpd.leduc.42" in host:
-                    lst = tr.findAll("td")
-                    since = utils.humanize_time(lst[5].text)
-                    ip = str(lst[10].text)
-                    vhost = str(lst[11].text)
-                    clients[ip] = (vhost, since)
-        for ip, couple in clients.iteritems():
-            vhost, since = couple
-            try:
-                reverse = socket.gethostbyaddr(ip)[0]
-            except socket.herror:
-                reverse = "Moi y'en a pas savoir résoudre"
-            res += "\t- %s (%s)\n\t\tSur %s, depuis %s\n" % (ip, reverse, vhost, since)
-        return res[0:-1]
-
-    def settag(self, args):
+    def settag(self, artist, title):
         if self.datadir is None:
             return "Impossible, datadir non spécifié"
         mess = []
@@ -203,19 +147,42 @@ class BotMPD(mpd.MPDClient):
         except IOError as e:
             if e.errno == 13:
                 return u"Je n'ai pas le droit de lire ce fichier :'("
-        for couple in args.split('&&'):
-            try:
-                key, val = couple.strip().split('=')
-                key = "artist" if key.lower() in ["artist", "artiste", "chanteur", "inteprete", "chose qui chante"] else key
-                key = "title" if key.lower() in ["title", "titre", "nom", "denomination du bruit"] else key
-                if key in ["artist", "title"]:
-                    try:
-                        mp3[key] = val
-                        mp3.save()
-                        self.update()
-                        mess.append("Règle %s en %s" % (key, val))
-                    except IOError:
-                        return "Je n'ai pas le droit d'éditer ce fichier :'("
-            except ValueError:
-                return "Ouiiii, la graMMaire n'est pas respectéee"
+        try:
+            mp3['artist'] = artist
+            mp3['title'] = title
+            mp3.save()
+            self.update()
+            mess.append("Règle artist en %s" % (artist))
+            mess.append("Règle title en %s" % (title))
+        except IOError:
+            return "Je n'ai pas le droit d'éditer ce fichier :'("
         return "\n".join(mess)
+
+    def artist(self):
+        try:
+            return self.currentsong()['artist']
+        except KeyError:
+            return None
+
+    def title(self):
+        try:
+            return self.currentsong()['title']
+        except KeyError:
+            return None
+
+    def next_song(self, sender):
+        ret = "%s ne veut pas écouter : %s" % (sender, self.currentsongf())
+        self.next()
+        return ret
+
+    def prev_song(self):
+        self.previous()
+        return "On revient à %s" % (self.currentsongf()) 
+
+    def connection(self, host, port, pwd):
+       try:
+           self.connect(host, port)
+           self.password(pwd)
+           return True
+       except ConnectionError as e:
+           return False
