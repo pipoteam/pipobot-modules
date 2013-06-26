@@ -12,12 +12,14 @@ class Remind(pipobot.lib.bdd.Base):
     description = Column(String(250))
     date = Column(Integer(250))
     reporter = Column(String(250))
+    room = Column(String(50))
 
-    def __init__(self, owner, description, date, reporter):
+    def __init__(self, owner, description, date, reporter, room):
         self.owner = owner
         self.description = description
         self.date = date
         self.reporter = reporter
+        self.room = room
 
     def __str__(self):
         d = time.strftime("%d/%m/%Y à %H:%M", time.localtime(float(self.date)))

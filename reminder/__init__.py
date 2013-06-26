@@ -25,7 +25,7 @@ remind list all : affiche toutes les alertes""",
 
     @answercmd("list")
     def list(self, sender):
-        owners = self.bot.session.query(Remind).group_by(Remind.owner).order_by(Remind.owner).all()
+        owners = self.bot.session.query(Remind).filter(Remind.room==self.bot.chatname).order_by(Remind.owner).all()
         owners = [remind.owner for remind in owners]
         if owners == []:
             send = u"Rien de prévu..."
@@ -36,10 +36,10 @@ remind list all : affiche toutes les alertes""",
     @answercmd("list (?P<who>\S+)")
     def list_someone(self, sender, who):
         if who == "all":
-            res = self.bot.session.query(Remind).order_by(Remind.owner).all()
+            res = self.bot.session.query(Remind).filter(Remind.room==self.bot.chatname).order_by(Remind.owner).all()
             error_msg = u"Aucun remind dans la base"
         else:
-            res = self.bot.session.query(Remind).filter(Remind.owner == who).all()
+            res = self.bot.session.query(Remind).filter(Remind.room==self.bot.chatname, Remind.owner == who).all()
             error_msg = u"Rien de prévu pour %s" % who
         send = u"\n".join([unicode(elt) for elt in res]) if res != [] else error_msg
         return send
@@ -56,7 +56,7 @@ remind list all : affiche toutes les alertes""",
         if date < time.time():
             send = u"On n'ajoute pas un événement dans le passé !!!"
         else:
-            r = Remind(owner, msg, date, sender)
+            r = Remind(owner, msg, date, sender, self.bot.chatname)
             self.bot.session.add(r)
             self.bot.session.commit()
             send = u"Event ajouté pour le %s" % (time.strftime("%d/%m/%y,%Hh%M",
@@ -68,17 +68,17 @@ remind list all : affiche toutes les alertes""",
         send = ""
         for i in ids.split(","):
             n = int(i)
-            deleted = self.bot.session.query(Remind).filter(Remind.id == n).all()
+            deleted = self.bot.session.query(Remind).filter(Remind.id == n, Remind.room == self.bot.chatname).all()
             if deleted == []:
                 send += u"Pas de remind d'id %s\n" % n
             else:
                 self.bot.session.delete(deleted[0])
                 send += u"%s a été supprimé\n" % deleted[0]
         self.bot.session.commit()
-        return send[0:-1]
+        return send.strip()
 
     def do_action(self):
-        reminds = self.bot.session.query(Remind).order_by(Remind.date).all()
+        reminds = self.bot.session.query(Remind).filter(Remind.room == self.bot.chatname).order_by(Remind.date).all()
         now = time.time()
         for remind in reminds:
             if remind.date >= self.lastcheck and remind.date < now:
