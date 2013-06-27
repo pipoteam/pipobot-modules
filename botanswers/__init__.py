@@ -29,9 +29,9 @@ class CmdBot(ListenModule):
             i = repartie.indirect.split("\n")
             random.shuffle(i)
             return u"%s: %s" % (sender, i[0])
-        elif re.search("(\s|^)+si\s+ils(\s|$)+", message.lower()):
+        elif re.search("\bsi\s+ils\b", message.lower()):
             return u"%s: S'ILS, c'est mieux !!! :@" % sender
-        elif re.search("(\s|^)+si\s+il(\s|$)+", message.lower()):
+        elif re.search("\bsi\s+il\b", message.lower()):
             return u"%s: S'IL, c'est mieux !!!" % sender
         elif re.search("(^|\s)+_all_(\!|\?|\:|\s+|$)", message.lower()):
             reply = self.bot.occupants.get_all(", ", [sender, self.bot.name])
