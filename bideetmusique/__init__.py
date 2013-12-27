@@ -1,29 +1,27 @@
 # -*- coding: utf-8 -*-
 
-import urllib
-import threading
-import bandm_lib
-from BeautifulSoup import BeautifulSoup
-from pipobot.lib.modules import defaultcmd, answercmd
+import urllib.request, urllib.parse, urllib.error
+from . import bandm_lib
+from pipobot.lib.modules import answercmd
 from pipobot.lib.abstract_modules import NotifyModule
 from pipobot.lib.module_test import ModuleTest
 
 
 class CmdBideEtMusique(NotifyModule):
     def __init__(self, bot):
-        desc = {"": u"Pour afficher des infos sur bides et musique.",
-                "current": u"Ce qui passe actuellement sur bides et musique",
-                "next [n]": u"Les [n] chansons à venir (dans la limite des stocks disponibles)",
-                "prev [n]": u"Les [n] chansons précédentes (dans la limite des stocks disponibles)",
-                "prog [n]": u"Les programmes de la journée J+n",
-                "mute": u"N'affiche plus les nouvelles chansons.",
-                "unmute": u"Affiche les nouvelles chansons.",
-                "lyrics": u"Les paroles de la chanson courante",
+        desc = {"": "Pour afficher des infos sur bides et musique.",
+                "current": "Ce qui passe actuellement sur bides et musique",
+                "next [n]": "Les [n] chansons à venir (dans la limite des stocks disponibles)",
+                "prev [n]": "Les [n] chansons précédentes (dans la limite des stocks disponibles)",
+                "prog [n]": "Les programmes de la journée J+n",
+                "mute": "N'affiche plus les nouvelles chansons.",
+                "unmute": "Affiche les nouvelles chansons.",
+                "lyrics": "Les paroles de la chanson courante",
                 }
         NotifyModule.__init__(self,
                               bot,
                               desc=desc,
-                              name=u"b&m",
+                              name="b&m",
                               delay=10,
                               )
         self.old = ""
@@ -35,7 +33,7 @@ class CmdBideEtMusique(NotifyModule):
     @answercmd("", "current")
     def default(self, sender):
         current = bandm_lib.current()
-        res = u"Titre en cours : %s" % (current)
+        res = "Titre en cours : %s" % (current)
         return res
 
 #######################################################################
@@ -71,7 +69,7 @@ class CmdBideEtMusique(NotifyModule):
     def do_action(self):
         new = bandm_lib.current()
         if new != self.old:
-            self.bot.say(u"Nouvelle chanson : %s" % new)
+            self.bot.say("Nouvelle chanson : %s" % new)
             self.old = new
 
     def update(self, silent=False):

@@ -1,9 +1,8 @@
 #-*- coding: utf-8 -*-
 
 import random
-import urllib
-import pipobot.lib.utils
-from BeautifulSoup import BeautifulSoup
+import urllib.request, urllib.parse, urllib.error
+from bs4 import BeautifulSoup
 from pipobot.lib.abstract_modules import FortuneModule
 from pipobot.lib.module_test import ModuleTest
 
@@ -13,7 +12,7 @@ SITE = "http://www.secouchermoinsbete.fr"
 
 class CmdScmb(FortuneModule):
     def __init__(self, bot):
-        desc = u"""Pour appendre des choses grâce à secouchermoinsbete.fr
+        desc = """Pour appendre des choses grâce à secouchermoinsbete.fr
 scmb : Retourne une information aléatoire.
 scmb [n] : Affiche l'information [n]"""
         FortuneModule.__init__(self,
@@ -26,7 +25,7 @@ scmb [n] : Affiche l'information [n]"""
                                )
 
     def extract_data(self, html_content):
-        soup = BeautifulSoup(html_content, convertEntities=BeautifulSoup.HTML_ENTITIES)
+        soup = BeautifulSoup(html_content)
         sections = soup.findAll("div", {"class": "anecdote-content-wrapper"})
         # If we are in a random page, we select a quote then continue parsing
         if sections != []:
@@ -34,17 +33,17 @@ scmb [n] : Affiche l'information [n]"""
             details = choice.findAll("p", {"class": "summary"})
             choiced = random.choice(details)
             url = "%s%s" % (SITE, choiced.a.get("href"))
-            page = urllib.urlopen(url)
+            page = urllib.request.urlopen(url)
             content = page.read()
             page.close()
-            soup = BeautifulSoup(content, convertEntities=BeautifulSoup.HTML_ENTITIES)
+            soup = BeautifulSoup(content)
 
         article = soup.find("article", {"class": "anecdote"})
         if article is None:
-            return u"scmb invalide !!"
+            return "scmb invalide !!"
         quote = article.find("p", {"class": "summary"}).text
         nb = article.get("id").partition("-")[2]
-        result = u"scmb#%s : \n%s" % (nb, quote)
+        result = "scmb#%s : \n%s" % (nb, quote)
         return result.rstrip()
 
 

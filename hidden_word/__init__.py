@@ -3,7 +3,7 @@ import os
 import time
 from random import choice
 from sqlalchemy.sql.expression import desc
-from model import HiddenBase
+from .model import HiddenBase
 from pipobot.lib.modules import ListenModule, defaultcmd
 from pipobot.lib import utils
 
@@ -17,7 +17,7 @@ class CmdHiddenWord(ListenModule):
     @defaultcmd
     def answer(self, sender, message):
         if self.word in message.lower():
-            msg = u"Bravo %s, tu as trouvé le mot caché qui était %s. Tu peux te reposer maintenant." % (sender, self.word)
+            msg = "Bravo %s, tu as trouvé le mot caché qui était %s. Tu peux te reposer maintenant." % (sender, self.word)
             self.word = self.get_word()
 
             jid = self.bot.occupants.pseudo_to_jid(sender.strip())

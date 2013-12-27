@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 import random
-import repartie
+from . import repartie
 import re
 from pipobot.lib.modules import ListenModule
 from pipobot.lib import utils
@@ -12,7 +12,7 @@ class CmdBot(ListenModule):
         ListenModule.__init__(self, bot, name="repartie", desc=desc)
 
     def answer(self, sender, message):
-        if type(message) not in (str, unicode):
+        if type(message) not in (str, str):
             return
         if message == "":
             return
@@ -24,20 +24,20 @@ class CmdBot(ListenModule):
             else:
                 d = repartie.direct.split("\n")
             random.shuffle(d)
-            return u"%s: %s" % (sender, d[0])
+            return "%s: %s" % (sender, d[0])
         elif re.search("(^|\W)" + self.bot.name.lower() + "($|\W)", message.lower()):
             i = repartie.indirect.split("\n")
             random.shuffle(i)
-            return u"%s: %s" % (sender, i[0])
+            return "%s: %s" % (sender, i[0])
         elif re.search("\bsi\s+ils\b", message.lower()):
-            return u"%s: S'ILS, c'est mieux !!! :@" % sender
+            return "%s: S'ILS, c'est mieux !!! :@" % sender
         elif re.search("\bsi\s+il\b", message.lower()):
-            return u"%s: S'IL, c'est mieux !!!" % sender
+            return "%s: S'IL, c'est mieux !!!" % sender
         elif re.search("(^|\s)+_all_(\!|\?|\:|\s+|$)", message.lower()):
             reply = self.bot.occupants.get_all(", ", [sender, self.bot.name])
             message = message.replace("_all_", reply)
             return message
         l = [["server", "serveur", "bot"], ["merde", "bois", "carton"]]
         if all([any([elt2 in message.lower() for elt2 in elt]) for elt in l]):
-            msg = u"Tu sais ce qu'il te dit le serveur ? Et puis surveille ton langage d'abord !!!"
+            msg = "Tu sais ce qu'il te dit le serveur ? Et puis surveille ton langage d'abord !!!"
             utils.kick(sender, msg, self.bot)

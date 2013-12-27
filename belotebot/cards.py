@@ -8,7 +8,7 @@ UTF8 = True
 class Suit :
     """ Class for handling suit  """
 
-    name_suits = [(4, u"P", u"♠"), (3, u"H", u"♥"),(2, u"C", u"♦"),(1, u"T", u"♣")]
+    name_suits = [(4, "P", "♠"), (3, "H", "♥"),(2, "C", "♦"),(1, "T", "♣")]
 
     def __init__(self, val, name, name_utf8) :
         """
@@ -131,8 +131,8 @@ class Deck :
                 self.cards.append(Card(name_valeur, _coul, point, point_trump))
 
         # Hashes to associate card representations to card object
-        self.assoc      = dict(zip([c.output(False).lower() for c in self.cards], self.cards))
-        self.assoc_utf8 = dict(zip([c.output(True).lower() for c in self.cards], self.cards))
+        self.assoc      = dict(list(zip([c.output(False).lower() for c in self.cards], self.cards)))
+        self.assoc_utf8 = dict(list(zip([c.output(True).lower() for c in self.cards], self.cards)))
 
         # We shuffle it
         self.shuffle()

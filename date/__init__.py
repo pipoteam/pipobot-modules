@@ -21,5 +21,5 @@ class CmdDate(SyncModule):
 
 class DateTest(ModuleTest):
     def test_date(self):
-        expected = u"Nous sommes le (\d+)/(\d+)/(\d+) et il est (\d+):(\d+)"
+        expected = "Nous sommes le (\d+)/(\d+)/(\d+) et il est (\d+):(\d+)"
         self.assertRegexpMatches(self.bot_answer("!date"), expected)

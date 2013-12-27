@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 import os
-import ConfigParser
+import configparser
 from pipobot.lib.modules import MultiSyncModule, defaultcmd
 from pipobot.lib.utils import check_url
 
@@ -21,7 +21,7 @@ class Link(MultiSyncModule):
         self.dico = {}
         names = {}
 
-        config = ConfigParser.RawConfigParser()
+        config = configparser.RawConfigParser()
         config.read(self.config_path)
         for c in config.sections():
             self.dico[c] = {}

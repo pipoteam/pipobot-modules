@@ -22,5 +22,4 @@ class Todo(Base):
     def __str__(self):
         t = time.strftime("%d/%m/%Y à %H:%M",
                           time.localtime(float(self.submission)))
-        t = t.decode("utf-8")
-        return u"%s - %s (par %s le %s)" % (self.id, self.content, self.reporter, t)
+        return "%s - %s (par %s le %s)" % (self.id, self.content, self.reporter, t)

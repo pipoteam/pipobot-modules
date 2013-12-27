@@ -20,7 +20,7 @@ class CmdScores(SyncModule):
             for module in self.bot.modules:
                 if hasattr(module, "cmd_score"):
                     self.avail_mods[module.name] = module.cmd_score
-            self.desc += "\nModules disponibles : %s" % (", ".join(self.avail_mods.keys()))
+            self.desc += "\nModules disponibles : %s" % (", ".join(list(self.avail_mods.keys())))
 
     @defaultcmd
     def answer(self, sender, message):

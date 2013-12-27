@@ -1,1 +1,1 @@
-from cmd_scores import CmdScores
+from .cmd_scores import CmdScores

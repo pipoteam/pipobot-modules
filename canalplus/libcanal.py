@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-import urllib
-import config
+import urllib.request, urllib.parse, urllib.error
+from . import config
 from xml.dom import minidom
 
 
@@ -44,7 +44,7 @@ class Video:
     id = property(get_id, set_id)
 
     def update(self):
-        page = urllib.urlopen(self.url)
+        page = urllib.request.urlopen(self.url)
         self.url = "%s/%s" % (config.urlXMLVid, self.id)
         content_page = page.read()
         page.close()
@@ -77,7 +77,7 @@ class Emission:
             raise UnknownEmission(name)
 
     def update_data(self):
-        page = urllib.urlopen(self.url)
+        page = urllib.request.urlopen(self.url)
         content_page = page.read()
         page.close()
 

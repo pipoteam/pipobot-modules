@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 
-import wrapi
+from . import wrapi
 from pipobot.lib.modules import SyncModule, answercmd
 from pipobot.lib.module_test import ModuleTest
 
@@ -21,13 +21,13 @@ class CmdWordRef(SyncModule):
     def translate(self, sender, in_lang, out_lang, req):
         try:
             rep = self.wordref.translate(in_lang, out_lang, req)
-            result = u"\n".join(map(unicode, rep.principal))
-            return result if result != u"" else u"Aucune traduction trouvée pour %s" % req
+            result = "\n".join(map(str, rep.principal))
+            return result if result != "" else "Aucune traduction trouvée pour %s" % req
         except wrapi.NoTranslation:
-            return u"Aucune traduction trouvée pour %s" % req
+            return "Aucune traduction trouvée pour %s" % req
         except wrapi.APIAuth:
-            return u"Erreur lors de l'accès à wordreference (contacter l'administrateur du bot !)"
+            return "Erreur lors de l'accès à wordreference (contacter l'administrateur du bot !)"
         except wrapi.InternalError:
-            return u"Erreur lors de l'accès à wordreference"
+            return "Erreur lors de l'accès à wordreference"
         except wrapi.LangError as e:
-            return unicode(e)
+            return str(e)

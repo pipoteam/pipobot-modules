@@ -33,7 +33,7 @@ rps (Rock|Paper|Scissor) : pour jouer"""
     @answercmd("bot")
     def bot_play(self, sender):
         self.manche[self.bot.name] = random.choice(self.choices)
-        left = self.players - len(self.manche.keys())
+        left = self.players - len(list(self.manche.keys()))
         if left == 0:
             res = self.results()
             self.players = 0
@@ -50,14 +50,14 @@ rps (Rock|Paper|Scissor) : pour jouer"""
     @answercmd("(?P<play>Rock|Paper|Scissor)")
     def default(self, sender, play):
         if play in self.choices:
-            if sender in self.manche.keys():
+            if sender in list(self.manche.keys()):
                 l = ["You must be stupid.", "What else?!"]
                 return "You have already played... " + random.choice(l)
             elif self.players == 0:
                 return "There is no game launched"
             else:
                 self.manche[sender] = play
-                left = self.players - len(self.manche.keys())
+                left = self.players - len(list(self.manche.keys()))
                 if left == 0:
                     l = ["%s: You were very looooooooooong to answer..." % sender,
                          "%s: You are the last and perhaps the least!" % sender,
@@ -85,17 +85,17 @@ rps (Rock|Paper|Scissor) : pour jouer"""
     def results(self):
         res = {}
         ret = ""
-        for player, pchoice in self.manche.iteritems():
+        for player, pchoice in self.manche.items():
             loose = False
-            for opponent, ochoice in self.manche.iteritems():
+            for opponent, ochoice in self.manche.items():
                 if opponent != player:
                     if CmdRPS.beats(ochoice, pchoice):
                         loose = True
                         break
             res[player] = loose
         else:
-            resultats = ", ".join(["%s: %s" % (player, score) for player, score in self.manche.iteritems()])
-            ret = ", ".join(["%s" % (player) for player, status in res.iteritems() if not status])
+            resultats = ", ".join(["%s: %s" % (player, score) for player, score in self.manche.items()])
+            ret = ", ".join(["%s" % (player) for player, status in res.items() if not status])
             plural = "s" if ret.count(",") != 0 else ""
             return "Results: %s, Winner%s: %s" % (resultats, plural, ret)
 

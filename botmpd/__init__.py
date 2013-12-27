@@ -6,7 +6,7 @@ from mpd import ConnectionError
 import pipobot.lib.exceptions
 from pipobot.lib.modules import defaultcmd, answercmd
 from pipobot.lib.abstract_modules import NotifyModule
-from libmpd.BotMPD import BotMPD
+from .libmpd.BotMPD import BotMPD
 
 
 logger = logging.getLogger("pipobot.botmpd")
@@ -119,8 +119,8 @@ class CmdMpd(NotifyModule):
 
     @answercmd("lyrics")
     def lyrics(self, sender):
-        import urllib
-        import BeautifulSoup
+        import urllib.request, urllib.parse, urllib.error
+        from bs4 import BeautifulSoup
         import re
 
         self.mpd.connection(self.host, self.port, self.pwd)
@@ -133,13 +133,13 @@ class CmdMpd(NotifyModule):
 
         ret = artist + " - " + title + "\n"
         url = 'http://lyrics.wikia.com/api.php?action=lyrics&artist=%s&song=%s&fmt=xml&func=getSong' % (artist, title)
-        f = urllib.urlopen(url)
-        soup = BeautifulSoup.BeautifulSoup(f.read())
+        f = urllib.request.urlopen(url)
+        soup = BeautifulSoup(f.read())
         f.close()
         if soup.find("lyrics").text != 'Not found':
             url2 = soup.find("url").text
-            f2 = urllib.urlopen(url2)
-            soup = BeautifulSoup.BeautifulSoup(f2.read())
+            f2 = urllib.request.urlopen(url2)
+            soup = BeautifulSoup(f2.read())
             f2.close()
             text = soup.find("div", {"class": "lyricbox"})
             if text is None:
@@ -157,7 +157,7 @@ class CmdMpd(NotifyModule):
                 comments = text.findAll(text=lambda text:isinstance(text, BeautifulSoup.Comment))
                 [c.extract() for c in comments]
                 t = "".join([str(i) for i in text.contents])
-                ret2 = str(BeautifulSoup.BeautifulSoup(t, convertEntities=BeautifulSoup.BeautifulSoup.HTML_ENTITIES))
+                ret2 = str(BeautifulSoup.BeautifulSoup(t, formatter="html")
                 ret += re.sub('<br />', '\n', ret2)
         else:
             ret += "No lyrics available"
@@ -226,7 +226,7 @@ class CmdMpd(NotifyModule):
         pos = int(position)
         return self.do_command_mpd(self.mpd.goto, [pos])
 
-    @answercmd("search title (?P<title>.*)", "search artist (?P<artist>.*)", "search (?P<search>.*)") 
+    @answercmd("search title (?P<title>.*)", "search artist (?P<artist>.*)", "search (?P<search>.*)")
     def search(self, sender, search=None, title=None, artist=None):
         return self.do_command_mpd(self.mpd.search, [search, title, artist])
 

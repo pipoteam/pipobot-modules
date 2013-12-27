@@ -5,18 +5,18 @@ import re
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import func, and_, or_
 from pipobot.lib.modules import SyncModule, defaultcmd, answercmd
-from model import Dette
+from .model import Dette
 
 
 class CmdDette(SyncModule):
     """ Gestion de Dettes """
     def __init__(self, bot):
-        desc = {"": u"Gestionnaire de dettes",
-                "add": u"""dette add [name1] [amount] [name2] [reason] : Ajoute une dette de [amount] que doit payer [name1] à [name2] à cause de [reason]
+        desc = {"": "Gestionnaire de dettes",
+                "add": """dette add [name1] [amount] [name2] [reason] : Ajoute une dette de [amount] que doit payer [name1] à [name2] à cause de [reason]
 dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent tous [amount] à [name3] à cause de [reason]""",
-                "multiple": u"dette multiple [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent se partager la dette [amount] à payer à [name3] à cause de [reason]",
-                "list": u"dette list [name] : Liste les dettes de [name1]",
-                "remove": u"dette remove [id1], [id2], [id3] : Supprime les dettes dont les id sont [id1], [id2], [id3]"
+                "multiple": "dette multiple [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent se partager la dette [amount] à payer à [name3] à cause de [reason]",
+                "list": "dette list [name] : Liste les dettes de [name1]",
+                "remove": "dette remove [id1], [id2], [id3] : Supprime les dettes dont les id sont [id1], [id2], [id3]"
                 }
         SyncModule.__init__(self,
                             bot,
@@ -26,7 +26,7 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
 
     @defaultcmd
     def answer(self, sender, message):
-        return "\n".join("%s: %s" % e for e in self.desc.iteritems())
+        return "\n".join("%s: %s" % e for e in self.desc.items())
 
     @answercmd("list", "list (?P<name1>\S+)(?: )*(?P<name2>\S+)?")
     def list(self, sender, name1=None, name2=None):
@@ -39,7 +39,7 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
                 res += "| Toutes les Dettes : |\n"
                 res += "|" + 21 * "_" + "|" + 88 * "_" + "\n"
                 for elt in tmp:
-                    res += u"| %s |\n" % elt
+                    res += "| %s |\n" % elt
                 res += "|" + 110 * "_" + "|"
                 return {"text": res, "monospace": True}
         else:
@@ -63,16 +63,16 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
                     res_credit += "| %s|\n" % e[0]
             if (n == 0) and (p == 0):
                 if name2 is None:
-                    return u"%s ne doit rien à personne" % (name1)
+                    return "%s ne doit rien à personne" % (name1)
                 else:
-                    return u"%s ne doit rien à %s" % (name1, name2)
+                    return "%s ne doit rien à %s" % (name1, name2)
             res = ""
 
             if name2 is None:
                 if p - n > 0:
-                    res += u"%s doit encore recevoir %s € en tout\n" % (name1, str(p - n))
+                    res += "%s doit encore recevoir %s € en tout\n" % (name1, str(p - n))
                 else:
-                    res += u"%s a un déficit de %s € en tout\n" % (name1, str(n - p))
+                    res += "%s a un déficit de %s € en tout\n" % (name1, str(n - p))
                 if n != 0:
                     res += " " + 12 * "_" + "\n"
                     res += "| Dette(s) : |\n"
@@ -81,16 +81,16 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
                     res += "|" + 109 * "_" + "|\n"
                 if p != 0:
                     res += " " + 13 * "_" + "\n"
-                    res += u"| Crédit(s) : |\n"
+                    res += "| Crédit(s) : |\n"
                     res += "|" + 13 * "_" + "|" + 95 * "_" + "\n"
                     res += res_credit
                     res += "|" + 109 * "_" + "|\n"
 
             else:
                 if p - n > 0:
-                    res += u"%s doit recevoir %s € de %s\n" % (name1, str(p - n), name2)
+                    res += "%s doit recevoir %s € de %s\n" % (name1, str(p - n), name2)
                 else:
-                    res += u"%s doit %s € à %s\n" % (name1, str(n - p), name2)
+                    res += "%s doit %s € à %s\n" % (name1, str(n - p), name2)
                 res += " " + 109 * "_" + "\n"
                 res += res_debt
                 res += res_credit
@@ -120,11 +120,11 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
                     for e in deleted:
                         self.bot.session.delete(e)
                     self.bot.session.commit()
-                    res += u"Les dettes entre %s et %s sont effacées\n" % (elt, creditor)
+                    res += "Les dettes entre %s et %s sont effacées\n" % (elt, creditor)
                 else:
-                    res += u"Ajout de la dette entre %s et %s\n" % (elt, creditor)
+                    res += "Ajout de la dette entre %s et %s\n" % (elt, creditor)
             else:
-                res += u"On ne peut pas avoir une dette avec soi-même...\n"
+                res += "On ne peut pas avoir une dette avec soi-même...\n"
         return res.rstrip()
 
     @answercmd("(remove|delete|rm|del) (?P<ids>(\d+,?)+)")
@@ -134,9 +134,9 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
             n = int(i)
             deleted = self.bot.session.query(Dette).filter(Dette.id == n).first()
             if deleted is None:
-                res.append(u"Pas de dette d'id %s" % (n))
+                res.append("Pas de dette d'id %s" % (n))
             else:
                 self.bot.session.delete(deleted)
-                res.append(u"%s a été supprimé" % (deleted))
+                res.append("%s a été supprimé" % (deleted))
         self.bot.session.commit()
         return "\n".join(res)

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-direct = u"""Tu me veux quoi ?
+direct = """Tu me veux quoi ?
 C'est quoi ton problème ?
 Tu me parles toi ?
 De quoi je me mêle !
@@ -26,7 +26,7 @@ Putain, ce que tu peux être chiant des fois.
 Hum désolé, t'étais en train de me dire quelquechose ?
 Je comprends tout à fait tes arguments mais je m'en tape"""
 
-indirect = u"""N'essaye pas de parler de moi dans mon dos !
+indirect = """N'essaye pas de parler de moi dans mon dos !
 Taggle !
 D'où tu parles de moi comme ca toi ?
 Si t'as quelque chose à dire, dis-le ! (et si tu dis « le » tu t'en prends une)
@@ -38,7 +38,7 @@ Tu vois ça, c'est ta mère et ça, c'est ma bite.
 Hé les gars, qui a laissé entrer ce boulet ?
 Je vais faire comme si je n'avais rien entendu"""
 
-question = u"""Oui oui oui !!!
+question = """Oui oui oui !!!
 Je ne sais pas du tout.
 Pourquoi tu me demandes à moi ? Tu sais bien que j'en sais autant que Charlie ! C'est-à-dire ...
 Dans tous les cas je suis du même avis que Fabien.

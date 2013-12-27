@@ -5,8 +5,8 @@ from pipobot.lib.module_test import ModuleTest
 
 class CmdGetjid(SyncModule):
     def __init__(self, bot):
-        desc = (u"getjid [nom]\n"
-                u"Affiche le jid pour découvrir qui se cache derrière un pseudo")
+        desc = ("getjid [nom]\n"
+                "Affiche le jid pour découvrir qui se cache derrière un pseudo")
         SyncModule.__init__(self,
                             bot,
                             desc=desc,

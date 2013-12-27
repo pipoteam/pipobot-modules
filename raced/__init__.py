@@ -1,1 +1,1 @@
-from raced import CmdRaced
+from .raced import CmdRaced

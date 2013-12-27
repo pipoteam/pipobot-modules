@@ -1,9 +1,8 @@
 #-*- coding: utf-8 -*-
 
-import BeautifulSoup
-import urllib
-import urllib2
-import re
+from bs4 import BeautifulSoup
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 from pipobot.lib.modules import SyncModule, defaultcmd
 
 
@@ -26,12 +25,12 @@ class CmdExa(SyncModule):
 
         # Converti les mots clefs pour l'url
         valeurs = {'q': motclef}
-        motclef = urllib.urlencode(valeurs)
+        motclef = urllib.parse.urlencode(valeurs)
         url = 'http://exalead.fr/search/web/results/?' + motclef
-        opener = urllib2.build_opener()
+        opener = urllib.request.build_opener()
         opener.addheaders = [('Accept-Language', 'fr')]
         result = opener.open(url)
-        body = BeautifulSoup.BeautifulSoup(result.read())
+        body = BeautifulSoup(result.read())
 
         # Verifie qu'on recupère bien des résultats
         try:
@@ -44,13 +43,13 @@ class CmdExa(SyncModule):
             for i in range(min([nbre_results, limite])):
                 results.append(body.find('ol', id="results").contents[2 * i + 1].contents[3].contents[1].contents[1])
             # Fabrication de la sortie suivant le mode désiré
-            redir = u""
-            redir_xhtml = u""
+            redir = ""
+            redir_xhtml = ""
             for i in range(min([nbre_results, limite])):
-                redir += "\n " + results[i]['href'] + u" --- " + results[i]['title']
-                redir_xhtml += u"\n<br/> <a href=\"" + results[i]['href'] + u"\" alt=\"" + results[i]['href'] + u"\">" + results[i]['title'] + u"</a>"
+                redir += "\n " + results[i]['href'] + " --- " + results[i]['title']
+                redir_xhtml += "\n<br/> <a href=\"" + results[i]['href'] + "\" alt=\"" + results[i]['href'] + "\">" + results[i]['title'] + "</a>"
         else:
-            redir = u"Pas de résultat"
+            redir = "Pas de résultat"
             redir_xhtml = ""
 
         return {"text": redir, "xhtml": redir_xhtml}

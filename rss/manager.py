@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 import feedparser
 import twitter
-from parser import get_id, get_time
+from .parser import get_id, get_time
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.exc import IntegrityError, FlushError
 
-from model import Feed, Entry
-from metadata import Base
+from .model import Feed, Entry
+from .metadata import Base
 
 
 class Manager(object):

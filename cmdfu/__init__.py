@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-import urllib
+import urllib.request
 from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.module_test import ModuleTest
 
@@ -17,8 +17,8 @@ cmdfu : Retourne une commande aléatoire"""
     @defaultcmd
     def answer(self, sender, message):
         url = "http://www.commandlinefu.com/commands/random/plaintext"
-        url = urllib.urlopen(url)
-        contenu = url.read()
+        url = urllib.request.urlopen(url)
+        contenu = url.read().decode("utf-8")
         return "\n".join(contenu.strip().split("\n")[2:])
 
 

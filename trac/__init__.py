@@ -21,7 +21,7 @@ class CmdTrac(SyncModule):
         send = "\n"
         # Connection db
         if self.db_path == "":
-            return u"Ma configuration ne me permet pas de répondre à cette question…"
+            return "Ma configuration ne me permet pas de répondre à cette question…"
 
         conn = sqlite3.connect(self.db_path)
         conn.isolation_level = None
@@ -31,13 +31,13 @@ class CmdTrac(SyncModule):
             for id, p, summary in c.fetchall():
                 send += "[%d] %s\n" % (id, summary)
             if send == "\n":
-                send = u"Pas de ticket ! Vous avez plus qu'à espérer ne pas vous faire contrôler"
+                send = "Pas de ticket ! Vous avez plus qu'à espérer ne pas vous faire contrôler"
 
         else:
             try:
                 i = int(message)
             except:
-                return u"Merci de rentrer un numéro de ticket"
+                return "Merci de rentrer un numéro de ticket"
             c.execute("SELECT id, priority, summary, description FROM ticket WHERE id=? ORDER BY priority", (i,))
             id, p, summ, desc = c.fetchone()
             send += "[%d] %s\n%s\n" % (id, summ, desc)

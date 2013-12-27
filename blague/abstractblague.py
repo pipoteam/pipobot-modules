@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import time
-from model import Blagueur
+from .model import Blagueur
 from pipobot.lib.modules import SyncModule, defaultcmd
 
 
@@ -28,7 +28,7 @@ class AbstractBlague(SyncModule):
         sjid = self.bot.occupants.pseudo_to_jid(sender.strip())
         jid = self.bot.occupants.pseudo_to_jid(message)
         if jid == "":
-            return u"%s n'est pas dans le salon !" % message
+            return "%s n'est pas dans le salon !" % message
 
         if sjid == jid:
             return self.autocongratulation
@@ -47,9 +47,9 @@ class AbstractBlague(SyncModule):
             if ecart > min_delay:
                 date_bl = time.strftime("le %d/%m/%Y à %H:%M",
                                         time.localtime(float(blag.submission)))
-                date_bl = date_bl.decode("utf-8")
+                date_bl = date_bl
                 blag.score = self.operation(blag.score, 1)
-                send = u"Nouveau score - %s : %d\n%d secondes depuis ta dernière blague (%s)" % (message, blag.score, ecart, date_bl)
+                send = "Nouveau score - %s : %d\n%d secondes depuis ta dernière blague (%s)" % (message, blag.score, ecart, date_bl)
                 blag.submission = temps
             else:
                 send = "Ta dernière blague date de moins de %s secondes !" % min_delay

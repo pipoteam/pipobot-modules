@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-import core
+from . import core
 from pipobot.lib.modules import MultiSyncModule, defaultcmd
 from pipobot.lib.module_test import ModuleTest
 
@@ -31,8 +31,8 @@ class NextPrevTest(ModuleTest):
 
     def test_ended(self):
         bot_rep = self.bot_answer("!next chuck")
-        self.assertEqual(bot_rep, u"Désolé mais la série Chuck est terminée.")
+        self.assertEqual(bot_rep, "Désolé mais la série Chuck est terminée.")
 
     def test_failed(self):
         bot_rep = self.bot_answer("!next qsdf")
-        self.assertEqual(bot_rep, u"Je n'ai aucune information sur la série qsdf")
+        self.assertEqual(bot_rep, "Je n'ai aucune information sur la série qsdf")

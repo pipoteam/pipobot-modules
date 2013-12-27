@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import simplejson
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 # This key has been generated with the registration form of wordreference
 # http://www.wordreference.com/docs/APIregistration.aspx
@@ -48,7 +48,7 @@ class WordRef(object):
         self.base_url = "http://api.wordreference.com/%s/json" % api_key
 
     def json_from_url(self, url):
-        page = urllib.urlopen(url)
+        page = urllib.request.urlopen(url)
         content = page.read()
         page.close()
         if page.getcode() == 404:
@@ -68,7 +68,7 @@ class WordRef(object):
         if not (frm_lang in LANGS and out_lang in LANGS and (frm_lang == "en" or out_lang == "en")):
             raise LangError("You can translate from or to english only, and with these languages : %s" % ", ".join(LANGS))
 
-        request = urllib.quote(request.encode("utf-8"))
+        request = urllib.parse.quote(request.encode("utf-8"))
         url = "%s/%s%s/%s" % (self.base_url, frm_lang, out_lang, request)
         json = self.json_from_url(url)
 
@@ -89,19 +89,19 @@ class Result(object):
 
     def _parse(self, json):
         if "PrincipalTranslations" in json["term0"]:
-            for id, translation in json["term0"]["PrincipalTranslations"].iteritems():
+            for id, translation in json["term0"]["PrincipalTranslations"].items():
                 self.principal.append(Translation(translation))
 
         if "original" in json and "Compounds" in json["original"]:
-            for id, translation in json["original"]["Compounds"].iteritems():
+            for id, translation in json["original"]["Compounds"].items():
                 self.compounds.append(Translation(translation))
 
         if "Entries" in json["term0"]:
-            for id, translation in json["term0"]["Entries"].iteritems():
+            for id, translation in json["term0"]["Entries"].items():
                 self.principal.append(Translation(translation))
 
         if "OtherSideEntries" in json["term0"]:
-            for id, translation in json["term0"]["OtherSideEntries"].iteritems():
+            for id, translation in json["term0"]["OtherSideEntries"].items():
                 self.principal.append(Translation(translation))
             
 
@@ -122,10 +122,10 @@ class Translation(object):
                 self.translations.append(t)
 
     def __str__(self):
-        return unicode(self).encode("utf-8")
+        return str(self).encode("utf-8")
 
     def __unicode__(self):
-        return u"%s → %s" % (self.original, ", ".join(unicode(elt) for elt in self.translations))
+        return "%s → %s" % (self.original, ", ".join(str(elt) for elt in self.translations))
         
 
     def __repr__(self):
@@ -139,16 +139,16 @@ class Term(object):
         for attr in self.__slots__:
             setattr(self, attr, None)
 
-        for key, value in json.iteritems():
+        for key, value in json.items():
             setattr(self, key.lower(), value)
 
     def __unicode__(self):
-        usage = u" (%s)" % self.sense if self.sense else ""
-        res = u"%s%s" % (self.term, usage)
+        usage = " (%s)" % self.sense if self.sense else ""
+        res = "%s%s" % (self.term, usage)
         return res
 
     def __str__(self):
-        rep = unicode(self).encode("utf-8")
+        rep = str(self).encode("utf-8")
         return rep
 
     def __repr__(self):
@@ -157,6 +157,6 @@ class Term(object):
 
 if __name__ == "__main__":
     w = WordRef()
-    trans = w.translate("ja", "en", u"おーい")
+    trans = w.translate("ja", "en", "おーい")
     for elt in trans.principal:
-        print elt
+        print(elt)

@@ -3,7 +3,7 @@
 
 import random
 import pipobot.lib.utils
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from pipobot.lib.abstract_modules import FortuneModule
 from pipobot.lib.module_test import ModuleTest
 
@@ -36,21 +36,21 @@ bashfr [n] : Affiche la quote [n] de bashfr"""
             tableau = sections[choiced].a.contents
             quote_url = sections[choiced].a["href"]
             quote_id = quote_url.partition("/")[2].partition(".")[0]
-            result = u""
+            result = ""
             for i in tableau:
-                if unicode(i) == u"<br />":
+                if i == "<br />":
                     result += "\n"
                 else:
-                    result = result + pipobot.lib.utils.xhtml2text(unicode(i))
+                    result = result + pipobot.lib.utils.xhtml2text(str(i))
             return "bashfr #%s :\n%s" % (quote_id, result)
 
 
 class BashfrTest(ModuleTest):
     def test_bashfr_5(self):
         bot_rep = self.bot_answer("!bashfr 5")
-        expected=(u"bashfr #5 :\n"
-                  u"(swatchtim) mac ? ca existe encore ca ?\n"
-                  u" * kick: (swatchtim) was kicked by (Cafmac) (Ouais. Les cons aussi.)")
+        expected=("bashfr #5 :\n"
+                  "(swatchtim) mac ? ca existe encore ca ?\n"
+                  " * kick: (swatchtim) was kicked by (Cafmac) (Ouais. Les cons aussi.)")
         self.assertEqual(bot_rep, expected)
 
     def test_bashfr_random(self):

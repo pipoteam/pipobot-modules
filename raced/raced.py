@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import time
-from model import Racer
+from .model import Racer
 from pipobot.lib.modules import SyncModule, defaultcmd
 from sqlalchemy import func
 from sqlalchemy.sql.expression import desc
@@ -23,11 +23,11 @@ class CmdRaced(SyncModule):
     def answer(self, sender, message):
         send = ''
         if message == '':
-            return u"Donnez vous un point raced envers un ami ! écrivez !raced pseudo (10 s minimum d'intervalle)"
+            return "Donnez vous un point raced envers un ami ! écrivez !raced pseudo (10 s minimum d'intervalle)"
         sjid = self.bot.occupants.pseudo_to_jid(sender.strip())
         jid = self.bot.occupants.pseudo_to_jid(message)
         if jid == "":
-            return u"%s n'est pas là..." % message
+            return "%s n'est pas là..." % message
 
         if sjid == jid:
             return "Sans vouloir contrarier, ça va être dur là…"
@@ -36,7 +36,7 @@ class CmdRaced(SyncModule):
         res = self.bot.session.query(Racer).filter(Racer.jid_from == sjid).filter(Racer.jid_to == jid).all()
 
         if len(res) == 0:
-            send = u"Félicitations %s, c'est la première fois que tu bats %s!" % (sender.strip(), message)
+            send = "Félicitations %s, c'est la première fois que tu bats %s!" % (sender.strip(), message)
             r = Racer(sjid, jid, 1, temps)
             self.bot.session.add(r)
         else:
@@ -46,7 +46,7 @@ class CmdRaced(SyncModule):
                 racer.score += 1
                 date_bl = time.strftime("le %d/%m/%Y a %H:%M",
                                         time.localtime(float(racer.submission)))
-                send = u"Nouveau score - %s : %d\n%d secondes depuis la dernière fois que tu as battu %s (%s)" % (sender.strip(), racer.score, ecart, message, date_bl)
+                send = "Nouveau score - %s : %d\n%d secondes depuis la dernière fois que tu as battu %s (%s)" % (sender.strip(), racer.score, ecart, message, date_bl)
                 racer.submission = temps
         self.bot.session.commit()
         return send

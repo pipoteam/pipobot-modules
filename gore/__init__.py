@@ -1,1 +1,1 @@
-from gore import CmdGore
+from .gore import CmdGore

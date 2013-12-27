@@ -1,7 +1,7 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 import time
-from model import Racer
+from .model import Racer
 from sqlalchemy.sql.expression import desc
 from sqlalchemy import func
 from lib.modules import SyncModule, defaultcmd

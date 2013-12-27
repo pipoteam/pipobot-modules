@@ -2,8 +2,8 @@
 # -*- coding: UTF-8 -*-
 
 import logging
-import mbox
-import mdir
+from . import mbox
+from . import mdir
 from pipobot.lib.modules import AsyncModule
 
 logger = logging.getLogger("mail")
@@ -26,7 +26,7 @@ class Mail(AsyncModule):
             self.notifier = mdir.MdirNotify(bot, self.path)
         elif self.format != "":
             self.alive = False
-            logger.error(u"Mail box format « %s » not defined. You must use either mbox or mdir !" % self.format)
+            logger.error("Mail box format « %s » not defined. You must use either mbox or mdir !" % self.format)
         elif self.format == "":
             self.delay = 10
 

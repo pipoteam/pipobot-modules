@@ -11,7 +11,7 @@ import time
 from email.parser import Parser
 from os.path import isdir, isfile, join
 
-from tools import decode
+from .tools import decode
 
 
 class MdirNotify(pyinotify.ProcessEvent):
@@ -81,14 +81,14 @@ class MdirNotify(pyinotify.ProcessEvent):
             msg_spam = None
 
         if not msg_subject:
-            msg_subject = u"[Pas de sujet]"
+            msg_subject = "[Pas de sujet]"
 
         if not msg_from:
-            msg_from = u"<Pas d’expéditeur>"
+            msg_from = "<Pas d’expéditeur>"
 
-        result = u">> Mail de %s : %s" % (msg_from, msg_subject)
+        result = ">> Mail de %s : %s" % (msg_from, msg_subject)
         if msg_spam is not None:
-            result += u" (Spam Score: %.1f)" % msg_spam
+            result += " (Spam Score: %.1f)" % msg_spam
 
         if msg_spam is None or msg_spam < 0.0:
             self.bot.say(result)

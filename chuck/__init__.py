@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 
 import pipobot.lib.utils
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from pipobot.lib.abstract_modules import FortuneModule
 
 

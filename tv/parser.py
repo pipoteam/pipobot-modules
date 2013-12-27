@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import urllib
-from BeautifulSoup import BeautifulSoup
+import urllib.request, urllib.parse, urllib.error
+from bs4 import BeautifulSoup
 from pipobot.lib.utils import xhtml2text
 
 
@@ -15,7 +15,7 @@ def extract(divclasse, LOCAL=False):
     if LOCAL:
         f = open(divclasse[1])
     else:
-        f = urllib.urlopen(divclasse[1])
+        f = urllib.request.urlopen(divclasse[1])
     content = f.read()
     f.close()
     soup = BeautifulSoup(content)
@@ -44,5 +44,5 @@ def extract(divclasse, LOCAL=False):
     return res
 
 if __name__ == "__main__":
-    print extract(requete.SOIREE, False)
-    print extract(requete.TNT, False)
+    print(extract(requete.SOIREE, False))
+    print(extract(requete.TNT, False))

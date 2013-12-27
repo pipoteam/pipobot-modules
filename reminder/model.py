@@ -23,4 +23,4 @@ class Remind(pipobot.lib.bdd.Base):
 
     def __str__(self):
         d = time.strftime("%d/%m/%Y à %H:%M", time.localtime(float(self.date)))
-        return u"%s. %s (le %s par %s)" % (self.id, self.description, d.decode("utf-8"), self.reporter)
+        return "%s. %s (le %s par %s)" % (self.id, self.description, d, self.reporter)

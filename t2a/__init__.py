@@ -1,12 +1,12 @@
 #-*- coding: utf8 -*-
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import re
 from pipobot.lib.modules import SyncModule, defaultcmd
 
 
 class CmdText2Ascii(SyncModule):
     def __init__(self, bot):
-        desc = u"!t2a texte : transforme le texte en ascii art"
+        desc = "!t2a texte : transforme le texte en ascii art"
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
@@ -19,7 +19,7 @@ class CmdText2Ascii(SyncModule):
         else:
             text = self.replace_accent(message)
             url = 'http://www.network-science.de/ascii/ascii.php?TEXT=%s&x=32&y=13&FONT=ogre&RICH=no&FORM=left&STRE=no&WIDT=80' % text
-            f = urllib.urlopen(url)
+            f = urllib.request.urlopen(url)
             content = f.read()
             f.close()
 
@@ -48,7 +48,7 @@ class CmdText2Ascii(SyncModule):
                     'C': ['Ç'],
                     'AE': ['Æ'],
                     ' ': ['\'']}
-        for (ch, wrong_ch) in to_replace.iteritems():
+        for (ch, wrong_ch) in to_replace.items():
             for w_ch in wrong_ch:
                 text = text.replace(w_ch, ch)
         return text

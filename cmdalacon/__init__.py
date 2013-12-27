@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-import ConfigParser
+import configparser
 import os
 import random
 import re
@@ -20,14 +20,14 @@ def multiwordReplace(text, wordDic):
     return rc.sub(translate, text)
 
 
-class ListConfigParser(ConfigParser.RawConfigParser):
+class ListConfigParser(configparser.RawConfigParser):
     def get(self, section, option):
         "Redéfinition du get pour gérer les listes"
-        value = ConfigParser.RawConfigParser.get(self, section, option)
+        value = configparser.RawConfigParser.get(self, section, option)
         if (value[0] == "[") and (value[-1] == "]"):
-            return map(lambda s: s.decode("utf-8"), eval(value))
+            return eval(value)
         else:
-            return value.decode("utf-8")
+            return value
 
 
 class CmdAlacon(MultiSyncModule):
@@ -42,11 +42,11 @@ class CmdAlacon(MultiSyncModule):
     def extract_to(self, config, cmd, value, backup):
         try:
             v = config.get(cmd, value)
-        except ConfigParser.NoOptionError:
+        except configparser.NoOptionError:
             v = config.get(cmd, backup)
         if type(v) != list:
             v = [v]
-        self.dico[cmd.decode("utf-8")][value] = v
+        self.dico[cmd][value] = v
 
     def readconf(self, bot):
         #name, description and actions associated to each command
@@ -57,7 +57,7 @@ class CmdAlacon(MultiSyncModule):
         config = ListConfigParser()
         config.read(self.config_path)
         for c in config.sections():
-            command_name = c.decode("utf-8")
+            command_name = c
             self.dico[command_name] = {}
             self.dico[command_name]['desc'] = config.get(c, 'desc')
             names[command_name] = self.dico[command_name]['desc']

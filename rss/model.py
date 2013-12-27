@@ -3,7 +3,7 @@ import time
 from sqlalchemy import Column, String, Integer, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 
-from metadata import Base
+from .metadata import Base
 
 
 class Feed(Base):

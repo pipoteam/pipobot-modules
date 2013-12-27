@@ -1,12 +1,12 @@
 #-*- coding: utf-8 -*-
 
 import json
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.module_test import ModuleTest
 from pipobot.lib.utils import xhtml2text
 
-NOT_FOUND = u"Rien de trouvé :'("
+NOT_FOUND = "Rien de trouvé :'("
 
 
 class CmdWiki(SyncModule):
@@ -20,10 +20,10 @@ class CmdWiki(SyncModule):
     @defaultcmd
     def answer(self, sender, message):
         url = "http://fr.wiktionary.org/w/api.php?action=query&list=search&format=json&srsearch=%s&srlimit=10" % message
-        page = urllib.urlopen(url)
+        page = urllib.request.urlopen(url)
         content = page.read()
         page.close()
-        js = json.loads(content)
+        js = json.loads(content.decode("utf-8"))
         try:
             snippet = xhtml2text(js["query"]["search"][0]["snippet"])
             #Removing prononciation
@@ -41,4 +41,4 @@ class TestWiki(ModuleTest):
 
     def test_ko(self):
         rep = self.bot_answer("!wiki pipoteam")
-        self.assertEqual(rep, u"Rien de trouvé :'(")
+        self.assertEqual(rep, "Rien de trouvé :'(")

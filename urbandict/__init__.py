@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from pipobot.lib.modules import SyncModule, answercmd
 from collections import deque
 
@@ -31,7 +31,7 @@ class UrbanDict(SyncModule):
     @answercmd("")
     def random_urban(self, sender):
         url = "http://www.urbandictionary.com/random.php"
-        page = urllib.urlopen(url)
+        page = urllib.request.urlopen(url)
         content = page.read()
         page.close()
         # The random page is a redirection like this : 
@@ -52,18 +52,18 @@ class UrbanDict(SyncModule):
 
         defs = self.get_cache(req)
         if defs is None:
-            params = urllib.urlencode({"term" : req})
-            page = urllib.urlopen("%s?%s" % (BASE_URL, params))
+            params = urllib.parse.urlencode({"term" : req})
+            page = urllib.request.urlopen("%s?%s" % (BASE_URL, params))
             content = page.read()
             page.close()
             urban_json = json.loads(content)
             if urban_json["result_type"] == "no_results":
                 self.add_cache(req, [])
-                return u"No result found"
+                return "No result found"
             defs = urban_json["list"]
             self.add_cache(req, defs)
         elif defs == []:
-            return u"Still no result found"
+            return "Still no result found"
 
         result = ""
         if select >= len(defs):
@@ -71,5 +71,5 @@ class UrbanDict(SyncModule):
             select = defs[0]
         else:
             select = defs[select]
-        result += u"%s : %s\nExample : %s" % (select["permalink"], select["definition"], select["example"])
+        result += "%s : %s\nExample : %s" % (select["permalink"], select["definition"], select["example"])
         return result

@@ -17,7 +17,7 @@ class CmdPioche(SyncModule):
         n = random.randint(0, 51)
         couleurs = ["pique", "coeur", "carreau", "trèfle"]
         noms = [str(i) for i in range(2, 11)] + ["Valet", "Dame", "Roi", "As"]
-        return noms[n % 13] + " de " + couleurs[n / 13]
+        return noms[n % 13] + " de " + couleurs[int(n / 13)]
 
 
 class TestPioche(ModuleTest):

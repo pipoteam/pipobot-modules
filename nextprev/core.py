@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import datetime
 
 alias = { 'himym': 'how i met your mother' }
@@ -20,31 +20,30 @@ def convert_episode(raw):
 
 
 def getdata(message, isnext):
-    res = ""
     if message in alias:
         message = alias[message]
     show_url = baseurl % (message.replace(" ", "%20"))
-    response = urllib.urlopen(show_url)
+    response = urllib.request.urlopen(show_url)
     content = response.readlines()
     response.close()
     data = {}
     if content == ['No Show Results Were Found For "%s"' % message]:
-        return u"Je n'ai aucune information sur la série %s" % message
+        return "Je n'ai aucune information sur la série %s" % message
     for line in content:
-        key, value = line.split("@", 1)
+        key, value = line.decode("utf-8").split("@", 1)
         data[key] = value.strip()
 
     if isnext:
         if data["Status"] == "Canceled/Ended":
-            return u"Désolé mais la série %s est terminée." % (data["Show Name"])
+            return "Désolé mais la série %s est terminée." % (data["Show Name"])
         if "Next Episode" in data:
             data_episode = convert_episode(data["Next Episode"])
-            return u"Prochain épisode de %s: %s." % (data["Show Name"], data_episode)
+            return "Prochain épisode de %s: %s." % (data["Show Name"], data_episode)
         else:
-            return u"Aucune date pour un prochain épisode :s."
+            return "Aucune date pour un prochain épisode :s."
     else:
         if "Latest Episode" in data:
             data_episode = convert_episode(data["Latest Episode"])
-            return u"Précédent épisode de %s: %s." % (data["Show Name"], data_episode)
+            return "Précédent épisode de %s: %s." % (data["Show Name"], data_episode)
         else:
-            return u"Aucune info disponible."
+            return "Aucune info disponible."

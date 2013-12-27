@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """ Some functions used to parse content from www.bide-et-musique.com/ """
-import urllib
-from BeautifulSoup import BeautifulSoup
+import urllib.request, urllib.parse, urllib.error
+from bs4 import BeautifulSoup
 from datetime import date
 from pipobot.lib.utils import xhtml2text
 
 
-class AppURLopener(urllib.FancyURLopener):
+class AppURLopener(urllib.request.FancyURLopener):
     """ Redefines the AppURLopener that could contain a wrong
         User-Agent """
     pass
@@ -23,7 +23,7 @@ HOME_PAGE = "http://www.bide-et-musique.com/programme-webradio.html"
 
 def parse_progs(typ=""):
     """ Parsing program page """
-    page = urllib.urlopen(PROGS)
+    page = urllib.request.urlopen(PROGS)
     content = page.read()
     page.close()
     soup = BeautifulSoup(content)
@@ -49,7 +49,7 @@ def get_shows(day=None):
     nb_day = date.today().weekday()
     if day is not None:
         nb_day = ((nb_day + day) % 7) + 1
-    page = urllib.urlopen(SHOWS)
+    page = urllib.request.urlopen(SHOWS)
     content = page.read()
     page.close()
     soup = BeautifulSoup(content)
@@ -107,7 +107,7 @@ def parse_tracks(soup, nb=1):
 
 def current():
     """ Returns current track """
-    page = urllib.urlopen(PLAYLIST)
+    page = urllib.request.urlopen(PLAYLIST)
     content = page.read(1500)
     page.close()
     soup = BeautifulSoup(content)
@@ -120,7 +120,7 @@ def current():
 def lyrics():
     """ Extracts lyrics from the current sont in 'bide et musique' """
     res = ""
-    page = urllib.urlopen(HOME_PAGE)
+    page = urllib.request.urlopen(HOME_PAGE)
     content = page.read()
     page.close()
     soup = BeautifulSoup(content)
@@ -130,7 +130,7 @@ def lyrics():
     souptitle = soup.findAll("p", {"class": "titre-song"})[0]
     url = "http://www.bide-et-musique.com"
     url = "%s%s" % (url, souptitle.a.get("href"))
-    page = urllib.urlopen(url)
+    page = urllib.request.urlopen(url)
     content = page.read()
     page.close()
     soup = BeautifulSoup(content)
@@ -144,7 +144,7 @@ def lyrics():
         for elt in tab:
             tmp = elt
             if str(tmp).lstrip() != "<br />":
-                lyrics_content += xhtml2text(unicode(tmp).lstrip()) + "\n"
+                lyrics_content += xhtml2text(str(tmp).lstrip()) + "\n"
         res += lyrics_content
     return xhtml2text(res)
 
@@ -156,5 +156,5 @@ def lyrics():
 if __name__ == "__main__":
 #    print get_next(5)
 #    print get_prev(4)
-    print get_shows(2)
+    print(get_shows(2))
 #    print current()

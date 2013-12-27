@@ -1,2 +1,2 @@
-from blague import CmdBlague
-from blame import CmdBlame
+from .blague import CmdBlague
+from .blame import CmdBlame

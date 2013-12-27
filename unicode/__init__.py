@@ -33,28 +33,25 @@ unicode nom
     def answer(self, sender, message):
         m = message.lower()
 
-        if type(message) == str:
-            message = message.decode('utf8')
-
         if len(message) == 1:
             code_rech = "%04x" % ord(m)
             for code, name in self.unicodes:
                 if code == code_rech:
-                    return u"⌞%s⌟ : %s, code %s" % (message, name, code_rech)
+                    return "⌞%s⌟ : %s, code %s" % (message, name, code_rech)
 
-            return u"%s ? C’est quoi ?" % message
+            return "%s ? C’est quoi ?" % message
 
         if len(message) < 3:
             return "Minimum 3 caractères"
 
-        send = u''
+        send = ''
         c = 0
         for code, name in self.unicodes:
             if m in name and name != '<control>':
                 if c != 0:
-                    send += u"\n"
-                send += u"* %s, code %s => %c" % (name, code, int(code, 16))
+                    send += "\n"
+                send += "* %s, code %s => %c" % (name, code, int(code, 16))
                 c += 1
             if c >= MAX:
                 break
-        return send if send != u'' else u'Aucun résultat trouvé'
+        return send if send != '' else 'Aucun résultat trouvé'

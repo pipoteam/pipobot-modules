@@ -1,10 +1,9 @@
 #-*- coding: utf-8 -*-
 
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import re
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from pipobot.lib.modules import SyncModule, defaultcmd
-from pipobot.lib.utils import xhtml2text
 
 
 class CmdSosBides(SyncModule):
@@ -17,13 +16,13 @@ class CmdSosBides(SyncModule):
 
     @defaultcmd
     def answer(self, sender, message):
-        url = urllib.urlopen("http://www.blablagues.net/hasard.html")
+        url = urllib.request.urlopen("http://www.blablagues.net/hasard.html")
         soup = BeautifulSoup(url.read())
         html = soup.find("div", {"class": "blague"}).findAll("div")
-        res = u""
+        res = ""
         for div in html:
-            res += u"\n" + div.renderContents()
-        res = re.sub(u"<br />\r\n", u"\n", res)
-        res = re.sub(u"<[^>]*>", "", res)
+            res += "\n" + div.renderContents()
+        res = re.sub("<br />\r\n", "\n", res)
+        res = re.sub("<[^>]*>", "", res)
         return res.strip()
 

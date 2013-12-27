@@ -4,7 +4,7 @@ import time
 import re
 from pipobot.lib.modules import SyncModule, answercmd
 from pipobot.lib.module_test import ModuleTest, string_gen
-from model import Todo
+from .model import Todo
 
 
 class CmdTodo(SyncModule):
@@ -45,7 +45,7 @@ todo list [name] : affiche les todo de la liste [name]""",
                 if tmp == []:
                     send = ""
                 else:
-                    send = u"%s :\n%s" % (listname, "\n".join(map(unicode, tmp)))
+                    send = "%s :\n%s" % (listname, "\n".join(map(str, tmp)))
             if send.strip() == "":
                 return "TODO-list vide"
             return send
@@ -89,7 +89,7 @@ class TodoAdd(ModuleTest):
         self.todo_list = string_gen(8)
         self.todo_msg = string_gen(50)
         bot_rep = self.bot_answer("!todo add %s %s" % (self.todo_list, self.todo_msg))
-        self.assertEqual(bot_rep, u"TODO ajouté")
+        self.assertEqual(bot_rep, "TODO ajouté")
 
     def tearDown(self):
         """ In case of failure, we manually remove the todo we added """
@@ -106,7 +106,7 @@ class TodoRemove(ModuleTest):
         todos = {string_gen(8): string_gen(50),
                  string_gen(8): string_gen(50),
                  string_gen(8): string_gen(50)}
-        for list_name, todo in todos.iteritems():
+        for list_name, todo in todos.items():
             todo = Todo(list_name, todo, "sender", time.time())
             self.bot.session.add(todo)
             self.bot.session.commit()

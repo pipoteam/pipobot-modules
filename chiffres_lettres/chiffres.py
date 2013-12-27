@@ -17,7 +17,7 @@ except ImportError:
     CHIFFRESC = False
     
 
-CHOICES = range(1, 10) + [10, 25, 50, 75, 100]
+CHOICES = list(range(1, 10)) + [10, 25, 50, 75, 100]
 NB_OPERANDS = 6
 
 
@@ -99,7 +99,7 @@ class Chiffres:
                         i, j = max(g, h, key=lambda x: x.n), min(g, h, key=lambda x: x.n)
 
                         # Iterate over operators and recursion
-                        for astop, op in operators.iteritems():
+                        for astop, op in operators.items():
                             try:
                                 r = compte(new_digits + [digit_ast(n=op(i.n, j.n), ast=ast.BinOp(i.ast, astop, j.ast))])
                                 # Stop if we have found a solution
@@ -137,7 +137,7 @@ class Chiffres:
                     try:
                         self.ok_values.remove(node.n)
                     except ValueError:
-                        raise CalcError(u"Euh, tu le sors d'où le %s ???"
+                        raise CalcError("Euh, tu le sors d'où le %s ???"
                                         % node.n)
                 else:
                     self.ok_values.append(node.n)
@@ -149,7 +149,7 @@ class Chiffres:
                     return eval_(node.op, left)(eval_(node.left, left),
                                                 eval_(node.right, left))
                 except ZeroDivisionError:
-                    raise CalcError(u"Division par 0, BOOOOOOOOOOOOOOOOOOO")
+                    raise CalcError("Division par 0, BOOOOOOOOOOOOOOOOOOO")
             else:
                 raise TypeError(node)
 
@@ -158,32 +158,32 @@ class Chiffres:
             try:
                 left, right = operation.split("=", 2)
             except ValueError:
-                raise CalcError(u"Erreur de syntaxe dans %s" % operation)
+                raise CalcError("Erreur de syntaxe dans %s" % operation)
             left = left.strip()
             right = right.strip()
             try:
                 eleft = eval_expr(left, True)
             except SyntaxError:
-                raise CalcError(u"Je n'arrive pas à calculer « %s »" % left)
+                raise CalcError("Je n'arrive pas à calculer « %s »" % left)
             try:
                 eright = eval_expr(right, False)
             except SyntaxError:
-                raise CalcError(u"Je n'arrive pas à calculer « %s »" % right)
+                raise CalcError("Je n'arrive pas à calculer « %s »" % right)
             if eleft != eright:
-                raise CalcError(u"Tu veux vraiment nous faire croire "
-                                u"que %s = %s ???" % (left, right))
+                raise CalcError("Tu veux vraiment nous faire croire "
+                                "que %s = %s ???" % (left, right))
         return eval_expr(right, False)
 
 if __name__ == '__main__':
-    opstr = {ast.Add: u'+', ast.Sub: u'-', ast.Mult: u'×', ast.Div: u'÷'}
+    opstr = {ast.Add: '+', ast.Sub: '-', ast.Mult: '×', ast.Div: '÷'}
 
     def pretty_lisp(astree):
         """ Print ast tree in algebra formula """
 
         if isinstance(astree, ast.Num):
-            return unicode(astree.n)
+            return str(astree.n)
         elif isinstance(astree, ast.BinOp):
-            return u'(%s%s%s)' % (pretty_lisp(astree.left), opstr[astree.op], pretty_lisp(astree.right))
+            return '(%s%s%s)' % (pretty_lisp(astree.left), opstr[astree.op], pretty_lisp(astree.right))
         else :
             raise Exception("WTF is %s (type : %s)" % (astree, type(astree)))
 
@@ -194,9 +194,9 @@ if __name__ == '__main__':
     #c.digits = [700, 3, 2]
     #c.digits = [4, 703]
     c.total = 703
-    print c.digits
+    print(c.digits)
     s = c.solve()[1]
-    print pretty_lisp(s.ast).encode('utf8')
+    print(pretty_lisp(s.ast).encode('utf8'))
 
 
     #c.digits = [ 788, 900, 102, 79, 77, 8765]

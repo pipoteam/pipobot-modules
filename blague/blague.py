@@ -5,21 +5,21 @@ import time
 import operator
 from pipobot.lib.modules import SyncModule
 from pipobot.lib.known_users import KnownUser
-from abstractblague import AbstractBlague
-from model import Blagueur
+from .abstractblague import AbstractBlague
+from .model import Blagueur
 
 
 class CmdBlague(AbstractBlague):
     """ Ajoute un point-blague à un collègue blagueur compétent """
     def __init__(self, bot):
-        desc = (u"Donnez un point blague à un ami ! Écrivez !blague pseudo "
-                u"(10 s minimum d'intervalle)")
+        desc = ("Donnez un point blague à un ami ! Écrivez !blague pseudo "
+                "(10 s minimum d'intervalle)")
         AbstractBlague.__init__(self,
                                 bot,
                                 desc=desc,
                                 name="blague",
                                 autocongratulation="Un peu de modestie, merde",
-                                premier=u"Félicitations %s, c'est ta première blague !",
+                                premier="Félicitations %s, c'est ta première blague !",
                                 operation=operator.add)
 
     def cmd_score(self, sender, message):
@@ -60,6 +60,6 @@ class CmdBlague(AbstractBlague):
             else:
                 #We do not know him : we use his jid
                 result[blag.pseudo] = (blag.score, blag.submission)
-        result = sorted(result.iteritems(),
+        result = sorted(iter(result.items()),
                         key=operator.itemgetter(1), reverse=True)
         return result

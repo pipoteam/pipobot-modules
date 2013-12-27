@@ -8,7 +8,7 @@ from pipobot.lib.modules import SyncModule, defaultcmd
 
 class CmdMute(SyncModule):
     def __init__(self, bot):
-        desc = u"mute [nom]\n[nom] ne peut plus parler sur le salon !!!"
+        desc = "mute [nom]\n[nom] ne peut plus parler sur le salon !!!"
         SyncModule.__init__(self,
                             bot,
                             name="mute",
@@ -21,49 +21,49 @@ class CmdMute(SyncModule):
     @defaultcmd
     def answer(self, sender, message):
         role_sender = self.bot.occupants.pseudo_to_role(sender)
-        reasonfail = [u"%s: TPPT !!!",
-                      u"%s: Je n'obéis qu'au personnel compétent",
-                      u"%s: Tu crois vraiment que je vais t'obéir",
-                      u"%s: Non mais tu te crois où ? oO",
-                      u"%s: J'vais l'dire aux modérateurs"]
-        reasonkick = [u"TU TE TAIS %s",
-                      u"Désolé %s, je ne fais qu'obéir aux ordres"]
+        reasonfail = ["%s: TPPT !!!",
+                      "%s: Je n'obéis qu'au personnel compétent",
+                      "%s: Tu crois vraiment que je vais t'obéir",
+                      "%s: Non mais tu te crois où ? oO",
+                      "%s: J'vais l'dire aux modérateurs"]
+        reasonkick = ["TU TE TAIS %s",
+                      "Désolé %s, je ne fais qu'obéir aux ordres"]
 
         lst = message.split(" ")
-        rapport = u""
+        rapport = ""
         if len(lst) == 2:
             if lst[0] == "undo":
                 who = lst[1]
                 pipobot.lib.utils.unmute(who, self.bot)
-                return u"%s peut maintenant parler" % who
+                return "%s peut maintenant parler" % who
 
         for muted in lst:
             authorised = False
             orNot = False
             if muted == self.bot.name:
-                rapport += u"Je vais pas me virer moi-même oO\n"
+                rapport += "Je vais pas me virer moi-même oO\n"
                 continue
             jidmuted = self.bot.occupants.pseudo_to_jid(muted)
             jidsender = self.bot.occupants.pseudo_to_jid(sender)
             if jidmuted == "":
-                rapport += u"%s n'est pas dans le salon\n" % muted
+                rapport += "%s n'est pas dans le salon\n" % muted
                 continue
             if jidmuted == jidsender:
                 if muted == sender:
-                    rapport += u"Tu veux te muter toi-même ?\n"
+                    rapport += "Tu veux te muter toi-même ?\n"
             elif role_sender != "moderator":
                 orNot = True
                 authorised = True
                 toMute = sender
-                rapport += u"%s n'a pas le droit de muter %s\n" % (sender, muted)
+                rapport += "%s n'a pas le droit de muter %s\n" % (sender, muted)
             else:
                 authorised = True
                 toMute = muted
-                rapport += u"J'ai muté %s pour toi !\n" % muted
+                rapport += "J'ai muté %s pour toi !\n" % muted
 
             if authorised:
                 if self.bot.occupants.pseudo_to_role(toMute) == "moderator":
-                    rapport = u"On ne peut pas muter quelqu'un ayant des droits aussi élevés\n"
+                    rapport = "On ne peut pas muter quelqu'un ayant des droits aussi élevés\n"
                 else:
                     t = Timer(30.0, lambda name=toMute: self.restore(name))
                     t.start()

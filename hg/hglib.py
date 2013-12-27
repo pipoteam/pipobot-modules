@@ -19,4 +19,4 @@ def log(repodir, rev=-1):
     return res
 
 if __name__ == "__main__":
-    print log("/srv/hg/repos/botjabber")
+    print(log("/srv/hg/repos/botjabber"))

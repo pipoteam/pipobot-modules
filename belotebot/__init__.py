@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 #-*- coding: utf-8 -*-
 
-import game
+from . import game
 import logging
 from pipobot.lib.modules import defaultcmd, answercmd
 from pipobot.lib.modules import SyncModule, IQModule
@@ -15,7 +15,7 @@ class CmdBelote(SyncModule) :
                 allez au bureau des renseignements, ils vous renseigneront…"
         SyncModule.__init__(self, bot, desc=desc, name='b')
         self.game = None
-    
+
     # Notify function for the belote game
     @staticmethod
     def html(card) :
@@ -75,25 +75,25 @@ class CmdBelote(SyncModule) :
         if self.game.state == 'wait_player' and 'moi' in message :
             self.game.join(sender)
         elif self.game.state in ['wait_choice', 'sec_choice'] :
-            suit = self.game.deck.find_suit(message.decode('utf8'))
+            suit = self.game.deck.find_suit(message)
             take = suit is not None or message == 'y'
             self.game.choice(sender, take=take, suit=suit)
         elif self.game.state == 'wait_play' :
-            card = self.game.deck.find(message.decode('utf8'))
+            card = self.game.deck.find(message)
             if card is None :
                 self.notify("Cette carte n'existe pas")
                 return
             self.game.play(sender, card)
 
 import os
-from cards import Deck
+from .cards import Deck
 
 class IqBobBelote(IQModule) :
 
     def __init__(self, bot) :
         IQModule.__init__(self, bot, name='BoBCard', desc='BoB for belote cards')
         bot.registerPlugin("xep_0231")
-        
+
         # Generate cache
         deck = Deck()
         for card in deck.cards :
@@ -103,5 +103,5 @@ class IqBobBelote(IQModule) :
             fdimg = open(path)
             raw_img = fdimg.read()
             fdimg.close()
-                
+
             bot.plugin['xep_0231'].set_bob(data=raw_img, mtype='image/png', cid=cid)

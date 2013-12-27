@@ -7,17 +7,17 @@ import ast
 import operator as op
 from pipobot.lib.modules import SyncModule, answercmd
 from pipobot.lib.module_test import ModuleTest
-from lettres import Lettres
-from chiffres import Chiffres, CalcError
+from .lettres import Lettres
+from .chiffres import Chiffres, CalcError
 
 logger = logging.getLogger("pipobot.chiffres_lettres")
 
 
 class ChiffresCmd(SyncModule):
     def __init__(self, bot):
-        desc = u"Le module du jeux des chiffres et des lettres\n"
-        desc += u"chiffres init : génère une nouvelle partie\n"
-        desc += u"chiffres solve : cherche à résoudre le problème"
+        desc = "Le module du jeux des chiffres et des lettres\n"
+        desc += "chiffres init : génère une nouvelle partie\n"
+        desc += "chiffres solve : cherche à résoudre le problème"
         self.game = None
         SyncModule.__init__(self,
                             bot,
@@ -33,9 +33,9 @@ class ChiffresCmd(SyncModule):
     @answercmd("init")
     def init(self, sender):
         self.game = Chiffres()
-        res = u"Nouvelle partie lancée\n"
-        res += u"Total à trouver : %s\n" % self.game.total
-        res += u"Nombres fournis : %s" % ', '.join(map(str, self.game.digits))
+        res = "Nouvelle partie lancée\n"
+        res += "Total à trouver : %s\n" % self.game.total
+        res += "Nombres fournis : %s" % ', '.join(map(str, self.game.digits))
         if self.timer is not None:
             self.timer.cancel()
 
@@ -46,41 +46,41 @@ class ChiffresCmd(SyncModule):
     @answercmd("solve", "solve (?P<sprinter>\S+)")
     def solve(self, sender, sprinter='tiles'):
         if self.game is None:
-            return u"Aucune partie lancée"
+            return "Aucune partie lancée"
         exact, res = self.game.solve()
 
         printer = self.printers.get(sprinter)
         if printer is None :
-            return u"Printer inconnu"
+            return "Printer inconnu"
 
         self.timer.cancel()
 
         if exact:
-            return u"J'ai trouvé une solution exacte : \n%s" % printer(res.ast, exact)
+            return "J'ai trouvé une solution exacte : \n%s" % printer(res.ast, exact)
         else:
-            return u"Pas de solution exacte… voici ce que j'ai de mieux : \n%s" % printer(res.ast, exact)
+            return "Pas de solution exacte… voici ce que j'ai de mieux : \n%s" % printer(res.ast, exact)
 
     @answercmd("check (?P<tocheck>.*)")
     def check(self, sender, tocheck):
         if self.game is None:
-            return u"Aucune partie lancée"
+            return "Aucune partie lancée"
 
         try:
             verdict = self.game.check(tocheck)
             if verdict:
                 if verdict == self.game.total:
                     self.timer.cancel()
-                    return u"%s : Le compte est bon !!" % sender
+                    return "%s : Le compte est bon !!" % sender
                 else:
-                    return u"%s : Les calculs sont bons, tu trouves %s au lieu de %s, soit une erreur de %s" % (sender,
+                    return "%s : Les calculs sont bons, tu trouves %s au lieu de %s, soit une erreur de %s" % (sender,
                                                                                     verdict,
                                                                                     self.game.total,
                                                                                     abs(verdict - self.game.total))
             else:
-                return u"%s : Désolé mais tu ne sais pas compter" % sender
+                return "%s : Désolé mais tu ne sais pas compter" % sender
 
         except CalcError as err:
-            return u"%s: %s" % (sender, err)
+            return "%s: %s" % (sender, err)
 
     def time_out(self):
         self.bot.say("Temps écoulé !! On arrête de compter !")
@@ -89,7 +89,7 @@ class ChiffresCmd(SyncModule):
     # Some printers for ast describing a solve
     #
 
-    opstr = {ast.Add: u'+', ast.Sub: u'-', ast.Mult: u'×', ast.Div: u'÷'}
+    opstr = {ast.Add: '+', ast.Sub: '-', ast.Mult: '×', ast.Div: '÷'}
     opast = {ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul, ast.Div: op.div}
 
     @staticmethod
@@ -97,9 +97,9 @@ class ChiffresCmd(SyncModule):
         """ Print ast tree in algebra formula. Its name is a reference to the number of parentheses that it involves """
 
         if isinstance(astree, ast.Num):
-            return unicode(astree.n)
+            return str(astree.n)
         elif isinstance(astree, ast.BinOp):
-            return u'(%s%s%s)' % (ChiffresCmd.pretty_lisp(astree.left, exact),
+            return '(%s%s%s)' % (ChiffresCmd.pretty_lisp(astree.left, exact),
                                   ChiffresCmd.opstr[astree.op],
                                   ChiffresCmd.pretty_lisp(astree.right, exact))
 
@@ -110,21 +110,21 @@ class ChiffresCmd(SyncModule):
         def inside(astree) :
             if isinstance(astree.left, ast.Num) and isinstance(astree.right, ast.Num):
                 res = ChiffresCmd.opast[astree.op](astree.left.n, astree.right.n)
-                return (u"Avec les nombres de départs, vous voyez on a %d %s %d, ce qui donne %d\n" % \
+                return ("Avec les nombres de départs, vous voyez on a %d %s %d, ce qui donne %d\n" % \
                         (astree.left.n, ChiffresCmd.opstr[astree.op], astree.right.n, res),
                         res)
             elif isinstance(astree.left, ast.Num):
                 before, bres = inside(astree.right)
                 res = ChiffresCmd.opast[astree.op](astree.left.n, bres)
                 return (before + \
-                        u"Et après ? Et ben on prend le %d calculé et le %d du tirage, un coup de %s et hop, %d\n" % \
+                        "Et après ? Et ben on prend le %d calculé et le %d du tirage, un coup de %s et hop, %d\n" % \
                                     (bres, astree.left.n, ChiffresCmd.opstr[astree.op], res),
                         res)
             elif isinstance(astree.right, ast.Num):
                 before, bres = inside(astree.left)
                 res = ChiffresCmd.opast[astree.op](bres, astree.right.n)
                 return (before + \
-                        u"Vous vous croyez coincé ? Et non, le %d %s le %d du tirage, ça donne %d\n" % \
+                        "Vous vous croyez coincé ? Et non, le %d %s le %d du tirage, ça donne %d\n" % \
                                     (bres, ChiffresCmd.opstr[astree.op], astree.right.n, res),
                         res)
             else:
@@ -133,15 +133,15 @@ class ChiffresCmd(SyncModule):
                 res = ChiffresCmd.opast[astree.op](bresl, bresr)
                 return  (beforel +\
                          beforer +\
-                         u"On prend le %d et le %d, on fait %s et on arrive à %d\n" %
+                         "On prend le %d et le %d, on fait %s et on arrive à %d\n" %
                                     (bresl, bresr, ChiffresCmd.opstr[astree.op], res),
                          res)
 
         mess, res = inside(astree)
         if exact:
-            mess += u"Et voila, on arrive bien à %d, c'était pas compliqué" % res
+            mess += "Et voila, on arrive bien à %d, c'était pas compliqué" % res
         else:
-            mess += u"Bon ben, j'ai fait ce que j'ai pu et j'arrive à %d" % res
+            mess += "Bon ben, j'ai fait ce que j'ai pu et j'arrive à %d" % res
         return mess
 
     @staticmethod
@@ -151,21 +151,21 @@ class ChiffresCmd(SyncModule):
         def inside(astree):
             if isinstance(astree.left, ast.Num) and isinstance(astree.right, ast.Num):
                 res = ChiffresCmd.opast[astree.op](astree.left.n, astree.right.n)
-                return (u"%d %s %d = %d\n" % \
+                return ("%d %s %d = %d\n" % \
                         (astree.left.n, ChiffresCmd.opstr[astree.op], astree.right.n, res),
                         res)
             elif isinstance(astree.left, ast.Num):
                 before, bres = inside(astree.right)
                 res = ChiffresCmd.opast[astree.op](astree.left.n, bres)
                 return (before + \
-                        u"%d %s %d = %d\n" % \
+                        "%d %s %d = %d\n" % \
                         (bres, ChiffresCmd.opstr[astree.op], astree.left.n, res),
                         res)
             elif isinstance(astree.right, ast.Num):
                 before, bres = inside(astree.left)
                 res = ChiffresCmd.opast[astree.op](bres, astree.right.n)
                 return (before + \
-                        u"%d %s %d = %d\n" % \
+                        "%d %s %d = %d\n" % \
                         (bres, ChiffresCmd.opstr[astree.op], astree.right.n, res),
                         res)
             else:
@@ -174,7 +174,7 @@ class ChiffresCmd(SyncModule):
                 res = ChiffresCmd.opast[astree.op](bresl, bresr)
                 return  (beforel +\
                          beforer +\
-                         u"%d %s %d = %d\n" % \
+                         "%d %s %d = %d\n" % \
                                     (bresl, ChiffresCmd.opstr[astree.op], bresr, res),
                          res)
 
@@ -185,9 +185,9 @@ class LettresCmd(SyncModule):
     _config = (("dico", str, ""),)
 
     def __init__(self, bot):
-        desc = u"Le module du jeux des chiffres et des lettres\n"
-        desc += u"lettres init : génère une nouvelle partie\n"
-        desc += u"lettres solve : cherche à résoudre le problème"
+        desc = "Le module du jeux des chiffres et des lettres\n"
+        desc += "lettres init : génère une nouvelle partie\n"
+        desc += "lettres solve : cherche à résoudre le problème"
 
         if self.dico == "":
             logger.error(_("Missing dictionary for lettres modules. "
@@ -202,8 +202,8 @@ class LettresCmd(SyncModule):
     @answercmd("init")
     def init(self, sender):
         self.game.tirage()
-        res = u"Nouvelle partie lancée\n"
-        res += u"Liste des lettres fournies : %s" % ", ".join(self.game.letters)
+        res = "Nouvelle partie lancée\n"
+        res += "Liste des lettres fournies : %s" % ", ".join(self.game.letters)
         t = threading.Timer(60, self.time_out)
         t.start()
         return res
@@ -211,26 +211,26 @@ class LettresCmd(SyncModule):
     @answercmd("solve")
     def solve(self, sender):
         if self.game.letters == []:
-            return u"Aucune partie lancée"
+            return "Aucune partie lancée"
 
         results = self.game.solve()
         if results is None:
-            return u"Je n'ai pas de dictionnaire dans ma config :'("
+            return "Je n'ai pas de dictionnaire dans ma config :'("
 
         self.game.letters = []
-        return u"Voici ce que j'ai trouvé : \n%s" % ", ".join(results)
+        return "Voici ce que j'ai trouvé : \n%s" % ", ".join(results)
 
     def time_out(self):
-        self.bot.say(u"Temps écoulé !! On arrête de chercher !")
+        self.bot.say("Temps écoulé !! On arrête de chercher !")
 
 
 class ChiffresTest(ModuleTest):
     def test_init(self):
-        expected=(u"Nouvelle partie lancée\nTotal à trouver : (\d+)\n"
-                  u"Nombres fournis : [(\d+),]*(\d+)")
+        expected=("Nouvelle partie lancée\nTotal à trouver : (\d+)\n"
+                  "Nombres fournis : [(\d+),]*(\d+)")
         self.assertRegexpMatches(self.bot_answer("!chiffres init"), expected)
                          
     def test_solve(self):
-        expected=[u"J'ai trouvé une solution exacte(.*)",
-                  u"Pas de solution exacte…(.*)"]
+        expected=["J'ai trouvé une solution exacte(.*)",
+                  "Pas de solution exacte…(.*)"]
         self.assertRegexpListMatches(self.bot_answer("!chiffres solve"), expected)

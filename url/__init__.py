@@ -1,12 +1,12 @@
 #-*- coding: utf-8 -*-
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import pipobot.lib.utils
-import httplib
+import http.client
 import sqlalchemy.exc
 from pipobot.lib.modules import ListenModule
 from pipobot.lib.utils import check_url
-from model import RepostUrl
+from .model import RepostUrl
 
 try:
     from hyperlinks_scanner import HyperlinksScanner
@@ -57,11 +57,11 @@ class CmdUrl(ListenModule):
                         except KeyError:
                             first = res.jid
                         first_date = 'le ' + res.date.strftime('%x') + ' à ' + res.date.strftime('%X')
-                        first_date = first_date.decode("utf-8")
+                        first_date = first_date
                         if res.count == 1:
-                            send.append(u'Ce lien a déjà été posté %s par %s sur %s…' % (first_date, first, res.chan))
+                            send.append('Ce lien a déjà été posté %s par %s sur %s…' % (first_date, first, res.chan))
                         else:
-                            send.append(u'Ce lien a déjà été posté %s fois depuis que %s l’a découvert, %s, sur %s…' % (res.count, first, first_date, res.chan))
+                            send.append('Ce lien a déjà été posté %s fois depuis que %s l’a découvert, %s, sur %s…' % (res.count, first, first_date, res.chan))
                         res.count += 1
                     else:
                         u = RepostUrl(url,

@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-import libcanal
+from . import libcanal
 import logging
 import traceback
-import config
+from . import config
 from pipobot.lib.modules import defaultcmd
 from pipobot.lib.abstract_modules import NotifyModule
 
@@ -25,18 +25,18 @@ class CmdCanalPlus(NotifyModule):
                               name="canal",
                               delay=self.timer)
         self.shows = {}
-        for show in config.emissions_id.keys():
+        for show in list(config.emissions_id.keys()):
             try:
                 em = libcanal.Emission(show, notif=(show in self.notify))
                 em.update()
                 self.shows[show] = em
             except:
-                logger.error("Error loading show %s : %s" % (show, traceback.format_exc().decode("utf-8")))
+                logger.error("Error loading show %s : %s" % (show, traceback.format_exc()))
 
     @defaultcmd
     def answer(self, sender, message):
         if message == "":
-            return u"usage : !canal emission [quality], avec emission parmi %s" % ", ".join(config.emissions_id.keys())
+            return "usage : !canal emission [quality], avec emission parmi %s" % ", ".join(list(config.emissions_id.keys()))
         emission = message
         args = emission.split()
         name = args[0]
@@ -49,33 +49,33 @@ class CmdCanalPlus(NotifyModule):
                 show = libcanal.Emission(name)
                 self.shows[name] = show
             except libcanal.UnknownEmission:
-                return u"Je ne connais pas l'émission %s" % name
+                return "Je ne connais pas l'émission %s" % name
             except:
-                logger.error("Error loading show %s : %s" % (name, traceback.format_exc().decode("utf-8")))
-                return u"L'émission %s n'est pas disponible" % name
+                logger.error("Error loading show %s : %s" % (name, traceback.format_exc()))
+                return "L'émission %s n'est pas disponible" % name
 
         if len(args) > 1:
             quality = args[1]
             try:
                 url = show.last_vid.get_url(quality)
                 vid = show.last_vid
-                return u"%s - %s\n%s : %s" % (vid.title, vid.subtitle, quality, url)
+                return "%s - %s\n%s : %s" % (vid.title, vid.subtitle, quality, url)
             except libcanal.QualityException:
-                return u"La vidéo %s n'existe pas avec cette qualité (%s)" % (name, quality)
+                return "La vidéo %s n'existe pas avec cette qualité (%s)" % (name, quality)
         res = {}
         vid = show.last_vid
-        vid_data = u"%s - %s" % (vid.title, vid.subtitle)
-        return "\n".join([vid_data] + ["%s : %s" % (quality, link) for quality, link in vid.links.iteritems()])
+        vid_data = "%s - %s" % (vid.title, vid.subtitle)
+        return "\n".join([vid_data] + ["%s : %s" % (quality, link) for quality, link in vid.links.items()])
 
     def do_action(self):
-        for show in [elt for elt in self.shows.values() if elt.notif]:
+        for show in [elt for elt in list(self.shows.values()) if elt.notif]:
             updated = show.update()
             if updated:
                 url = show.last_vid.get_url("HD")
-                msg = u"Nouvel épisode de %s !!!\n" % show.name
-                msg += u"Lien HD : %s" % str(url)
+                msg = "Nouvel épisode de %s !!!\n" % show.name
+                msg += "Lien HD : %s" % str(url)
                 self.bot.say(">> %s" % msg)
 
     def update(self, silent=False):
-        for show in self.shows.values():
+        for show in list(self.shows.values()):
             updated = show.update()

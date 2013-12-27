@@ -3,7 +3,7 @@ import random
 from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.module_test import ModuleTest
 
-FAIL_MSG = u"On veut un entier quand même…"
+FAIL_MSG = "On veut un entier quand même…"
 OLA = ["\o/ .o. .o. .o.", ".o. \o/ .o. .o.",
        ".o. .o. \o/ .o.", ".o. .o. .o. \o/"]
 OLA_REV = list(OLA)

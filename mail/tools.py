@@ -91,14 +91,14 @@ def decode(header):
     Decode RFC2047 encoded headers to Unicode.
     """
     if not header:
-        return u""
+        return ""
 
-    result = u""
+    result = ""
 
     try:
         header_parts = decode_header(header)
     except HeaderParseError:
-        return u"<En-tête corrompu>"
+        return "<En-tête corrompu>"
 
     for data, charset in header_parts:
         if charset is None:

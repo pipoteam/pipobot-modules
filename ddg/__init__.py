@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 #-*- coding: utf8 -*-
-import BeautifulSoup
-import urllib
-import simplejson
+from bs4 import BeautifulSoup, Tag
+import urllib.request, urllib.parse, urllib.error
 import duckduckgo
 from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.utils import xhtml2text
@@ -31,9 +30,9 @@ def ddg_request(msg):
 
 
 def html_request(msg):
-    site = urllib.urlopen('http://duckduckgo.com/html/?q=%s' % msg)
+    site = urllib.request.urlopen('http://duckduckgo.com/html/?q=%s' % msg)
     data = site.read()
-    soup = BeautifulSoup.BeautifulSoup(data)
+    soup = BeautifulSoup(data)
     site.close()
 
     links = soup.findAll('div', {'class': "links_main links_deep"})
@@ -43,7 +42,7 @@ def html_request(msg):
         contents = link.find("a").contents
         title = ""
         for data in contents:
-            if isinstance(data, BeautifulSoup.Tag):
+            if isinstance(data, Tag):
                 title += " %s" % data.getString()
             else:
                 title += " %s" % str(xhtml2text(data))
@@ -53,7 +52,7 @@ def html_request(msg):
 
 class CmdDDG(SyncModule):
     def __init__(self, bot):
-        desc = u"!ddg mot-clé : recherche dans duckduckgo"
+        desc = "!ddg mot-clé : recherche dans duckduckgo"
         SyncModule.__init__(self,
                             bot,
                             desc=desc,

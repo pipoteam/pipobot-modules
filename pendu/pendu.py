@@ -2,7 +2,7 @@
 
 import os
 from random import choice
-from pendu_ascii import asc_res
+from .pendu_ascii import asc_res
 
 
 class Pendu(object):
@@ -22,12 +22,12 @@ class Pendu(object):
     word = property(getword, setword)
 
     def playedtostr(self):
-        return u"Lettres jouées: %s" % ", ".join(sorted(self.letters | self.okletters))
+        return "Lettres jouées: %s" % ", ".join(sorted(self.letters | self.okletters))
 
     def propose(self, letter):
         res = ""
         if letter in (self.letters | self.okletters):
-            return u"Lettre déjà proposée"
+            return "Lettre déjà proposée"
 
         if letter in self.word:
             i = -1
@@ -36,16 +36,16 @@ class Pendu(object):
                 if l == letter:
                     self.played[i] = self.word[i]
                     self.okletters.add(letter)
-            res = u"Bien vu !"
+            res = "Bien vu !"
             if self.solved():
-                res += u"\nEt oui, le mot à trouver était bien %s !" % self.word
+                res += "\nEt oui, le mot à trouver était bien %s !" % self.word
                 self.word = ""
             else:
-                res += u" Mot actuel: %s" % "".join(self.played)
+                res += " Mot actuel: %s" % "".join(self.played)
         else:
             if len(self.letters) == self.maxanswers:
                 res = asc_res[8]
-                res += u"Tu devais trouver %s" % self.word
+                res += "Tu devais trouver %s" % self.word
                 self.word = ""
             else:
                 self.letters.add(letter)
@@ -65,14 +65,14 @@ class Pendu(object):
 
 if __name__ == "__main__":
     g = Pendu("pipo")
-    print g.played
-    print g.propose("p")
-    print g.playedtostr()
-    print g.solved()
-    print g.propose("r")
-    print g.playedtostr()
-    print g.solved()
-    print g.propose("i")
-    print g.playedtostr()
-    print g.solved()
-    print g.propose("o")
+    print(g.played)
+    print(g.propose("p"))
+    print(g.playedtostr())
+    print(g.solved())
+    print(g.propose("r"))
+    print(g.playedtostr())
+    print(g.solved())
+    print(g.propose("i"))
+    print(g.playedtostr())
+    print(g.solved())
+    print(g.propose("o"))

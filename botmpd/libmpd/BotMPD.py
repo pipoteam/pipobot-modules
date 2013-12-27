@@ -4,7 +4,7 @@ import random
 from mpd import MPDClient, ConnectionError, CommandError
 from mutagen.easyid3 import EasyID3
 from mutagen.mp3 import MP3
-import utils
+from . import utils
 
 
 class BotMPD(MPDClient):
@@ -28,7 +28,7 @@ class BotMPD(MPDClient):
 
         res = self.currentsongf() + "\n"
         res += "[playing] #%s/%s" % (song["pos"], playlist["playlistlength"])
-        if 'time' in playlist.keys():
+        if 'time' in list(playlist.keys()):
             current, total = playlist['time'].split(':')
             pcentage = int(100 * float(current) / float(total))
             res += "  %s/%s (%s%%)" % (utils.humanize_time(current),
@@ -146,7 +146,7 @@ class BotMPD(MPDClient):
             mp3 = MP3(f, ID3=EasyID3)
         except IOError as e:
             if e.errno == 13:
-                return u"Je n'ai pas le droit de lire ce fichier :'("
+                return "Je n'ai pas le droit de lire ce fichier :'("
         try:
             mp3['artist'] = artist
             mp3['title'] = title
@@ -172,7 +172,7 @@ class BotMPD(MPDClient):
 
     def next_song(self, sender):
         ret = "%s ne veut pas écouter : %s" % (sender, self.currentsongf())
-        self.next()
+        next(self)
         return ret
 
     def prev_song(self):

@@ -2,7 +2,7 @@
 """ A module to parse quotes from http://bash.org """
 
 from pipobot.lib.utils import xhtml2text
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from pipobot.lib.abstract_modules import FortuneModule
 from pipobot.lib.module_test import ModuleTest
 
@@ -34,8 +34,8 @@ bashorg [n] : Show the quote [n] from bash.org"""
         for elt in tables:
             p = elt.findAll("p", {"class": "qt"})
             if p != []:
-                content = xhtml2text(unicode(p[0]))
-                nb = xhtml2text(unicode(elt.findAll("b")[0].text))
+                content = xhtml2text(str(p[0]))
+                nb = xhtml2text(str(elt.findAll("b")[0].text))
                 break
 
         return "bashorg %s :\n%s" % (nb, content)
@@ -44,8 +44,8 @@ bashorg [n] : Show the quote [n] from bash.org"""
 class BashfOrgTest(ModuleTest):
     def test_bashorg_ok(self):
         bot_rep = self.bot_answer("!bashorg 1729")
-        expected=(u"bashorg #1729 :\n"
-                  u"<blinkchik> can i become a bot and how??")
+        expected=("bashorg #1729 :\n"
+                  "<blinkchik> can i become a bot and how??")
         self.assertEqual(bot_rep, expected)
 
     def test_bashorg_random(self):

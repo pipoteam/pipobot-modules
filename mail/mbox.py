@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import time
-from tools import decode
+from .tools import decode
 
 DEFAULT_FILE = '/var/mail/bot'
 

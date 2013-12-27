@@ -1,13 +1,13 @@
 #-*- coding: utf-8 -*-
 
 import pipobot.lib.utils
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from pipobot.lib.abstract_modules import FortuneModule
 from pipobot.lib.module_test import ModuleTest
 
 
-ERROR_MSG = (u"Je n'arrive pas à parser la page : peut-être que l'html a changé, "
-             u"ou la page cherchée n'existe pas, ou alors mon développeur est un boulet")
+ERROR_MSG = ("Je n'arrive pas à parser la page : peut-être que l'html a changé, "
+             "ou la page cherchée n'existe pas, ou alors mon développeur est un boulet")
 
 
 
@@ -33,7 +33,7 @@ vdm [n] : Affiche la vdm [n]"""
             for elt in a.findAll("a"):
                 res.append(pipobot.lib.utils.xhtml2text(elt.text))
             nb = a.findAll("a")[0].get("href").split("/")[-1]
-            res = (u"VDM#%s : %s" % (nb, "".join(res))).replace(".", ". ")
+            res = ("VDM#%s : %s" % (nb, "".join(res))).replace(".", ". ")
         except:
             res = ERROR_MSG
         return res

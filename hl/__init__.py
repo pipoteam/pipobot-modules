@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 
-from model import HlList, HlListMembers
+from .model import HlList, HlListMembers
 from pipobot.lib.modules import SyncModule, defaultcmd, answercmd
 from pipobot.lib.known_users import KnownUser, minpermlvl
 

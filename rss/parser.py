@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import BeautifulSoup
+import bs4 import BeautifulSoup
 import html2text
 import feedparser
 import hashlib
@@ -17,8 +17,8 @@ def get_content(entry):
     if conts:
         if "type" in conts:
             if conts.type == "html":
-                cleanerhtml = BeautifulSoup.BeautifulSoup(conts.value)
-                return html2text.html2text(unicode(cleanerhtml))
+                cleanerhtml = BeautifulSoup(conts.value)
+                return html2text.html2text(str(cleanerhtml))
             elif conts.type == "text/plain":
                 return conts.value
 
@@ -30,12 +30,12 @@ def get_content(entry):
 def get_id(entry):
     if "id" in entry and entry.id:
         if type(entry.id) is dict:
-            return entry.id.values()[0]
+            return list(entry.id.values())[0]
         return entry.id
 
     content = get_content(entry)
     if content and content != "\n":
-        if type(content) is unicode:
+        if type(content) is str:
             content = content.encode("utf-8")
         return hashlib.md5(content).hexdigest()
 
@@ -58,12 +58,12 @@ if __name__ == "__main__":
     feeds = feedparser.parse(url)
     for entry in feeds.entries:
         if DEBUG:
-            for key, value in entry.iteritems():
-                print key, "→", value
-                print "*" * 110
+            for key, value in entry.items():
+                print(key, "→", value)
+                print("*" * 110)
         else:
-            print "*" * 110
-            print get_id(entry)
-            print get_time(entry)
-            print entry.link
-            print entry.title
+            print("*" * 110)
+            print(get_id(entry))
+            print(get_time(entry))
+            print(entry.link)
+            print(entry.title)

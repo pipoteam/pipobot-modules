@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import yaml
-import hglib
+from . import hglib
 import mercurial
 from pipobot.lib.modules import SyncModule, answercmd
 from pipobot.lib.exceptions import ConfigException
