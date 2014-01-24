@@ -10,7 +10,7 @@ class Remind(pipobot.lib.bdd.Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     owner = Column(String(250))
     description = Column(String(250))
-    date = Column(Integer(250))
+    date = Column(Integer)
     reporter = Column(String(250))
     room = Column(String(50))
 
