@@ -4,11 +4,13 @@ import random
 from mpd import MPDClient, ConnectionError, CommandError
 from mutagen.easyid3 import EasyID3
 from mutagen.mp3 import MP3
-from . import utils
+import utils
+import threading
 
 
 class BotMPD(MPDClient):
     def __init__(self, host, port, password, datadir=None):
+        self.token = threading.Lock()
         MPDClient.__init__(self)
         if not self.connection(host, port, password):
             self.disconnect()
@@ -177,12 +179,17 @@ class BotMPD(MPDClient):
 
     def prev_song(self):
         self.previous()
-        return "On revient à %s" % (self.currentsongf()) 
+        return "On revient à %s" % (self.currentsongf())
 
     def connection(self, host, port, pwd):
+       self.token.acquire()
        try:
            self.connect(host, port)
            self.password(pwd)
            return True
        except ConnectionError as e:
            return False
+
+    def disconnect(self):
+        MPDClient.disconnect(self)
+        self.token.release()
