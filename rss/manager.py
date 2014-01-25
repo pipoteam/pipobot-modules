@@ -4,7 +4,8 @@ import twitter
 from parser import get_id, get_time
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.exc import IntegrityError, FlushError
+from sqlalchemy.orm.exc import FlushError
+from sqlalchemy.exc import IntegrityError
 
 from model import Feed, Entry
 from metadata import Base
