@@ -3,7 +3,8 @@ import re
 import urllib.request, urllib.parse, urllib.error
 import datetime
 
-alias = { 'himym': 'how i met your mother' }
+alias = {'himym': 'how i met your mother',
+         'got': 'game of thrones'}
 baseurl = "http://services.tvrage.com/tools/quickinfo.php?show=%s"
 
 
@@ -20,13 +21,13 @@ def convert_episode(raw):
 
 
 def getdata(message, isnext):
-    if message in alias:
-        message = alias[message]
+    message = alias.get(message, message)
     show_url = baseurl % (message.replace(" ", "%20"))
     response = urllib.request.urlopen(show_url)
     content = response.readlines()
     response.close()
     data = {}
+
     if content == ['No Show Results Were Found For "%s"' % message]:
         return "Je n'ai aucune information sur la série %s" % message
     for line in content:
