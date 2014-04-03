@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import os
 import ConfigParser
 from pipobot.lib.modules import MultiSyncModule, defaultcmd
@@ -17,7 +17,7 @@ class Link(MultiSyncModule):
                                  names=names)
 
     def readconf(self, bot):
-        #name, description and url associated to each link
+        # name, description and url associated to each link
         self.dico = {}
         names = {}
 
@@ -33,5 +33,5 @@ class Link(MultiSyncModule):
     @defaultcmd
     def answer(self, cmd, sender, message):
         if message:
-            return check_url(self.dico[cmd]['url'].replace('KEYWORDS', message).replace(' ', '+'), geturl=True)
+            return check_url(self.dico[cmd]['url'].replace('KEYWORDS', message).replace(' ', '+').encode('utf-8'), geturl=True)
         return "rtfm ;)"
