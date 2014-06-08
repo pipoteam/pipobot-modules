@@ -90,7 +90,7 @@ class HighLight(SyncModule):
             return _("%s: There is no such HighLight List" % sender)
         ret = ''
 
-        users = users.strip().split()
+        users = users.split()
         if users:
             for user in users:
                 knownuser = KnownUser.get(user, self.bot)
