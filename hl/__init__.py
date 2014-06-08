@@ -46,10 +46,10 @@ class HighLight(SyncModule):
         ret = ''
         knownusers = []
         unknownusers = []
-        users = users.strip().split()
+        users = users.split()
 
         for user in users:
-            knownuser = KnownUser.get(user, self.bot)
+            knownuser = KnownUser.get(user, self.bot, authviapseudo=True)
             if knownuser:
                 knownusers.append(knownuser)
             else:
@@ -93,7 +93,7 @@ class HighLight(SyncModule):
         users = users.split()
         if users:
             for user in users:
-                knownuser = KnownUser.get(user, self.bot)
+                knownuser = KnownUser.get(user, self.bot, authviapseudo=True)
                 if not knownuser:
                     ret += _('user "%s" is not even registered…\n' % user)
                     continue
@@ -119,19 +119,17 @@ class HighLight(SyncModule):
         knownusers = []
         unknownusers = []
         hllists = self.bot.session.query(HlList).all()
-        hllistnames = []
-        for hllist in hllists:
-            hllistnames.append(hllist.name)
+        hllistnames = [hllist.name for hllist in hllists]
         ret = 'HL:'
-        for user in message.split(':')[0].split(' '):
-            if user in hllistnames:
+        for user in message.split(':')[0].split():
+            if user in hllistnames:  # highliht a whole list
                 for hllist in hllists:
                     if hllist.name == user:
                         for knownuser in hllist.members:
                             knownusers.append(knownuser.user)
                         break
-            else:
-                knownuser = KnownUser.get(user, self.bot)
+            else:  # highlight one user
+                knownuser = KnownUser.get(user, self.bot, authviapseudo=True)
                 if knownuser:
                     knownusers.append(knownuser)
                 else:
