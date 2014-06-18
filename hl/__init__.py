@@ -83,7 +83,7 @@ class HighLight(SyncModule):
 
     @answercmd(r'^rm (?P<plist>\w+) (?P<users>.*)')
     @minpermlvl(2)
-    def answer_rm(self, sender, plist, users):
+    def answer_rm_users(self, sender, plist, users):
         hllistname = plist
         hllist = self.bot.session.query(HlList).filter(HlList.name == hllistname).first()
         if not hllist:
@@ -111,6 +111,17 @@ class HighLight(SyncModule):
             ret += _('list "%s" has been deleted' % hllistname)
         self.bot.session.commit()
         return ret.strip()
+
+    @answercmd(r'^rm (?P<hllistname>\w+)')
+    @minpermlvl(2)
+    def answer_rm(self, sender, hllistname):
+        hllist = self.bot.session.query(HlList).filter(HlList.name == hllistname).first()
+        if not hllist:
+            return _("%s: There is no such HighLight List" % sender)
+        for hllistmember in self.bot.session.query(HlListMembers).filter(HlListMembers.hlid == hllist.hlid):
+            self.bot.session.delete(hllistmember)
+        self.bot.session.delete(hllist)
+        return _("The list %s has been deleted, as well as all its subscribers")
 
     @defaultcmd
     def answer(self, sender, message):
