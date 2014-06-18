@@ -121,7 +121,7 @@ class HighLight(SyncModule):
         for hllistmember in self.bot.session.query(HlListMembers).filter(HlListMembers.hlid == hllist.hlid):
             self.bot.session.delete(hllistmember)
         self.bot.session.delete(hllist)
-        return _("The list %s has been deleted, as well as all its subscribers")
+        return _("The list %s has been deleted, as well as all its subscribers" % hllistname)
 
     @defaultcmd
     def answer(self, sender, message):
