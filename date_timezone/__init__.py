@@ -59,5 +59,5 @@ class CmdDateTimeZone(SyncModule):
     @defaultcmd
     def answer(self, sender, message):
         setlocale(LC_ALL, self.locale)
-        timezones = [self.default] + [tz[0] for tz in self.bot.session.query(KnownUserTimeZone.timezone).filter(KnownUserTimeZone.timezone != self.default).all()]
+        timezones = [self.default] + [tz[0] for tz in self.bot.session.query(KnownUserTimeZone.timezone).filter(KnownUserTimeZone.timezone != self.default).distinct().all()]
         return '\n'.join([tz + ':\t' + datetime.now(timezone(tz)).strftime(self.dateformat) for tz in timezones])
