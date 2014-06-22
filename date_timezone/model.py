@@ -10,5 +10,5 @@ from pipobot.lib.bdd import Base
 class KnownUserTimeZone(Base):
     __tablename__ = "memberstimezones"
     kuid = Column(Integer, ForeignKey('knownuser.kuid'), primary_key=True)
-    timezone = Column(String)
+    timezone = Column(String(40))
     user = relationship('KnownUser')
