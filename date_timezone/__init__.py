@@ -61,5 +61,5 @@ class CmdDateTimeZone(SyncModule):
         setlocale(LC_ALL, self.locale)
         ret = _("It is:\n")
         timezones = [timezone(tz[0]) for tz in self.bot.session.query(KnownUserTimeZone.timezone).distinct().all()]
-        ret += '\n'.join(['%s (%s)' % (datetime.now(tz).strftime(self.dateformat), tz.zone) for tz in sorted(timezones, key=lambda tz: datetime.now(tz))])
+        ret += '\n'.join(['%s (%s)' % (datetime.now(tz).strftime(self.dateformat), tz.zone) for tz in sorted(timezones, key=lambda tz: datetime.now(tz).timetuple())])
         return ret
