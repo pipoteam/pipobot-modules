@@ -12,7 +12,7 @@ from .model import KnownUserTimeZone
 
 
 class CmdDateTimeZone(SyncModule):
-    _config = (("default", str, 'Europe/Paris'), ("locale", str, 'fr_FR.UTF-8'),)
+    _config = (("default", str, 'Europe/Paris'), ("dateformat", str, '%A %d %B %Y, %X'), ("locale", str, 'fr_FR.UTF-8'),)
 
     def __init__(self, bot):
         desc = _("date : show the actual date and time for all registered users\n")
@@ -60,4 +60,4 @@ class CmdDateTimeZone(SyncModule):
     def answer(self, sender, message):
         setlocale(LC_ALL, self.locale)
         timezones = [self.default] + [tz[0] for tz in self.bot.session.query(KnownUserTimeZone.timezone).filter(KnownUserTimeZone.timezone != self.default).all()]
-        return '\n'.join([tz + ':\t' + datetime.now(timezone(tz)).strftime('%A %d %B %Y, %X') for tz in timezones])
+        return '\n'.join([tz + ':\t' + datetime.now(timezone(tz)).strftime(self.dateformat) for tz in timezones])
