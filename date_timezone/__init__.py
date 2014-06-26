@@ -45,7 +45,7 @@ class CmdDateTimeZone(SyncModule):
         self.bot.session.commit()
         return _("Current timezone of %s set to %s" % (sender, tz))
 
-    @answercmd(r'^(?P<user>\w+)')
+    @answercmd(r'^(?P<user>.+)')
     def answer_user(self, sender, user):
         knownuser = KnownUser.get(user, self.bot, authviapseudo=True)
         if not knownuser:
