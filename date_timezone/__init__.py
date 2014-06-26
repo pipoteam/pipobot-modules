@@ -48,7 +48,7 @@ class CmdDateTimeZone(SyncModule):
         kutz.timezone = tz
         self.bot.session.add(kutz)
         self.bot.session.commit()
-        return _("Current timezone of %s set to %s" % (sender, tz))
+        return _("Current timezone of %s set to %s" % (knownuser.get_pseudo(hl=True), tz))
 
     @answercmd(r'^all')
     def answer_all(self, sender):
@@ -56,7 +56,7 @@ class CmdDateTimeZone(SyncModule):
         setlocale(LC_ALL, self.locale)
         ret = _("It is:\n")
         timezones = [tz[0] for tz in session.query(KUTZ.timezone).distinct().all()]
-        timezones_users = [(timezone(tz), ", ".join([k.user.pseudo for k in session.query(KUTZ).filter(KUTZ.timezone == tz).all()])) for tz in timezones]
+        timezones_users = [(timezone(tz), ", ".join([k.user.get_pseudo() for k in session.query(KUTZ).filter(KUTZ.timezone == tz).all()])) for tz in timezones]
         timezones_users = sorted(timezones_users, key=lambda tz: datetime.now(tz[0]).timetuple())
         ret += '\n'.join(['%s (%s): %s' % (datetime.now(tz).strftime(self.dateformat), tz.zone, users) for tz, users in timezones_users])
         return ret

@@ -51,12 +51,12 @@ class CmdBlague(AbstractBlague):
             #if the jid in the database is a known user
             if known:
                 # if we already have an entry for him with a different jid
-                if known.pseudo in result:
-                    result[known.pseudo] = (result[known.pseudo][0] + blag.score,
-                                            max(blag.submission, result[known.pseudo][1]))
+                if known.get_pseudo() in result:
+                    result[known.get_pseudo()] = (result[known.get_pseudo()][0] + blag.score,
+                                            max(blag.submission, result[known.get_pseudo()][1]))
                 else:
                     #else we create it
-                    result[known.pseudo] = (blag.score, blag.submission)
+                    result[known.get_pseudo()] = (blag.score, blag.submission)
             else:
                 #We do not know him : we use his jid
                 result[blag.pseudo] = (blag.score, blag.submission)
