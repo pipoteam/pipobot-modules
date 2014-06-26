@@ -147,9 +147,8 @@ class HighLight(SyncModule):
                 else:
                     unknownusers.append(user)
         for user in self.bot.occupants.users:
-            known = KnownUser.get(user, self.bot)
-            if known in knownusers:
-                ret += ' %s' % known.get_pseudo(hl=True)
+            if KnownUser.get(user, self.bot) in knownusers:
+                ret += ' %s' % user
         for user in unknownusers:
             ret += ' %s' % user
         if ':' in message:
