@@ -22,14 +22,15 @@ class CmdDok(SyncModule):
 
     @answercmd(r'(?P<query>.+)')
     def answer_query(self, sender, query):
+        rtfd = _("Read The Fucking Dok: ")
         xml_search = self.server_proxy.dokuwiki.search(query)
         if query in [r['id'] for r in xml_search]:  # What about 'title' ?
-            return self.url + query
+            return rtfd + self.url + query
         if len(xml_search) == 1:
-            return self.url + xml_search[0]['id']
+            return rtfd + self.url + xml_search[0]['id']
         if len(xml_search) > 1:
-            return "\n".join([self.url + page['id'] for page in xml_search])
-        return self.url + '?' + urlencode({'do': 'search', 'id': query})
+            return rtfd + "\n".join([self.url + page['id'] for page in xml_search])
+        return rtfd + self.url + '?' + urlencode({'do': 'search', 'id': query})
 
     @defaultcmd
     def answer(self, sender, message):
