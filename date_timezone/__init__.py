@@ -22,6 +22,7 @@ class CmdDateTimeZone(SyncModule):
         desc = _("date : show the actual date for the server and the sender\n")
         desc += _("date set <timezone> : set your actual timezone (see http://pastebin.com/XbLSvZhY)\n")
         desc += _("date all : show the actual date for all register users\n")
+        desc += _("date <timezone> : show the actual date and time for <timezone>")
         desc += _("date <user> : show the actual date and time for <user>")
         SyncModule.__init__(self,
                             bot,
@@ -63,6 +64,11 @@ class CmdDateTimeZone(SyncModule):
 
     @answercmd(r'^(?P<user>.+)')
     def answer_user(self, sender, user):
+        try:
+            tz = timezone(user)
+            return user + ': ' + datetime.now(tz).strftime(self.dateformat)
+        except UnknownTimeZoneError:
+            pass
         knownuser = KnownUser.get(user, self.bot, authviapseudo=True)
         if not knownuser:
             return _("I don't know that %s, he has to try '!user register'." % user)
