@@ -7,7 +7,7 @@ from pipobot.lib.abstract_modules import FortuneModule
 from pipobot.lib.module_test import ModuleTest
 
 
-SITE = "http://www.secouchermoinsbete.fr"
+SITE = "http://secouchermoinsbete.fr"
 
 
 class CmdScmb(FortuneModule):
@@ -19,7 +19,7 @@ scmb [n] : Affiche l'information [n]"""
                                bot,
                                desc=desc,
                                name="scmb",
-                               url_random="%s/au-hasard" % SITE,
+                               url_random="%s/random" % SITE,
                                url_indexed=SITE + "/%s-content",
                                lock_time=5,
                                )
@@ -53,7 +53,7 @@ class ScmbTest(ModuleTest):
                                      ["scmb invalide !!", r"scmb#(\d+) : .*"])
 
     def test_fail(self):
-        self.assertEqual(self.bot_answer("!scmb 42"), "scmb invalide !!")
+        self.assertEqual(self.bot_answer("!scmb 42"), "http://secouchermoinsbete.fr/42-content n'existe pas !")
 
     def test_ok(self):
         self.assertRegexpMatches(self.bot_answer("!scmb 133"), r"scmb#(\d+) : .*")
