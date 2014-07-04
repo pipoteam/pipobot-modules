@@ -4,6 +4,7 @@ import os
 import random
 import re
 from pipobot.lib.modules import MultiSyncModule, defaultcmd
+from pipobot.lib.known_users import KnownUser
 
 DEFAULT_CONFIG = os.path.join(os.path.dirname(__file__), "cmdlist.cfg")
 
@@ -69,7 +70,7 @@ class CmdAlacon(MultiSyncModule):
 
     @defaultcmd
     def answer(self, cmd, sender, message):
-        toall = self.bot.occupants.get_all(" ", [self.bot.name, sender])
+        toall = KnownUser.get_all(self.bot, " ", [self.bot.name, sender])
         replacement = {"__somebody__": message, "__sender__": sender, "_all_": toall}
         if message.lower() == sender.lower():
             key = "toSender"
