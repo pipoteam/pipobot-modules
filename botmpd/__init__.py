@@ -1,11 +1,15 @@
 #! /usr/bin/python2
 # -*- coding: utf-8 -*-
 
-import logging
+from bs4 import BeautifulSoup
 from mpd import ConnectionError
-import pipobot.lib.exceptions
-from pipobot.lib.modules import defaultcmd, answercmd
+import logging
+import re
+import urllib.request, urllib.parse, urllib.error
+
 from pipobot.lib.abstract_modules import NotifyModule
+from pipobot.lib.modules import defaultcmd, answercmd
+
 from .libmpd.BotMPD import BotMPD
 
 
@@ -119,9 +123,6 @@ class CmdMpd(NotifyModule):
 
     @answercmd("lyrics")
     def lyrics(self, sender):
-        import urllib.request, urllib.parse, urllib.error
-        from bs4 import BeautifulSoup
-        import re
 
         self.mpd.connection(self.host, self.port, self.pwd)
         artist = self.mpd.artist()
@@ -132,10 +133,12 @@ class CmdMpd(NotifyModule):
             return "Bad tag"
 
         ret = artist + " - " + title + "\n"
-        url = 'http://lyrics.wikia.com/api.php?action=lyrics&artist=%s&song=%s&fmt=xml&func=getSong' % (artist, title)
+        url = 'http://lyrics.wikia.com/api.php?action=lyrics&artist=%s&song=%s&fmt=xml&func=getSong' % \
+                 (artist.replace(" ", "%20"), title.replace(" ", "%20"))
         f = urllib.request.urlopen(url)
         soup = BeautifulSoup(f.read())
         f.close()
+
         if soup.find("lyrics").text != 'Not found':
             url2 = soup.find("url").text
             f2 = urllib.request.urlopen(url2)
@@ -146,19 +149,11 @@ class CmdMpd(NotifyModule):
                 ret += "No lyrics available"
             else:
                 for tag in text.findAll(True):
-                    if tag.name == "div" or tag.name == "p":
+                    if tag.name in ("div", "p"):
                         tag.extract()
-                for tag in text.findAll("a"):
-                    tag.replaceWith(tag.renderContents())
-                for tag in text.findAll("i"):
-                    tag.replaceWith(tag.renderContents())
-                for tag in text.findAll("b"):
-                    tag.replaceWith(tag.renderContents())
-                comments = text.findAll(text=lambda text:isinstance(text, BeautifulSoup.Comment))
-                [c.extract() for c in comments]
-                t = "".join([str(i) for i in text.contents])
-                ret2 = str(BeautifulSoup.BeautifulSoup(t, formatter="html")
-                ret += re.sub('<br />', '\n', ret2)
+
+                t = "".join([str(i) for i in text.contents[:-3]])
+                ret += re.sub('<br/>', '\n', t)
         else:
             ret += "No lyrics available"
         return ret.strip()
@@ -187,7 +182,7 @@ class CmdMpd(NotifyModule):
         return self.do_command_mpd(self.mpd.settag, [artist, title])
 
     @answercmd("shuffle")
-    def current(self, sender):
+    def shuffle(self, sender):
         self.do_command_mpd(self.mpd.shuffle, ())
         return "Et on mélange le tout !"
 

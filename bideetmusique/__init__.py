@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import urllib.request, urllib.parse, urllib.error
 from . import bandm_lib
 from pipobot.lib.modules import answercmd
 from pipobot.lib.abstract_modules import NotifyModule

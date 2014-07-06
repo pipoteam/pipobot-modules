@@ -10,33 +10,34 @@ class CmdBot(ListenModule):
     def __init__(self, bot):
         desc = "The bot will not let you say anything about him !!"
         ListenModule.__init__(self, bot, name="repartie", desc=desc)
+        self.question = repartie.question.split("\n")
+        self.direct = repartie.direct.split("\n")
+        self.indirect = repartie.indirect.split("\n")
 
     def answer(self, sender, message):
-        if type(message) not in (str, str):
+        if message[0] in ("", "!", ":"):
             return
-        if message == "":
-            return
-        if message[0] in ["!", ":"]:
-            return
-        if re.search("^" + self.bot.name.lower() + "(\W|$)", message.lower()):
-            if '?' in message:
-                d = repartie.question.split("\n")
-            else:
-                d = repartie.direct.split("\n")
-            random.shuffle(d)
-            return "%s: %s" % (sender, d[0])
-        elif re.search("(^|\W)" + self.bot.name.lower() + "($|\W)", message.lower()):
-            i = repartie.indirect.split("\n")
-            random.shuffle(i)
-            return "%s: %s" % (sender, i[0])
-        elif re.search("\bsi\s+ils\b", message.lower()):
+
+        if re.search("^" + self.bot.name.lower() + r"(\W|$)", message.lower()):
+            d = self.question if "?" in message else self.direct
+            ret = random.choice(d)
+            return "%s: %s" % (sender, ret)
+
+        elif re.search(r"(^|\W)" + self.bot.name.lower() + r"($|\W)", message.lower()):
+            ret = random.choice(self.indirect)
+            return "%s: %s" % (sender, ret)
+
+        elif re.search(r"\bsi\s+ils\b", message.lower()):
             return "%s: S'ILS, c'est mieux !!! :@" % sender
-        elif re.search("\bsi\s+il\b", message.lower()):
+
+        elif re.search(r"\bsi\s+il\b", message.lower()):
             return "%s: S'IL, c'est mieux !!!" % sender
-        elif re.search("(^|\s)+_all_(\!|\?|\:|\s+|$)", message.lower()):
+
+        elif re.search(r"(^|\s)+_all_(\!|\?|\:|\s+|$)", message.lower()):
             reply = self.bot.occupants.get_all(", ", [sender, self.bot.name])
             message = message.replace("_all_", reply)
             return message
+
         l = [["server", "serveur", "bot"], ["merde", "bois", "carton"]]
         if all([any([elt2 in message.lower() for elt2 in elt]) for elt in l]):
             msg = "Tu sais ce qu'il te dit le serveur ? Et puis surveille ton langage d'abord !!!"

@@ -43,28 +43,28 @@ class CmdAlacon(MultiSyncModule):
         try:
             v = config.get(cmd, value)
         except configparser.NoOptionError:
-            v = config.get(cmd, backup)
-        if type(v) != list:
+            v = backup
+        if type(v) is not list:
             v = [v]
         self.dico[cmd][value] = v
 
     def readconf(self, bot):
-        #name, description and actions associated to each command
+        # name, description and actions associated to each command
         self.dico = {}
-        #To initialize MultiSyncModule
+        # To initialize MultiSyncModule
         names = {}
 
         config = ListConfigParser()
         config.read(self.config_path)
-        for c in config.sections():
-            command_name = c
+
+        for command_name in config.sections():
             self.dico[command_name] = {}
-            self.dico[command_name]['desc'] = config.get(c, 'desc')
+            self.dico[command_name]['desc'] = config.get(command_name, 'desc')
             names[command_name] = self.dico[command_name]['desc']
-            self.dico[command_name]['toNobody'] = config.get(c, 'toNobody') if type(config.get(c, 'toNobody')) == list else [config.get(c, 'toNobody')]
-            self.extract_to(config, c, "toSender", "toNobody")
-            self.extract_to(config, c, "toBot", "toNobody")
-            self.extract_to(config, c, "toSomebody", "toNobody")
+
+            nobody = config.get(command_name, "toNobody")
+            for key in ("toNobody", "toSender", "toBot", "toSomebody"):
+                self.extract_to(config, command_name, key, nobody)
         return names
 
     @defaultcmd

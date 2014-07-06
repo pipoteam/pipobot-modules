@@ -89,7 +89,7 @@ def get_next(nb=1):
 def parse_one_track(soup_track):
     """ Extracts infos of a track from HTML code of b&m pages """
     artist, title = soup_track.findAll("td", {"class": "baseitem"})
-    tmp = "%s - %s" % (artist.text, title.text)
+    tmp = "%s - %s" % (artist.text.strip(), title.text.strip())
     return xhtml2text(tmp)
 
 

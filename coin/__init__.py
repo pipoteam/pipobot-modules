@@ -3,7 +3,7 @@
 from pipobot.lib.modules import ListenModule
 from pipobot.lib.module_test import ModuleTest
 
-orig_ducks = ["\_°<", ">°_/"]
+orig_ducks = ("\_°<", ">°_/")
 
 
 class CmdCoin(ListenModule):

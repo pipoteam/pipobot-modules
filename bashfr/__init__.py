@@ -28,21 +28,21 @@ bashfr [n] : Affiche la quote [n] de bashfr"""
         """Extracts the content of the quote given
            the HTML code of a bashfr page"""
         soup = BeautifulSoup(html_content)
-        if soup.find("h2", text="Erreur 404"):
-            return "La quote demandée n'existe pas. (Erreur 404)"
-        else:
-            sections = soup.findAll("p", {"class": "item-content"})
-            choiced = random.randrange(len(sections))
-            tableau = sections[choiced].a.contents
-            quote_url = sections[choiced].a["href"]
-            quote_id = quote_url.partition("/")[2].partition(".")[0]
-            result = ""
-            for i in tableau:
-                if i == "<br />":
-                    result += "\n"
-                else:
-                    result = result + pipobot.lib.utils.xhtml2text(str(i))
-            return "bashfr #%s :\n%s" % (quote_id, result)
+        sections = soup.findAll("p", {"class": "item-content"})
+        choiced = random.randrange(len(sections))
+        tableau = sections[choiced].a.contents
+        quote_url = sections[choiced].a["href"]
+        quote_id = quote_url.split("/")[-1].partition(".")[0]
+
+        result = ""
+        for i in tableau:
+            stri = str(i)
+            if stri in ("<br />", "<br/>"):
+                result += "\n"
+            else:
+                result += pipobot.lib.utils.xhtml2text(stri)
+
+        return "bashfr #%s :\n%s" % (quote_id, result)
 
 
 class BashfrTest(ModuleTest):
@@ -61,5 +61,5 @@ class BashfrTest(ModuleTest):
 
     def test_bashfr_404(self):
         bot_rep = self.bot_answer("!bashfr 42")
-        expected = "La quote demandée n'existe pas. (Erreur 404)"
+        expected = "http://danstonchat.com/42.html n'existe pas !"
         self.assertEqual(bot_rep, expected)

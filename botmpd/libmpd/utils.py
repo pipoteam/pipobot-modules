@@ -14,10 +14,10 @@ def humanize_time(secs):
 
 def format(song):
     """Formatte joliment un fichier"""
-    artiste = song["artist"] if "artist" in list(song.keys()) else "<unkown>"
-    titre = song["title"] if "title" in list(song.keys()) else "<unkown>"
+    artist = song.get("artist", "<unknown>")
+    title = song.get("title", "<unknown>")
 
-    if artiste == "<unkown>" and titre == "<unkown>":
+    if artist == "<unkown>" and title == "<unkown>":
         return "%s. %s" % (song["pos"], song["file"])
     else:
-        return "%s. %s - %s" % (song["pos"], artiste, titre)
+        return "%s. %s - %s" % (song["pos"], artist, title)

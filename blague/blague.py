@@ -3,14 +3,24 @@
 
 import time
 import operator
-from pipobot.lib.modules import SyncModule
 from pipobot.lib.known_users import KnownUser
 from .abstractblague import AbstractBlague
 from .model import Blagueur
 
+tab_header = """
+Blagounettes - scores:
+__________________________________________________________________________"""
+
+tab_line = """
+| %(score)-4s  -  %(jid)-30s dernière %(date)s | """
+
+tab_footer = """
+|________________________________________________________________________|"""
+
 
 class CmdBlague(AbstractBlague):
     """ Ajoute un point-blague à un collègue blagueur compétent """
+
     def __init__(self, bot):
         desc = ("Donnez un point blague à un ami ! Écrivez !blague pseudo "
                 "(10 s minimum d'intervalle)")
@@ -24,27 +34,25 @@ class CmdBlague(AbstractBlague):
 
     def cmd_score(self, sender, message):
         """Affiche les scores des blagueurs"""
-        classement = self.bot.session.query(Blagueur).all()
-        if len(classement) != 0:
-            classement.reverse()
-            sc = "\nBlagounettes - scores :"
-            pseudo = ""
-            sc += "\n" + 75 * "_"
-            classement = self.regroup_scores(classement)
-            for pseudo, score in classement:
-                sc += "\n| %-4s  -  " % (score[0])
-                if len(pseudo) > 30:
-                    sc += "%s " % (pseudo[:30])
-                else:
-                    sc += "%-30s " % (pseudo)
-                sc += time.strftime(" dernière le %d/%m/%Y à %H:%M |",
-                                    time.localtime(score[1]))
-            sc += "\n|" + 73 * "_" + "|"
-            return {"text": sc, "monospace": True}
-        else:
+
+        classement = self.get_scores()
+        if classement == []:
             return "Aucune blague, bande de nuls !"
 
-    def regroup_scores(self, classement):
+        sc = tab_header
+
+        for pseudo, (score, last_blague) in classement:
+            date = time.strftime("le %d/%m/%Y à %H:%M",
+                                 time.localtime(last_blague))
+            sc += tab_line % {"score": score,
+                              "jid": pseudo[:30],
+                              "date": date
+                             }
+        sc += tab_footer
+        return {"text": sc, "monospace": True}
+
+    def get_scores(self):
+        classement = self.bot.session.query(Blagueur).all()
         result = {}
         for blag in classement:
             known = KnownUser.get(blag.pseudo, self.bot)
@@ -52,8 +60,9 @@ class CmdBlague(AbstractBlague):
             if known:
                 # if we already have an entry for him with a different jid
                 if known.pseudo in result:
-                    result[known.pseudo] = (result[known.pseudo][0] + blag.score,
-                                            max(blag.submission, result[known.pseudo][1]))
+                    old_score, old_time = result[known.pseudo]
+                    result[known.pseudo] = (old_score + blag.score,
+                                            max(blag.submission, old_time))
                 else:
                     #else we create it
                     result[known.pseudo] = (blag.score, blag.submission)
