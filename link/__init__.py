@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import os
 import configparser
 from pipobot.lib.modules import MultiSyncModule, defaultcmd
@@ -17,7 +17,7 @@ class Link(MultiSyncModule):
                                  names=names)
 
     def readconf(self, bot):
-        #name, description and url associated to each link
+        # name, description and url associated to each link
         self.dico = {}
         names = {}
 

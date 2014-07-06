@@ -22,7 +22,6 @@ def convert_episode(raw):
 
 def getdata(message, isnext):
     message = alias.get(message, message)
-
     show_url = baseurl % (message.replace(" ", "%20"))
     response = urllib.request.urlopen(show_url)
     content = response.readlines()
@@ -38,7 +37,6 @@ def getdata(message, isnext):
     if isnext:
         if data["Status"] == "Canceled/Ended":
             return "Désolé mais la série %s est terminée." % (data["Show Name"])
-
         if "Next Episode" in data:
             data_episode = convert_episode(data["Next Episode"])
             return "Prochain épisode de %s: %s." % (data["Show Name"], data_episode)

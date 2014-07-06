@@ -3,7 +3,7 @@ Section: net
 Priority: extra
 Maintainer: Vincent Duvert (VinDuv) <vincent@duvert.net>
 Build-Depends: debhelper (>= 7.0.50~)
-Standards-Version: 3.9.1
+Standards-Version: 3.9.4
 Homepage: https://github.com/pipoteam/pipobot-modules/
 
 Package: pipobot-modules

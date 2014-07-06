@@ -26,7 +26,8 @@ remind list all : affiche toutes les alertes""",
     @answercmd("list")
     def list(self, sender):
         owners = self.bot.session.query(Remind).filter(Remind.room==self.bot.chatname).order_by(Remind.owner).all()
-        owners = [remind.owner for remind in owners]
+        owners = owners.group_by(Remind.owner).order_by(Remind.owner).all()
+        # owners is like [(u'owner1',), (u'owner2',)]
         if owners == []:
             send = "Rien de prévu..."
         else:
