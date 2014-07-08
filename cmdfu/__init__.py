@@ -12,7 +12,7 @@ cmdfu : Retourne une commande aléatoire"""
                             bot,
                             desc=desc,
                             name="cmdfu",
-                            )
+                           )
 
     @defaultcmd
     def answer(self, sender, message):
