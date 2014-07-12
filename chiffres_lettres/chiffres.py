@@ -15,7 +15,7 @@ try :
 except ImportError:
     logger.info("Unable to find C implementation for chiffres solving, falling back to python one")
     CHIFFRESC = False
-    
+
 
 CHOICES = list(range(1, 10)) + [10, 25, 50, 75, 100]
 NB_OPERANDS = 6
@@ -38,7 +38,7 @@ def mysub(a, b):
 
 def mydiv(a, b):
     if a % b == 0:
-        return op.div(a, b)
+        return op.itruediv(a, b)
     else:
         raise CalcError("%d n'est pas divisible par %d, escroc" % (a, b))
 
@@ -64,7 +64,7 @@ class Chiffres:
         digit_ast = namedtuple('digit_ast', ['n', 'ast'])
         if CHIFFRESC :
             r = chiffresc.solve6(self.total, *self.digits)
- 
+
             def transform_ast(tuple_ast) :
                 """ Transform a tuple ast from C to digit_ast """
 

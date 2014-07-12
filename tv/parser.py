@@ -1,48 +1,30 @@
 # -*- coding: utf-8 -*-
-import urllib.request, urllib.parse, urllib.error
-from bs4 import BeautifulSoup
-from pipobot.lib.utils import xhtml2text
+from pipobot.lib.utils import xhtml2text, url_to_soup
 
 
-class requete:
-    SOIREE = ("contenu grille grilleprimes grillehome", "http://www.programme-tv.net")
-    TNT = ("contenu grille grilleprimes", "http://www.programme-tv.net/programme/programme-tnt.html")
-#    SOIREE = ("contenu grille grilleprimes grillehome","/home/seb/Downloads/soiree.html")
-#    TNT = ("contenu grille grilleprimes","/home/seb/Downloads/TNT.html")
+url = "http://www.programme-tv.net/programme/programme-tnt.html"
 
 
-def extract(divclasse, LOCAL=False):
-    if LOCAL:
-        f = open(divclasse[1])
-    else:
-        f = urllib.request.urlopen(divclasse[1])
-    content = f.read()
-    f.close()
-    soup = BeautifulSoup(content)
-    grid = soup.findAll("div", {"class": divclasse[0]})
-    res = {}
-    for elt in grid:
-        for eltli in elt.findAll("li"):
-            chaine = eltli.first("span", {"class": "txtLogoChaine"})
+def extract():
+    soup = url_to_soup(url)
+    programs = {}
+
+    for channel in soup.findAll("div", {"class": "channel"}):
+        channel_name = channel.find("span").get("title")
+        channel_name = channel_name.split("Programme de ")[1]
+
+        channel_data = []
+        for prog in channel.findAll("div", {"class": "programme"}):
+            heure = prog.find("span", {"class": "prog_heure"}).text
             try:
-                chaine = chaine.getText().partition("Programme ")[2]
+                nom = prog.find("a", {"class": "prog_name"}).text
             except AttributeError:
-                continue
-            soiree = ""
-            for eltp in eltli.findAll("p"):
-                a = eltp.findAll("a")
-                try:
-                    title = a[0].get("title")
-                except IndexError:
-                    continue
-                span = eltp.findAll("span")
-                hour = span[0].getText()
-                soiree += "%s : %s " % (hour, title)
-            chaine = xhtml2text(chaine).lower()
-            soiree = xhtml2text(soiree)
-            res[chaine] = soiree
-    return res
+                nom = prog.find("span", {"class": "prog_name"}).text
+            channel_data.append("%s - %s" % (heure, nom))
+        channel_data = " / ".join(channel_data)
+        programs[channel_name.lower()] = xhtml2text(channel_data)
+
+    return programs
 
 if __name__ == "__main__":
-    print(extract(requete.SOIREE, False))
-    print(extract(requete.TNT, False))
+    e = extract()

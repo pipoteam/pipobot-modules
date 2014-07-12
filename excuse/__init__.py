@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 
+from bs4 import BeautifulSoup
 import pipobot.lib.utils
-from BeautifulSoup import BeautifulSoup
 from pipobot.lib.abstract_modules import FortuneModule
 
 
@@ -16,7 +16,7 @@ excuse : Retourne une excuse."""
                                url_random="http://programmingexcuses.com/",
                                url_indexed="http://programmingexcuses.com/",
                                lock_time=2,
-                               )
+                              )
 
     def extract_data(self, html_content):
         soup = BeautifulSoup(html_content)

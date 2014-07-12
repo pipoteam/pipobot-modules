@@ -22,7 +22,7 @@ class CmdBideEtMusique(NotifyModule):
                               desc=desc,
                               name="b&m",
                               delay=10,
-                              )
+                             )
         self.old = ""
 
 #######################################################################

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import simplejson
+import json
 import urllib.request, urllib.parse, urllib.error
 
 # This key has been generated with the registration form of wordreference
@@ -11,35 +11,24 @@ API_KEY = "2ed3e"
 LANGS = ["ar", "zh", "cz", "en", "fr", "gr", "it", "ja", "ko", "pl", "pt", "ro", "es", "tr"]
 
 class NoTranslation(Exception):
-    def __init__(self, msg):
-        self.msg = msg
-
-    def __str__(self):
-        return self.msg
+    """ Raised if we can not find a translation """
+    pass
 
 
 class APIAuth(Exception):
-    def __init__(self, msg):
-        self.msg = msg
-
-    def __str__(self):
-        return self.msg
+    """ Raised if we can not log into the API with our key """
+    pass
 
 
 class InternalError(Exception):
-    def __init__(self, msg):
-        self.msg = msg
+    """ Error during the parsing of the response from wordreference """
+    pass
 
-    def __str__(self):
-        return self.msg
 
 class LangError(Exception):
-    def __init__(self, msg):
-        self.msg = msg
+    """ Raised when you translate in/from a not available language """
+    pass
 
-    def __str__(self):
-        return self.msg
-    
 
 class WordRef(object):
     __slots__ = ('base_url')
@@ -55,15 +44,15 @@ class WordRef(object):
             raise APIAuth("Can't log in the wordreference API with this key")
 
         try:
-            json = simplejson.loads(content)
+            ret = json.loads(content.decode("utf-8"))
         except:
             raise InternalError("Error reading wordreference response")
 
-        if "Error" in json:
-            raise NoTranslation(json["Note"])
+        if "Error" in ret:
+            raise NoTranslation(ret["Note"])
 
-        return json
-        
+        return ret
+
     def translate(self, frm_lang, out_lang, request):
         if not (frm_lang in LANGS and out_lang in LANGS and (frm_lang == "en" or out_lang == "en")):
             raise LangError("You can translate from or to english only, and with these languages : %s" % ", ".join(LANGS))
@@ -85,7 +74,10 @@ class Result(object):
         self.principal = []
         self.additional = []
         self.compounds = []
-        self._parse(json)
+        try:
+            self._parse(json)
+        except:
+            raise NoTranslation()
 
     def _parse(self, json):
         if "PrincipalTranslations" in json["term0"]:
@@ -103,7 +95,7 @@ class Result(object):
         if "OtherSideEntries" in json["term0"]:
             for id, translation in json["term0"]["OtherSideEntries"].items():
                 self.principal.append(Translation(translation))
-            
+
 
 class Translation(object):
     __slots__ = ("original", "translations")
@@ -122,11 +114,7 @@ class Translation(object):
                 self.translations.append(t)
 
     def __str__(self):
-        return str(self).encode("utf-8")
-
-    def __unicode__(self):
         return "%s → %s" % (self.original, ", ".join(str(elt) for elt in self.translations))
-        
 
     def __repr__(self):
         return str(self)
@@ -136,20 +124,18 @@ class Term(object):
     __slots__ = ("term", "pos", "sense", "usage")
 
     def __init__(self, json):
-        for attr in self.__slots__:
-            setattr(self, attr, None)
+        self.term = None
+        self.pos = None
+        self.sense = None
+        self.usage = None
 
         for key, value in json.items():
             setattr(self, key.lower(), value)
 
-    def __unicode__(self):
+    def __str__(self):
         usage = " (%s)" % self.sense if self.sense else ""
         res = "%s%s" % (self.term, usage)
         return res
-
-    def __str__(self):
-        rep = str(self).encode("utf-8")
-        return rep
 
     def __repr__(self):
         return str(self)

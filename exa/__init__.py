@@ -1,8 +1,7 @@
 #-*- coding: utf-8 -*-
 
 from bs4 import BeautifulSoup
-import urllib.request, urllib.parse, urllib.error
-import urllib.request, urllib.error, urllib.parse
+import urllib.request, urllib.parse
 from pipobot.lib.modules import SyncModule, defaultcmd
 
 

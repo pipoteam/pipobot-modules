@@ -23,16 +23,16 @@ vdm [n] : Affiche la vdm [n]"""
                                url_random="http://www.viedemerde.fr/aleatoire",
                                url_indexed="http://www.viedemerde.fr/travail/%s",
                                lock_time=2,
-                               )
+                              )
 
     def extract_data(self, html_content):
         soup = BeautifulSoup(html_content)
         res = []
         try:
-            a = soup.find("div", {"class": "post article"}).find("p")
-            for elt in a.findAll("a"):
+            div = soup.find("div", {"class": "post article"}).find("p")
+            for elt in div.findAll("a"):
                 res.append(pipobot.lib.utils.xhtml2text(elt.text))
-            nb = a.findAll("a")[0].get("href").split("/")[-1]
+            nb = div.find("a").get("href").split("/")[-1]
             res = ("VDM#%s : %s" % (nb, "".join(res))).replace(".", ". ")
         except:
             res = ERROR_MSG

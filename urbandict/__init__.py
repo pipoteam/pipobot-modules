@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import json
-import urllib.request, urllib.parse, urllib.error
+import requests
 from pipobot.lib.modules import SyncModule, answercmd
 from collections import deque
 
-BASE_URL = "http://www.urbandictionary.com/iphone/search/define"
-MAX_CACHE = 10 
+
+BASE_URL = "http://api.urbandictionary.com/v0/define"
+MAX_CACHE = 10
 
 
 class UrbanDict(SyncModule):
@@ -31,32 +31,26 @@ class UrbanDict(SyncModule):
     @answercmd("")
     def random_urban(self, sender):
         url = "http://www.urbandictionary.com/random.php"
-        page = urllib.request.urlopen(url)
-        content = page.read()
-        page.close()
-        # The random page is a redirection like this : 
+        req = requests.get(url)
+        content = req.content.decode("utf-8")
+        # The random page is a redirection like this :
         # <html><body>You are being <a href="http://www.urbandictionary.com/define.php?term=RTM">redirected</a>.</body></html>
         words = content.partition("define.php?term=")[2].partition('"')[0]
         return self.urbandict(sender, req=words, select=0)
 
 
-    @answercmd("(?P<select>\d+)?(?P<req>.+)")
-    def urbandict(self, sender, req=None, select=None):
+    @answercmd(r"(?P<select>\d+)?(?P<req>.+)")
+    def urbandict(self, sender, req=None, select="0"):
         if req is None:
             return self.random_urban(sender)
         req = req.strip()
-        if select is None:
-            select = 0
-        else:
-            select = int(select)
+        select = int(select)
 
         defs = self.get_cache(req)
         if defs is None:
-            params = urllib.parse.urlencode({"term" : req})
-            page = urllib.request.urlopen("%s?%s" % (BASE_URL, params))
-            content = page.read()
-            page.close()
-            urban_json = json.loads(content)
+            http_req = requests.get(BASE_URL, params={"term": req})
+            urban_json = http_req.json()
+
             if urban_json["result_type"] == "no_results":
                 self.add_cache(req, [])
                 return "No result found"
@@ -71,5 +65,7 @@ class UrbanDict(SyncModule):
             select = defs[0]
         else:
             select = defs[select]
-        result += "%s : %s\nExample : %s" % (select["permalink"], select["definition"], select["example"])
+        result += "%(link)s : %(def)s\nExample : %(example)s" % {"link": select["permalink"],
+                                                                 "def": select["definition"],
+                                                                 "example":select["example"]}
         return result

@@ -1,6 +1,5 @@
 #-*- coding: utf8 -*-
-import urllib.request, urllib.parse, urllib.error
-import simplejson
+import requests
 import pipobot.lib.utils
 from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.module_test import ModuleTest
@@ -19,10 +18,9 @@ class CmdGoogle(SyncModule):
         if message == '':
             return self.desc
         else:
-            query = urllib.parse.urlencode({'q': message})
-            url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&%s' % query
-            search_results = urllib.request.urlopen(url)
-            json = simplejson.loads(search_results.read())
+            url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0'
+            req = requests.get(url, params={"q": message})
+            json = req.json()
             results = json['responseData']['results']
 
             ans = ''

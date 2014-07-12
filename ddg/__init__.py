@@ -18,13 +18,13 @@ def ddg_request(msg):
             return rep.answer.text
     elif rep.type == "disambiguation":
         res = []
-        for result in rep.related:
+        for result in rep.related[:MAX_RESULT]:
             if hasattr(result, "text"):
                 res.append("%s - %s" % (result.text, result.url))
             else:
                 res.append("%s - %s" % (result.topics[0].text,
                                         result.topics[0].url))
-        return "\n".join(res[:MAX_RESULT])
+        return "\n".join(res)
     # If the API does not have return any usefull result, we do a real search in ddg
     return html_request(msg)
 

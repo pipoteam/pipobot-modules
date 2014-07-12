@@ -90,7 +90,7 @@ class ChiffresCmd(SyncModule):
     #
 
     opstr = {ast.Add: '+', ast.Sub: '-', ast.Mult: '×', ast.Div: '÷'}
-    opast = {ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul, ast.Div: op.div}
+    opast = {ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul, ast.Div: op.itruediv}
 
     @staticmethod
     def pretty_lisp(astree, exact):
@@ -229,7 +229,7 @@ class ChiffresTest(ModuleTest):
         expected=("Nouvelle partie lancée\nTotal à trouver : (\d+)\n"
                   "Nombres fournis : [(\d+),]*(\d+)")
         self.assertRegexpMatches(self.bot_answer("!chiffres init"), expected)
-                         
+
     def test_solve(self):
         expected=["J'ai trouvé une solution exacte(.*)",
                   "Pas de solution exacte…(.*)"]

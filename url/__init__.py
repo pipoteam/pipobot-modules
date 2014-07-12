@@ -1,8 +1,5 @@
 #-*- coding: utf-8 -*-
 import re
-import urllib.request, urllib.parse, urllib.error
-import pipobot.lib.utils
-import http.client
 import sqlalchemy.exc
 from pipobot.lib.modules import ListenModule
 from pipobot.lib.utils import check_url

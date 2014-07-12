@@ -19,6 +19,10 @@ class BotMPD(MPDClient):
 
         self.datadir = datadir
 
+    def _current_pos(self):
+        current = self.currentsong()
+        return int(current['pos'])
+
     def currentsongf(self):
         song = self.currentsong()
         return utils.format(song)
@@ -39,9 +43,8 @@ class BotMPD(MPDClient):
         return res
 
     def nextplaylist(self, nb):
-        current = self.currentsong()
         playlist = self.playlistinfo()
-        deb = int(current['pos'])
+        deb = self._current_pos()
         end = int(self.status()["playlistlength"])
         res = ""
         for i in range(nb):
@@ -66,9 +69,7 @@ class BotMPD(MPDClient):
         return res
 
     def setnext(self, nb):
-        song = self.currentsong()
-        current = song["pos"]
-        icurrent = int(current)
+        icurrent = self._current_pos()
 
         if nb < icurrent:
             newindex = icurrent
@@ -110,8 +111,7 @@ class BotMPD(MPDClient):
 
     def goto(self, pos):
         try:
-            song = self.currentsong()
-            current = int(song["pos"])
+            current = self._current_pos()
             self.move(current, pos)
             return "On s'est déplacé en %s !" % pos
         except CommandError:

@@ -1,10 +1,10 @@
 #-*- coding: utf-8 -*-
 
 import random
-import urllib.request, urllib.parse, urllib.error
 from bs4 import BeautifulSoup
 from pipobot.lib.abstract_modules import FortuneModule
 from pipobot.lib.module_test import ModuleTest
+from pipobot.lib.utils import url_to_soup
 
 
 SITE = "http://secouchermoinsbete.fr"
@@ -22,25 +22,22 @@ scmb [n] : Affiche l'information [n]"""
                                url_random="%s/random" % SITE,
                                url_indexed=SITE + "/%s-content",
                                lock_time=5,
-                               )
+                              )
 
     def extract_data(self, html_content):
         soup = BeautifulSoup(html_content)
         sections = soup.findAll("div", {"class": "anecdote-content-wrapper"})
         # If we are in a random page, we select a quote then continue parsing
         if sections != []:
-            choice = sections[0]
-            details = choice.findAll("p", {"class": "summary"})
+            details = sections[0].findAll("p", {"class": "summary"})
             choiced = random.choice(details)
             url = "%s%s" % (SITE, choiced.a.get("href"))
-            page = urllib.request.urlopen(url)
-            content = page.read()
-            page.close()
-            soup = BeautifulSoup(content)
+            soup = url_to_soup(url)
 
         article = soup.find("article", {"class": "anecdote"})
         if article is None:
             return "scmb invalide !!"
+
         quote = article.find("p", {"class": "summary"}).text
         nb = article.get("id").partition("-")[2]
         result = "scmb#%s : \n%s" % (nb, quote)

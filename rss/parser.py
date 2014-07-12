@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 import html2text
 import feedparser
 import hashlib

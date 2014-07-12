@@ -1,14 +1,12 @@
 #! /usr/bin/python2
 # -*- coding: utf-8 -*-
 
-from bs4 import BeautifulSoup
-from mpd import ConnectionError
 import logging
-import re
-import urllib.request, urllib.parse, urllib.error
+from mpd import ConnectionError
 
 from pipobot.lib.abstract_modules import NotifyModule
 from pipobot.lib.modules import defaultcmd, answercmd
+from pipobot.lib.utils import url_to_soup, xhtml2text
 
 from .libmpd.BotMPD import BotMPD
 
@@ -36,7 +34,7 @@ class CmdMpd(NotifyModule):
                 "clean": "mpd clean : pour retarder l'inévitable...",
                 "settag": "mpd settag [artist|title]=Nouvelle valeur",
                 "lyrics": "mpd lyrics: permet de retrouver les paroles de la chanson courante",
-                }
+               }
         NotifyModule.__init__(self,
                               bot,
                               desc=desc,
@@ -52,9 +50,10 @@ class CmdMpd(NotifyModule):
             self.mpd_listen = BotMPD(self.host, self.port, self.pwd, self.datadir)
             self.mpd.disconnect()
             self.mpd_listen.disconnect()
-        except ConnectionError:
-            logger.error("Can't connect to mpd server")
-        except NameError:
+        except (ConnectionError, ConnectionRefusedError, NameError):
+            # raised by the BotMPD constructor if he can't connect to the server
+            self.mpd = None
+            self.mpd_listen = None
             self.delay = 60
             logger.error("Error trying to connect to the mpd server")
 
@@ -78,7 +77,10 @@ class CmdMpd(NotifyModule):
         # If the bot is muted, the action() does not block so there is no block at all !
 
         try:
-            self.mpd_listen.connection(self.host, self.port, self.pwd)
+            if self.mpd_listen is None:
+                self.mpd_listen = BotMPD(self.host, self.port, self.pwd, self.datadir)
+            else:
+                self.mpd_listen.connection(self.host, self.port, self.pwd)
             self.error_notified = False
             self.delay = 0
             self.mpd_listen.send_idle()
@@ -111,19 +113,15 @@ class CmdMpd(NotifyModule):
                     if c in title:
                         self.bot.say(repDict[c])
             self.mpd_listen.disconnect()
-        except ConnectionError:
+        except (NameError, ConnectionError, ConnectionRefusedError):
             if not self.error_notified:
                 logger.error(_("Can't connect to server %s:%s") % (self.host, self.port))
                 self.error_notified = True
                 #The module will check again in `self.delay` seconds
-                self.delay = 10
-        except NameError:
-            self.delay = 60
-            logger.error("Error trying to connect to the mpd server")
+                self.delay = 60
 
     @answercmd("lyrics")
     def lyrics(self, sender):
-
         self.mpd.connection(self.host, self.port, self.pwd)
         artist = self.mpd.artist()
         title = self.mpd.title()
@@ -135,15 +133,11 @@ class CmdMpd(NotifyModule):
         ret = artist + " - " + title + "\n"
         url = 'http://lyrics.wikia.com/api.php?action=lyrics&artist=%s&song=%s&fmt=xml&func=getSong' % \
                  (artist.replace(" ", "%20"), title.replace(" ", "%20"))
-        f = urllib.request.urlopen(url)
-        soup = BeautifulSoup(f.read())
-        f.close()
+        soup = url_to_soup(url)
 
         if soup.find("lyrics").text != 'Not found':
             url2 = soup.find("url").text
-            f2 = urllib.request.urlopen(url2)
-            soup = BeautifulSoup(f2.read())
-            f2.close()
+            soup = url_to_soup(url2)
             text = soup.find("div", {"class": "lyricbox"})
             if text is None:
                 ret += "No lyrics available"
@@ -152,11 +146,10 @@ class CmdMpd(NotifyModule):
                     if tag.name in ("div", "p"):
                         tag.extract()
 
-                t = "".join([str(i) for i in text.contents[:-3]])
-                ret += re.sub('<br/>', '\n', t)
+                ret += "".join([str(i) for i in text.contents[:-3]])
         else:
             ret += "No lyrics available"
-        return ret.strip()
+        return xhtml2text(ret)
 
     @answercmd("current")
     def current(self, sender):

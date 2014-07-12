@@ -1,32 +1,22 @@
 # -*- coding: utf-8 -*-
 """ Some functions used to parse content from www.bide-et-musique.com/ """
-import urllib.request, urllib.parse, urllib.error
-from bs4 import BeautifulSoup
+
 from datetime import date
-from pipobot.lib.utils import xhtml2text
 
+from pipobot.lib.utils import xhtml2text, url_to_soup
 
-class AppURLopener(urllib.request.FancyURLopener):
-    """ Redefines the AppURLopener that could contain a wrong
-        User-Agent """
-    pass
 
 #CONSTS
-
-PLAYLIST = 'http://www.bide-et-musique.com/playlist.rss'
-PROGS = "http://www.bide-et-musique.com/programme-webradio.html"
+HOME_PAGE = "http://www.bide-et-musique.com/programme-webradio.html"
 SHOWS = "http://www.bide-et-musique.com/grille.html"
 PROG_ID = {"next": 1,
            "prev": 2}
-HOME_PAGE = "http://www.bide-et-musique.com/programme-webradio.html"
+PROGS = HOME_PAGE
 
 
 def parse_progs(typ=""):
     """ Parsing program page """
-    page = urllib.request.urlopen(PROGS)
-    content = page.read()
-    page.close()
-    soup = BeautifulSoup(content)
+    soup = url_to_soup(PROGS)
     tables = soup.findAll("table", {"class": "bmtable"})
     soup = tables[PROG_ID[typ]]
     return soup
@@ -49,10 +39,7 @@ def get_shows(day=None):
     nb_day = date.today().weekday()
     if day is not None:
         nb_day = ((nb_day + day) % 7) + 1
-    page = urllib.request.urlopen(SHOWS)
-    content = page.read()
-    page.close()
-    soup = BeautifulSoup(content)
+    soup = url_to_soup(SHOWS)
     table = soup.find("table", {"class": "bmtable"})
     res = []
     found = False
@@ -107,46 +94,35 @@ def parse_tracks(soup, nb=1):
 
 def current():
     """ Returns current track """
-    page = urllib.request.urlopen(PLAYLIST)
-    content = page.read(1500)
-    page.close()
-    soup = BeautifulSoup(content)
-    try:
-        return xhtml2text(xhtml2text(soup.findAll("title")[1].text.partition(": ")[2]))
-    except:
-        return "HTML parsing failed !"
+    soup = url_to_soup(HOME_PAGE)
+
+    player = soup.find("td", {"id": "player"})
+    artist = player.find("p", {"class": "titre-song2"}).text.strip()
+    title = player.find("p", {"class": "titre-song"}).text.strip()
+
+    return "%s : %s" % (artist, title)
 
 
 def lyrics():
-    """ Extracts lyrics from the current sont in 'bide et musique' """
-    res = ""
-    page = urllib.request.urlopen(HOME_PAGE)
-    content = page.read()
-    page.close()
-    soup = BeautifulSoup(content)
-    souptitle = soup.findAll("p", {"class": "titre-song"})[0]
+    """ Extracts lyrics from the current song in 'bide et musique' """
+    soup = url_to_soup(HOME_PAGE)
+    souptitle = soup.find("p", {"class": "titre-song"})
     title = souptitle.text
-    artist = soup.findAll("p", {"class": "titre-song2"})[0].text
-    souptitle = soup.findAll("p", {"class": "titre-song"})[0]
+    artist = soup.find("p", {"class": "titre-song2"}).text
     url = "http://www.bide-et-musique.com"
     url = "%s%s" % (url, souptitle.a.get("href"))
-    page = urllib.request.urlopen(url)
-    content = page.read()
-    page.close()
-    soup = BeautifulSoup(content)
-    tab = soup.findAll("td", {"class": "paroles"})
-    if tab == []:
-        res = "Pas de paroles disponibles pour %s de %s" % (artist, title)
-    else:
-        tab = tab[0].contents
-        res = "%s - %s\n%s\n" % (artist, title, "*" * 30)
-        lyrics_content = ""
-        for elt in tab:
-            tmp = elt
-            if str(tmp).lstrip() != "<br />":
-                lyrics_content += xhtml2text(str(tmp).lstrip()) + "\n"
-        res += lyrics_content
-    return xhtml2text(res)
+
+    soup = url_to_soup(url)
+    tab = soup.find("td", {"class": "paroles"})
+
+    if tab is None:
+        return "Pas de paroles disponibles pour %s de %s" % (artist, title)
+
+    tab = tab.contents
+    res = "%s - %s\n%s\n" % (artist.strip(), title.strip(), "*" * 30)
+    for elt in tab:
+        res += xhtml2text(str(elt).strip())
+    return res
 
 
 ##########################################################

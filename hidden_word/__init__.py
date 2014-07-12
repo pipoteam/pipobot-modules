@@ -1,11 +1,10 @@
 #-*- coding: utf-8 -*-
 import os
-import time
 from random import choice
 from sqlalchemy.sql.expression import desc
-from .model import HiddenBase
+
 from pipobot.lib.modules import ListenModule, defaultcmd
-from pipobot.lib import utils
+from .model import HiddenBase
 
 
 class CmdHiddenWord(ListenModule):
@@ -33,9 +32,10 @@ class CmdHiddenWord(ListenModule):
 
     def get_word(self):
         path = os.path.join(os.path.dirname(__file__), 'list.txt')
-        with open(path, 'r') as word_file:
-            content = word_file.read()
-        return choice(content.split("\n"))
+        with open(path, 'rb') as word_file:
+            content = word_file.read().decode("utf-8")
+        choiced = choice(content.split("\n"))
+        return choiced
 
     def cmd_score(self, sender, message):
         classement = self.bot.session.query(HiddenBase).order_by(desc(HiddenBase.score)).all()

@@ -1,8 +1,6 @@
 #-*- coding: utf-8 -*-
 
-from bs4 import BeautifulSoup
-import json
-import urllib.request
+import requests
 
 from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.utils import xhtml2text
@@ -24,8 +22,9 @@ chuck [n] : Affiche le fact [n]"""
 
     @defaultcmd
     def answer(self, sender, message):
-        page = urllib.request.urlopen(URL)
-        content = page.read()
-
-        ret = json.loads(content.decode("utf-8"))[0]
-        return "Fact #%s : %s" % (ret["id"], xhtml2text(ret["fact"]))
+        req = requests.get(URL)
+        if req.status_code == 200:
+            ret = req.json()[0]
+            return "Fact #%s : %s" % (ret["id"], xhtml2text(ret["fact"]))
+        else:
+            return "HTTP Error %d on module chuck" % req.status_code
