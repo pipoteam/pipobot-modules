@@ -1,10 +1,12 @@
 #-*- coding: utf-8 -*-
-import ConfigParser
 import os
 import random
 import re
-from pipobot.lib.modules import MultiSyncModule, defaultcmd
+from ConfigParser import NoOptionError
+
 from pipobot.lib.known_users import KnownUser
+from pipobot.lib.modules import MultiSyncModule, defaultcmd
+from pipobot.lib.utils import ListConfigParser
 
 DEFAULT_CONFIG = os.path.join(os.path.dirname(__file__), "cmdlist.cfg")
 
@@ -21,16 +23,6 @@ def multiwordReplace(text, wordDic):
     return rc.sub(translate, text)
 
 
-class ListConfigParser(ConfigParser.RawConfigParser):
-    def get(self, section, option):
-        "Redéfinition du get pour gérer les listes"
-        value = ConfigParser.RawConfigParser.get(self, section, option)
-        if (value[0] == "[") and (value[-1] == "]"):
-            return map(lambda s: s.decode("utf-8"), eval(value))
-        else:
-            return value.decode("utf-8")
-
-
 class CmdAlacon(MultiSyncModule):
     _config = (("config_path", str, DEFAULT_CONFIG),)
 
@@ -43,7 +35,7 @@ class CmdAlacon(MultiSyncModule):
     def extract_to(self, config, cmd, value, backup):
         try:
             v = config.get(cmd, value)
-        except ConfigParser.NoOptionError:
+        except NoOptionError:
             v = config.get(cmd, backup)
         if type(v) != list:
             v = [v]

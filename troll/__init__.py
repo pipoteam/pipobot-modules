@@ -1,33 +1,28 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from pipobot.lib.modules import ListenModule
+
 from datetime import datetime
-import random
+from os.path import join, dirname
+from random import choice
 import re
+
+from pipobot.lib.modules import ListenModule
+from pipobot.lib.utils import ListConfigParser
+
+DEFAULT_CONFIG = join(dirname(__file__), "answerlist.cfg")
 
 
 class Troll(ListenModule):
-    _config = (('words', list, []),)
+    _config = (("config_path", str, DEFAULT_CONFIG),)
 
     def __init__(self, bot):
-        desc = u"Pipo n'aime pas les trolls."
+        desc = _(u"Pipo does not like trolls.")
         ListenModule.__init__(self, bot, name='troll', desc=desc)
-        self.words = [w.lower() for w in self.words]
+        self.words = [w.lower() for w in config.get('trolls', 'words')]
+        self.friday = config.get('trolls', 'friday')
+        self.others = config.get('trolls', 'others')
 
     def answer(self, sender, message):
         if any(w.lower() in self.words for w in re.findall(r'[a-zA-Z]+', message)):
             if datetime.now().weekday() == 4: # Friday
-                return random.choice([
-                    u"Oh un troll … wait … mais on est vendredi ! Personnellement, je pense que ton truc, c'est de la grosse merde.",
-                    u'Happy Troll Day !',
-                    u"Pas de troll en semaine, merci. Mais non, je déconne, c'est vendredi, c'est le week-end !!",
-                    None, # no answer
-                ])
-            else:
-                return random.choice([
-                    u'Hum.. ça sent le troll !',
-                    u'Stop le troll !',
-                    u'TROLLLLLLLLLLLLLLLLLLL !',
-                    u'Troll spotted !',
-                    u'Pas de troll en semaine, merci. Il y a des gens qui bossent ! (ou pas)',
-                ])
+                return choice(self.friday)
+            return choice(self.others)
