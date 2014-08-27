@@ -17,6 +17,8 @@ class Troll(ListenModule):
     def __init__(self, bot):
         desc = _(u"Pipo does not like trolls.")
         ListenModule.__init__(self, bot, name='troll', desc=desc)
+        config = ListConfigParser()
+        config.read(self.config_path)
         self.words = [w.lower() for w in config.get('trolls', 'words')]
         self.friday = config.get('trolls', 'friday')
         self.others = config.get('trolls', 'others')
