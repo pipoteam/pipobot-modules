@@ -223,24 +223,27 @@ static PyMethodDef ChiffrecMethods[] = {
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
+static struct PyModuleDef ChiffrecModule = {
+    PyModuleDef_HEAD_INIT,
+    "chiffresc",
+    "Solve 'Le compte est bon'",
+    -1,
+    ChiffrecMethods
+};
+
 void
 initchiffresc(void)
 {
-    (void) Py_InitModule("chiffresc", ChiffrecMethods);
+    (void) PyModule_Create(&ChiffrecModule);
 }
 
-int main(int argc, char *argv[])
+PyMODINIT_FUNC PyInit_chiffresc(char* argv[])
 {
-    /* Pass argv[0] to the Python interpreter */
-    Py_SetProgramName(argv[0]);
-
     /* Initialize the Python interpreter.  Required. */
     Py_Initialize();
 
     /* Add a static module */
     initchiffresc() ;
-
-    return 0 ;
 }
 
 #else /* NOPYTHON */

@@ -9,7 +9,7 @@ import logging
 logger = logging.getLogger("pipobot.chiffres_lettres.chiffres")
 
 try :
-    import chiffresc
+    from .chiffresc import solve6
     CHIFFRESC = True
     CHIFFRESC_OP = {0: ast.Add, 1: ast.Sub, 2: ast.Mult, 3: ast.Div, 4: None}
 except ImportError:
@@ -63,7 +63,7 @@ class Chiffres:
 
         digit_ast = namedtuple('digit_ast', ['n', 'ast'])
         if CHIFFRESC :
-            r = chiffresc.solve6(self.total, *self.digits)
+            r = solve6(self.total, *self.digits)
 
             def transform_ast(tuple_ast) :
                 """ Transform a tuple ast from C to digit_ast """
