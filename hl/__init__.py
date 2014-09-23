@@ -9,10 +9,9 @@ class HighLight(SyncModule):
     def __init__(self, bot):
         desc = _("hl <people>: Highligh <people> (whom can be registerd users, pseudos or list of people)")
         desc += _("\nhl <people> :<message>: Highligh <people>, and shows <message>")
-        desc += _("\nhl show : Shows list of people")
-        desc += _("\nhl set <list> <people>: Add <people> to <list>")
-        desc += _("\nhl rm <list> <people>: Remove <people> from <list>")
-        desc += _("\nhl rm <list>: Remove <list>")
+        desc += _("\nhl show [<list>]: Shows list of people")
+        desc += _("\nhl set|add <list> <people>: Add <people> to <list>")
+        desc += _("\nhl rm|del <list> [<people>]: Remove <list>, or <people> from <list>")
 
         SyncModule.__init__(self,
                 bot,
@@ -41,7 +40,7 @@ class HighLight(SyncModule):
                 ret += ' %s' % user.user
         return ret
 
-    @answercmd(r'^set (?P<hllist>\w+) (?P<users>.*)')
+    @answercmd(r'^(set|add) (?P<hllist>\w+) (?P<users>.*)')
     def answer_set(self, sender, hllist, users):
         ret = ''
         knownusers = []
@@ -81,7 +80,7 @@ class HighLight(SyncModule):
         self.bot.session.commit()
         return ret.strip()
 
-    @answercmd(r'^rm (?P<plist>\w+) (?P<users>.*)')
+    @answercmd(r'^(rm|del) (?P<plist>\w+) (?P<users>.*)')
     @minpermlvl(2)
     def answer_rm_users(self, sender, plist, users):
         hllistname = plist
@@ -112,7 +111,7 @@ class HighLight(SyncModule):
         self.bot.session.commit()
         return ret.strip()
 
-    @answercmd(r'^rm (?P<hllistname>\w+)')
+    @answercmd(r'^(rm|del) (?P<hllistname>\w+)')
     @minpermlvl(2)
     def answer_rm(self, sender, hllistname):
         hllist = self.bot.session.query(HlList).filter(HlList.name == hllistname).first()
