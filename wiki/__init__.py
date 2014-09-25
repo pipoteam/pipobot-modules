@@ -1,7 +1,6 @@
 #-*- coding: utf-8 -*-
 
-import json
-import urllib.request, urllib.parse, urllib.error
+import requests
 from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.module_test import ModuleTest
 from pipobot.lib.utils import xhtml2text
@@ -19,15 +18,15 @@ class CmdWiki(SyncModule):
 
     @defaultcmd
     def answer(self, sender, message):
-        url = "http://fr.wiktionary.org/w/api.php?action=query&list=search&format=json&srsearch=%s&srlimit=10" % message
-        page = urllib.request.urlopen(url)
-        content = page.read()
-        page.close()
-        js = json.loads(content.decode("utf-8"))
+        params = {"action": "query",
+                  "list": "search",
+                  "format": "json",
+                  "srsearch": message,
+                  "limit": "10"}
+        ret = requests.get("http://fr.wiktionary.org/w/api.php", params=params)
+        js = ret.json()
         try:
             snippet = xhtml2text(js["query"]["search"][0]["snippet"])
-            #Removing prononciation
-            splitted = snippet
             clean = snippet.replace("  ", " ")
             return clean if clean != "" else NOT_FOUND
         except (KeyError, IndexError):
