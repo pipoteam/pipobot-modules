@@ -21,6 +21,8 @@ def convert_episode(raw):
 
 
 def getdata(message, isnext):
+    if message == "":
+        return "Avec un nom de série ça serait mieux !!"
     message = alias.get(message, message)
     show_url = baseurl % (message.replace(" ", "%20"))
     response = urllib.request.urlopen(show_url)
@@ -28,14 +30,17 @@ def getdata(message, isnext):
     response.close()
     data = {}
 
-    if content == ['No Show Results Were Found For "%s"' % message]:
-        return "Je n'ai aucune information sur la série %s" % message
+    if content:
+        res = content[0].decode("utf-8")
+        if res.startswith("No Show"):
+            return "Je n'ai aucune information sur la série %s" % message
+
     for line in content:
         key, value = line.decode("utf-8").split("@", 1)
         data[key] = value.strip()
 
     if isnext:
-        if data["Status"] == "Canceled/Ended":
+        if data["Status"] in ("Canceled", "Ended"):
             return "Désolé mais la série %s est terminée." % (data["Show Name"])
         if "Next Episode" in data:
             data_episode = convert_episode(data["Next Episode"])
