@@ -41,14 +41,13 @@ class CmdHiddenWord(ListenModule):
         classement = self.bot.session.query(HiddenBase).order_by(desc(HiddenBase.score)).all()
 
         if classement != []:
-            sc = "\nHidden Word Score :\n"
+            sc = "\nHidden Word Score :"
             pseudo = ""
-            sc += " " + 39 * "_"
+            sc += "\n┌" + 39 * "─" + "┐"
             for hidden in classement:
                 pseudo = self.bot.occupants.jid_to_pseudo(hidden.jid)
-                sc += "\n| %-4s - %-30s |" % (hidden.score, pseudo)
-            sc += "\n|" + 39 * "_" + "|"
+                sc += "\n│ %-4s - %-30s │" % (hidden.score, pseudo)
+            sc += "\n└" + 39 * "─" + "┘"
             return {"text": sc, "monospace": True}
         else:
             return "Aucun mot caché trouvé..."
-
