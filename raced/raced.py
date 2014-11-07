@@ -86,10 +86,10 @@ class CmdRaced(SyncModule):
         classement = self.bot.session.query(Racer).order_by(desc(Racer.score), Racer.jid_from).all()
 
         if len(classement) != 0:
-            sc = "\nRaced - scores :\n"
-            sc += " " + 82 * "_"
+            sc = "\nRaced - scores :"
+            sc += '\n┌' + 80 * '─' + '┐'
             for racer in classement:
-                sc += "\n| "
+                sc += "\n│ "
                 pseudo_from = self.bot.occupants.jid_to_pseudo(racer.jid_from)
                 pseudo_to = self.bot.occupants.jid_to_pseudo(racer.jid_to)
 
@@ -103,9 +103,9 @@ class CmdRaced(SyncModule):
                     sc += "%s " % (pseudo_to[:30])
                 else:
                     sc += "%-30s " % (pseudo_to)
-                sc += " |"
+                sc += "│ "
             sc += "\n"
-            sc += "|" + 81 * "_" + "|"
+            sc += "└" + 80 * "─" + "┘"
             return {"text": sc, "monospace": True}
         else:
             return "Aucun race, bande de nuls !"
