@@ -56,11 +56,11 @@ class CmdGore(SyncModule):
         classement = self.bot.session.query(GoreBase).order_by(desc(GoreBase.score)).all()
 
         if classement != []:
-            sc = "\nGore - scores :\n"
+            sc = "\nGore - scores :"
             pseudo = ""
-            sc += " " + 72 * "_"
+            sc += "\n┌" + 72 * "─" + "┐"
             for gore in classement:
-                sc += "\n| %-4s  -  " % (gore.score)
+                sc += "\n│ %-4s  -  " % (gore.score)
                 pseudo = self.bot.occupants.jid_to_pseudo(gore.jid)
 
                 if len(pseudo) > 30:
@@ -68,8 +68,8 @@ class CmdGore(SyncModule):
                 else:
                     sc += "%-30s " % (pseudo)
 
-                sc += time.strftime(" dernier le %d/%m/%Y à %H:%M |", time.localtime(gore.submission))
-            sc += "\n|" + 72 * "_" + "|"
+                sc += time.strftime(" dernier le %d/%m/%Y à %H:%M │", time.localtime(gore.submission))
+            sc += "\n└" + 72 * "─" + "┘"
             return {"text": sc, "monospace": True}
         else:
             return "Aucun point gore..."

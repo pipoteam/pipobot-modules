@@ -29,17 +29,17 @@ class CmdBlague(AbstractBlague):
             classement.reverse()
             sc = "\nBlagounettes - scores :"
             pseudo = ""
-            sc += "\n" + 75 * "_"
+            sc += "\n┌" + 73 * "─" + "┐"
             classement = self.regroup_scores(classement)
             for pseudo, score in classement:
-                sc += "\n| %-4s  -  " % (score[0])
+                sc += "\n│ %-4s  -  " % (score[0])
                 if len(pseudo) > 30:
                     sc += "%s " % (pseudo[:30])
                 else:
                     sc += "%-30s " % (pseudo)
-                sc += time.strftime(" dernière le %d/%m/%Y à %H:%M |",
+                sc += time.strftime(" dernière le %d/%m/%Y à %H:%M │",
                                     time.localtime(score[1]))
-            sc += "\n|" + 73 * "_" + "|"
+            sc += '\n└' + 73 * '─' + '┘'
             return {"text": sc, "monospace": True}
         else:
             return "Aucune blague, bande de nuls !"
