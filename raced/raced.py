@@ -62,22 +62,22 @@ class CmdRaced(SyncModule):
         classement = self.bot.session.query(Racer, sum_res).group_by(Racer.jid_from).order_by(desc(sum_res)).all()
 
         if len(classement) != 0:
-            sc = "\nRaced - scores :\n"
-            sc += " " + 60 * "_"
+            sc = "\nRaced - scores :"
+            sc += '\n┌' + 59 * '─' + '┐'
             for racer in classement:
                 if racer[1] != 0:
-                    sc += "\n| "
+                    sc += "\n│ "
                     pseudo_from = self.bot.occupants.jid_to_pseudo(racer[0].jid_from)
                     pseudo_to = self.bot.occupants.jid_to_pseudo(racer[0].jid_to)
-    
+
                     if len(pseudo_from) > 30:
                         sc += "%s " % (pseudo_from[:30])
                     else:
                         sc += "%-30s " % (pseudo_from)
                     sc += "a raced au total %-3s fois " % (racer[1])
-                    sc += " |"
+                    sc += " │"
             sc += "\n"
-            sc += "|" + 59 * "_" + "|"
+            sc += "└" + 59 * "─" + "┘"
             return {"text": sc, "monospace": True}
         else:
             return "Aucun race, bande de nuls !"
@@ -86,10 +86,10 @@ class CmdRaced(SyncModule):
         classement = self.bot.session.query(Racer).order_by(desc(Racer.score), Racer.jid_from).all()
 
         if len(classement) != 0:
-            sc = "\nRaced - scores :\n"
-            sc += " " + 82 * "_"
+            sc = "\nRaced - scores :"
+            sc += '\n┌' + 80 * '─' + '┐'
             for racer in classement:
-                sc += "\n| "
+                sc += "\n│ "
                 pseudo_from = self.bot.occupants.jid_to_pseudo(racer.jid_from)
                 pseudo_to = self.bot.occupants.jid_to_pseudo(racer.jid_to)
 
@@ -103,9 +103,9 @@ class CmdRaced(SyncModule):
                     sc += "%s " % (pseudo_to[:30])
                 else:
                     sc += "%-30s " % (pseudo_to)
-                sc += " |"
+                sc += "│ "
             sc += "\n"
-            sc += "|" + 81 * "_" + "|"
+            sc += "└" + 80 * "─" + "┘"
             return {"text": sc, "monospace": True}
         else:
             return "Aucun race, bande de nuls !"
