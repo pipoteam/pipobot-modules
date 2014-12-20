@@ -2,17 +2,9 @@
 import ConfigParser
 import os
 import random
+
 from pipobot.lib.modules import MultiSyncModule, defaultcmd
-
-
-class ListConfigParser(ConfigParser.RawConfigParser):
-    def get(self, section, option):
-        "Redéfinition du get pour gérer les listes"
-        value = ConfigParser.RawConfigParser.get(self, section, option)
-        if (value[0] == "[") and (value[-1] == "]"):
-            return eval(value)
-        else:
-            return value
+from pipobot.lib.utils import ListConfigParser
 
 
 class Kaamelott(MultiSyncModule):
