@@ -1,5 +1,4 @@
-#-*- coding: utf-8 -*-
-import ConfigParser
+# -*- coding: utf-8 -*-
 import os
 import random
 
@@ -25,7 +24,7 @@ class Kaamelott(MultiSyncModule):
             self.dico[c] = {}
             self.dico[c]['desc'] = config.get(c, 'desc')
             quote = config.get(c, 'citation')
-            self.dico[c]['citation'] = quote if type(quote) is list  else [config.get(c, 'citation')]
+            self.dico[c]['citation'] = quote if type(quote) is list else [config.get(c, 'citation')]
             names[c] = self.dico[c]['desc']
         return names
 
