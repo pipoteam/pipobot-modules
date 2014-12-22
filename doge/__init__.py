@@ -19,4 +19,4 @@ class CmdDoge(SyncModule):
             such, very = message.split()
         else:
             such, very = message, 'amazing'
-        return 'Such %s!\nVery %s!Wow !' % (such, very)
+        return 'Such %s!\nVery %s!\nWow !' % (such, very)
