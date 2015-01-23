@@ -3,6 +3,7 @@
 from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.utils import check_url
 
+
 class Gags(SyncModule):
     def __init__(self, bot):
         desc = _('retrieves a random 9gag page.')
