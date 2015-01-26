@@ -34,4 +34,4 @@ class Twitter(AsyncModule):
                         break
                     self.bot.say(u'Tweet de %s: %s' % (user, tweet['text']))
                 last_tweet.last = timeline[0]['id']
-        self.bot.session.commit()
+                self.bot.session.commit()
