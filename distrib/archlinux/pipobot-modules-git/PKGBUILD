@@ -1,45 +1,32 @@
 # Maintainer: Sébastien Leduc <sebastien@sleduc.fr>
 pkgname=pipobot-modules-git
 _projectname=pipobot-modules
-pkgver=20130221
+pkgver=220.413945d
 pkgrel=1
 pkgdesc="Some modules for Pipobot, a bot for XMPP MUCs"
 arch=("any")
 url="https://github.com/pipoteam/pipobot-modules"
 license=('GPL')
-depends=('python2' 'pipobot-git')
+depends=('python' 'pipobot-git')
 conflicts=('pipobot-modules')
-optdepends=('python2-beautifulsoup3: for modules parsing online content'
-            'python2-mpd: for the MPD module'
+optdepends=('python-beautifulsoup3: for modules parsing online content'
+            'python-mpd2: for the MPD module'
             'mutagen: to edit ID3 tags in the MPD module'
             'python-simplejson: for google module'
-            'python2-pyinotify: for mail module'
+            'python-pyinotify: for mail module'
             'mercurial: for the mercurial module'
-            'python2-pyenchant: for the spell module')
-makedepends=('python2' 'git')
-_gitroot="https://github.com/pipoteam/pipobot-modules.git"
-_gitname="pipobot-modules"
+            'python-pyenchant: for the spell module')
+makedepends=('python' 'git')
+source=("${_projectname}::git+https://github.com/pipoteam/pipobot-modules#branch=python3")
+md5sums=('SKIP')
 
-build() {
-  cd "$srcdir"
-  msg "Connecting to GIT server...."
 
-  if [[ -d "$_gitname" ]]; then
-    cd "$_gitname" && git pull origin
-    msg "The local files are updated."
-  else
-    git clone "$_gitroot" "$_gitname" 
-  fi
-
-  msg "GIT checkout done or server timeout"
-  msg "Starting build..."
-
-  rm -rf "$srcdir/$_gitname-build"
-  git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build" 
+pkgver () {
+  cd $_projectname
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
 }
-
 package() {
-  cd "$srcdir/$_projectname-build"
+  cd "$srcdir/$_projectname"
   install -d -m755 "$pkgdir"/usr/share/pipobot/modules
   cp -ra * "$pkgdir"/usr/share/pipobot/modules
 }
