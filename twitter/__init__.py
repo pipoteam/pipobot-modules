@@ -28,7 +28,7 @@ class Twitter(AsyncModule):
         for user in self.users:
             last_tweet = self.bot.session.query(LastTweets).filter(LastTweets.user == user).first()
             timeline = self.twitter.get_user_timeline(screen_name=user)
-            if last_tweet.last != timeline[0]['id']:
+            if last_tweet.last > timeline[0]['id']:
                 for tweet in timeline:
                     if tweet['id'] == last_tweet.last:
                         break
