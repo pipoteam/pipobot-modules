@@ -1,18 +1,9 @@
 #-*- coding: utf-8 -*-
-import configparser
 import os
 import random
+
 from pipobot.lib.modules import MultiSyncModule, defaultcmd
-
-
-class ListConfigParser(configparser.RawConfigParser):
-    def get(self, section, option):
-        "Redéfinition du get pour gérer les listes"
-        value = configparser.RawConfigParser.get(self, section, option)
-        if (value[0] == "[") and (value[-1] == "]"):
-            return eval(value)
-        else:
-            return value
+from pipobot.lib.utils import ListConfigParser
 
 
 class Kaamelott(MultiSyncModule):
@@ -33,7 +24,7 @@ class Kaamelott(MultiSyncModule):
             self.dico[c] = {}
             self.dico[c]['desc'] = config.get(c, 'desc')
             quote = config.get(c, 'citation')
-            self.dico[c]['citation'] = quote if type(quote) is list  else [config.get(c, 'citation')]
+            self.dico[c]['citation'] = quote if type(quote) is list else [config.get(c, 'citation')]
             names[c] = self.dico[c]['desc']
         return names
 
