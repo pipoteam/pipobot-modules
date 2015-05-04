@@ -17,7 +17,7 @@ def format(song):
     artist = song.get("artist", "<unknown>")
     title = song.get("title", "<unknown>")
 
-    if artist == "<unkown>" and title == "<unkown>":
+    if artist == "<unknown>" and title == "<unknown>":
         return "%s. %s" % (song["pos"], song["file"])
     else:
         return "%s. %s - %s" % (song["pos"], artist, title)
