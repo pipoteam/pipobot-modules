@@ -27,15 +27,21 @@ class MboxNotify:
         t = self.file.readline()
         if t == '':
             time.sleep(1)
-        if t[:5] == "From:":
+        elif t[:5] == "From:":
             self.mfrom = decode(t[5:].strip())
-        if t[:8] == "Subject:":
+        elif t[:8] == "Subject:":
             self.msubject = decode(t[8:].strip())
-        if t[:13] == "X-Spam-Score:":
+        elif t[:13] == "X-Spam-Score:":
             try:
                 self.spam = float(t[14:].strip())
             except:
                 self.spam = -2
+        elif t[:14] == "X-Spam-Status:":
+            try:
+                self.spam = float(t[14:].split("=")[1].split()[0].strip())
+            except:
+                self.spam = -2
+
         if self.mfrom != "" and self.msubject != "":
             if self.spam < 0:
                 try:
