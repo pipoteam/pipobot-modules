@@ -17,8 +17,10 @@ class Twitter(AsyncModule):
                              delay=60)
 
         for user in self.users:
+            last = self.bot.session.query(LastTweets).order_by(LastTweets.last.desc()).first()
+            last_id = last.last if last is not None else 0
             if not self.bot.session.query(LastTweets).filter(LastTweets.user == user).first():
-                self.bot.session.add(LastTweets(user=user, last=0))
+                self.bot.session.add(LastTweets(user=user, last=last_id))
                 self.bot.session.commit()
 
         token = Twython(self.app_key, self.app_secret, oauth_version=2).obtain_access_token()
