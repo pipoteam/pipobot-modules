@@ -6,6 +6,7 @@ import httplib
 import sqlalchemy.exc
 from pipobot.lib.modules import ListenModule
 from pipobot.lib.utils import check_url
+from pipobot.lib.known_users import KnownUser
 from model import RepostUrl
 
 try:
@@ -51,11 +52,7 @@ class CmdUrl(ListenModule):
                     res = self.bot.session.query(RepostUrl).filter(RepostUrl.url == url).first()
                     if res:
                         send.append('OLD! ')
-                        first = ''
-                        try:
-                            first = self.bot.occupants.jid_to_pseudo(res.jid)
-                        except KeyError:
-                            first = res.jid
+                        first = KnownUser.get_antihl(res.jid, self.bot)
                         first_date = 'le ' + res.date.strftime('%x') + ' à ' + res.date.strftime('%X')
                         first_date = first_date.decode("utf-8")
                         if res.count == 1:
