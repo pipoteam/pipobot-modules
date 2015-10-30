@@ -2,12 +2,12 @@ from pipobot.lib.modules import AsyncModule
 
 from twython import Twython
 
-from .model import LastTweets
+from .model import LastTweets, Tweets
 
 
 class Twitter(AsyncModule):
     """A module to follow tweets form some users"""
-    _config = (("users", list, []), ("app_key", str, ""), ("app_secret", str, ""))
+    _config = (("users", list, []), ("app_key", str, ""), ("app_secret", str, ""), ("avoid_rt", bool, True))
 
     def __init__(self, bot):
         AsyncModule.__init__(self,
@@ -27,6 +27,15 @@ class Twitter(AsyncModule):
         self.twitter = Twython(self.app_key, access_token=token)
 
     def action(self):
+        tweets_id_list = set()
+
+        def already_said(id):
+            if id in tweets_id_list:
+                return True
+            tweets_id_list.add(id)
+            q = self.bot.session.query(Tweets).filter(Tweets.id == id)
+            return self.bot.session.query(q.exists()).scalar()
+
         for user in self.users:
             last_tweet = self.bot.session.query(LastTweets).filter(LastTweets.user == user).first()
             timeline = self.twitter.get_user_timeline(screen_name=user)
@@ -34,6 +43,10 @@ class Twitter(AsyncModule):
                 for tweet in timeline:
                     if tweet['id'] <= last_tweet.last:
                         break
-                    self.bot.say(u'Tweet de %s: %s' % (user, tweet['text']))
+                    if not (self.avoid_rt and 'retweeted_status' in tweet and already_said(tweet['retweeted_status']['id'])):
+                        self.bot.say(u'Tweet de %s: %s' % (user, tweet['text']))
+                    tweets_id_list.add(tweet['id'])
                 last_tweet.last = timeline[0]['id']
-                self.bot.session.commit()
+        for tweet in tweets_id_list - set(t[0] for t in self.bot.session.query(LastTweets.last).all()):
+            self.bot.session.add(Tweets(id=tweet))
+        self.bot.session.commit()
