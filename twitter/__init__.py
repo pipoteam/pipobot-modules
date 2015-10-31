@@ -27,12 +27,12 @@ class Twitter(AsyncModule):
         self.twitter = Twython(self.app_key, access_token=token)
 
     def action(self):
-        tweets_id_list = set()
+        tweets = set()
 
         def already_said(id):
-            if id in tweets_id_list:
+            if id in tweets:
                 return True
-            tweets_id_list.add(id)
+            tweets.add(id)
             q = self.bot.session.query(Tweets).filter(Tweets.id == id)
             return self.bot.session.query(q.exists()).scalar()
 
@@ -45,8 +45,8 @@ class Twitter(AsyncModule):
                         break
                     if not (self.avoid_rt and 'retweeted_status' in tweet and already_said(tweet['retweeted_status']['id'])):
                         self.bot.say(u'Tweet de %s: %s' % (user, tweet['text']))
-                    tweets_id_list.add(tweet['id'])
+                    tweets.add(tweet['id'])
                 last_tweet.last = timeline[0]['id']
-        for tweet in tweets_id_list - set(t[0] for t in self.bot.session.query(LastTweets.last).all()):
+        for tweet in tweets - set(t[0] for t in self.bot.session.query(LastTweets.last).all()):
             self.bot.session.add(Tweets(id=tweet))
         self.bot.session.commit()
