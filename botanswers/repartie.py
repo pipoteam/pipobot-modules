@@ -23,7 +23,7 @@ Aujourd'hui, j'ai mangé une pomme.
 Cela ne me touche même pas.
 I see your lips moving but all I hear is blah blah blah.
 Putain, ce que tu peux être chiant des fois.
-Hum désolé, t'étais en train de me dire quelquechose ?
+Hum désolé, t'étais en train de me dire quelque chose ?
 Je comprends tout à fait tes arguments mais je m'en tape"""
 
 indirect = u"""N'essaye pas de parler de moi dans mon dos !
