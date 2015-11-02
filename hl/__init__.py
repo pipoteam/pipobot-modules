@@ -140,13 +140,13 @@ class HighLight(SyncModule):
                             knownusers.append(knownuser.user)
                         break
             else:  # highlight one user
-                knownuser = KnownUser.get(user, self.bot, authviapseudo=True)
+                knownuser = KnownUser.get(user, self.bot, authviapseudo=True, avoid_bot=False)
                 if knownuser:
                     knownusers.append(knownuser)
                 else:
                     unknownusers.append(user)
         for user in self.bot.occupants.users:
-            if KnownUser.get(user, self.bot) in knownusers:
+            if KnownUser.get(user, self.bot, avoid_bot=False) in knownusers:
                 ret += ' %s' % user
         for user in unknownusers:
             ret += ' %s' % user
