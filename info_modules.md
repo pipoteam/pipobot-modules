@@ -15,8 +15,10 @@ depends:
 
 # belotebot
 CmdBelote
+
 Jeu de belote. Si vous voulez être renseigné,                 allez au bureau des renseignements, ils vous renseigneront…
 IqBobBelote
+
 :exclamation: import failed: 'NoneType' object is not callable
 
 # bideetmusique
@@ -43,6 +45,7 @@ depends:
 
 # bourse
 CmdBourse
+
 bourse [valeur [historique]]
 Affiche le taux de conversion d'une valeur boursière.
 Valeurs disponibles: JPY, USD, CHF, CAD
@@ -55,10 +58,12 @@ depends:
 * chiffresc
 
 ChiffresCmd
+
 Le module du jeux des chiffres et des lettres
 chiffres init : génère une nouvelle partie
 chiffres solve : cherche à résoudre le problème
 LettresCmd
+
 :exclamation: import failed: 'LettresCmd' object has no attribute 'dico'
 
 # chuck
@@ -72,15 +77,18 @@ depends:
 
 # cmdfu
 CmdCmdFu
+
 Commandline tips
 cmdfu : Retourne une commande aléatoire
 
 # coin
 CmdCoin
+
 Shooting ducks
 
 # date
 CmdDate
+
 date : Affiche la date et l'heure actuelle
 
 # date_timezone
@@ -89,6 +97,7 @@ depends:
 * pytz
 
 CmdDateTimeZone
+
 date : show the actual date for the server and the sender
 date set <timezone> : set your actual timezone (see http://pastebin.com/XbLSvZhY)
 date all : show the actual date for all register users
@@ -107,6 +116,7 @@ depends:
 * sqlalchemy
 
 CmdDette
+
 Gestionnaire de dettes
 
 |Command|Description|
@@ -122,10 +132,12 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
 
 # doge
 CmdDoge
+
 doge <message>: dogifies your <message>
 
 # dok
 CmdDok
+
 :exclamation: import failed: 'CmdDok' object has no attribute 'url'
 
 # exa
@@ -133,6 +145,7 @@ depends:
 * BeautifulSoup
 
 CmdExa
+
 exa [mots clefs]
 Effectue une recherche sur le web et affiche les 4 premiers résultats
 
@@ -144,6 +157,7 @@ depends:
 
 # getjid
 CmdGetjid
+
 getjid [nom]
 Affiche le jid pour découvrir qui se cache derrière un pseudo
 
@@ -158,11 +172,13 @@ depends:
 * sqlalchemy
 
 CmdGore
+
 gore <pseudo>
 Ajoute un point gore à <pseudo> (10 s minimum d'intervalle)
 
 # haddock
 Haddock
+
 Les insultes du capitaine haddock :p.
 
 # hg
@@ -183,6 +199,7 @@ depends:
 * sqlalchemy
 
 HighLight
+
 hl <people>: Highligh <people> (whom can be registerd users, pseudos or list of people)
 hl <people> :<message>: Highligh <people>, and shows <message>
 hl show [<list>]: Shows list of people
@@ -201,6 +218,7 @@ depends:
 * sqlalchemy
 
 CmdKickStarter
+
 kickstarter : show this help
 kickstarter list: list known projects
 kickstarter all: show the status of all known projects
@@ -226,12 +244,15 @@ depends:
 CmdNextPrev
 
 
+
 # ola
 Ola
+
 Fait la ola.
 
 # pendu
 CmdPendu
+
 Un superbe jeu de pendu
 pendu init : lance une partie avec un mot aléatoire (to be coded...)
 pendu init [word] : lance une partie avec 'word' comme mot à trouver
@@ -243,8 +264,10 @@ pendu played : affiche la liste des lettres déjà jouées
 CmdPingPong
 
 
+
 # pioche
 CmdPioche
+
 pioche
 Pioche une carte au hasard dans un jeu de 52 cartes
 
@@ -254,6 +277,7 @@ depends:
 * lib
 
 CmdRaced
+
 raced pseudo
 Ajoute un point raced à /me envers pseudo
 
@@ -265,12 +289,14 @@ depends:
 
 # roll
 CmdRoll
+
 Le jugement des dieux !... Enfin de Pipo !
 roll [entier] : renvoie un entier entre 1 et [entier]
 roll [x,y,z] : renvoie un choix aléatoire entre x, y et z
 
 # rps
 CmdRPS
+
 Rock Paper Scissors:
 rps init <n> : lance une nouvelle partie avec <n> joueurs
 rps bot : pour se mesurer au bot !!!
@@ -278,6 +304,7 @@ rps (Rock|Paper|Scissor) : pour jouer
 
 # rpsls
 CmdRPSLS
+
 Rock Paper Scissors Lizard Spock:
 rpsls init <someone> : Pour défier quelqu'un.
 rpsls accept <someone> : Accèpte le défi de quelqu'un.
@@ -301,6 +328,7 @@ depends:
 
 # scores
 CmdScores
+
 score [module] [params]
 Consulte les scores pour le module [module]
 
@@ -315,16 +343,19 @@ depends:
 * enchant
 
 CmdSpell
+
 Correction orthographique
 spell check : vérifie si un mot existe ou pas
 spell suggest : donne les mots approchants
 
 # t2a
 CmdText2Ascii
+
 !t2a texte : transforme le texte en ascii art
 
 # taggle
 CmdTaggle
+
 Ta gueule [nom]
 Dit taggle à nom (valeur par défaut à mettre dans le fichier de configuration)
 
@@ -333,6 +364,7 @@ depends:
 * sqlalchemy
 
 CmdTodo
+
 Gestion des TODO-lists
 
 |Command|Description|
@@ -346,6 +378,7 @@ todo list [name] : affiche les todo de la liste [name]|
 
 # trac
 CmdTrac
+
 trac [num]
 Liste les tickets trac actifs ou en affiche un en détail
 
@@ -366,6 +399,7 @@ depends:
 
 # unicode
 CmdUnicode
+
 Unicode caractère
     Affiche des informations sur le caractère unicode « caractère »
 unicode nom
@@ -374,6 +408,7 @@ unicode nom
 
 # urbandict
 UrbanDict
+
 urban [result] [query] : displays the [result]-th response to the [query]
 urban : displays a random urban dictionary entry
 
@@ -398,6 +433,7 @@ depends:
 * simplejson
 
 CmdWordRef
+
 wr in out expression: traduit [expression] de la langue [in] vers la langue [out]
 
 # xhtml
