@@ -14,9 +14,9 @@ depends:
 :exclamation: import failed: No module named utils
 
 # belotebot
-## CmdBelote
+CmdBelote
 Jeu de belote. Si vous voulez être renseigné,                 allez au bureau des renseignements, ils vous renseigneront…
-## IqBobBelote
+IqBobBelote
 :exclamation: import failed: 'NoneType' object is not callable
 
 # bideetmusique
@@ -42,7 +42,7 @@ depends:
 :exclamation: import failed: No module named exceptions
 
 # bourse
-## CmdBourse
+CmdBourse
 bourse [valeur [historique]]
 Affiche le taux de conversion d'une valeur boursière.
 Valeurs disponibles: JPY, USD, CHF, CAD
@@ -54,11 +54,11 @@ Valeurs disponibles: JPY, USD, CHF, CAD
 depends:
 * chiffresc
 
-## ChiffresCmd
+ChiffresCmd
 Le module du jeux des chiffres et des lettres
 chiffres init : génère une nouvelle partie
 chiffres solve : cherche à résoudre le problème
-## LettresCmd
+LettresCmd
 :exclamation: import failed: 'LettresCmd' object has no attribute 'dico'
 
 # chuck
@@ -71,16 +71,16 @@ depends:
 :exclamation: import failed: No module named utils
 
 # cmdfu
-## CmdCmdFu
+CmdCmdFu
 Commandline tips
 cmdfu : Retourne une commande aléatoire
 
 # coin
-## CmdCoin
+CmdCoin
 Shooting ducks
 
 # date
-## CmdDate
+CmdDate
 date : Affiche la date et l'heure actuelle
 
 # date_timezone
@@ -88,7 +88,7 @@ depends:
 * sqlalchemy
 * pytz
 
-## CmdDateTimeZone
+CmdDateTimeZone
 date : show the actual date for the server and the sender
 date set <timezone> : set your actual timezone (see http://pastebin.com/XbLSvZhY)
 date all : show the actual date for all register users
@@ -106,7 +106,7 @@ depends:
 depends:
 * sqlalchemy
 
-## CmdDette
+CmdDette
 Gestionnaire de dettes
 
 |Command|Description|
@@ -121,18 +121,18 @@ dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent
 # dns
 
 # doge
-## CmdDoge
+CmdDoge
 doge <message>: dogifies your <message>
 
 # dok
-## CmdDok
+CmdDok
 :exclamation: import failed: 'CmdDok' object has no attribute 'url'
 
 # exa
 depends:
 * BeautifulSoup
 
-## CmdExa
+CmdExa
 exa [mots clefs]
 Effectue une recherche sur le web et affiche les 4 premiers résultats
 
@@ -143,7 +143,7 @@ depends:
 :exclamation: import failed: No module named utils
 
 # getjid
-## CmdGetjid
+CmdGetjid
 getjid [nom]
 Affiche le jid pour découvrir qui se cache derrière un pseudo
 
@@ -157,12 +157,12 @@ depends:
 depends:
 * sqlalchemy
 
-## CmdGore
+CmdGore
 gore <pseudo>
 Ajoute un point gore à <pseudo> (10 s minimum d'intervalle)
 
 # haddock
-## Haddock
+Haddock
 Les insultes du capitaine haddock :p.
 
 # hg
@@ -182,7 +182,7 @@ depends:
 depends:
 * sqlalchemy
 
-## HighLight
+HighLight
 hl <people>: Highligh <people> (whom can be registerd users, pseudos or list of people)
 hl <people> :<message>: Highligh <people>, and shows <message>
 hl show [<list>]: Shows list of people
@@ -200,7 +200,7 @@ depends:
 * requests
 * sqlalchemy
 
-## CmdKickStarter
+CmdKickStarter
 kickstarter : show this help
 kickstarter list: list known projects
 kickstarter all: show the status of all known projects
@@ -223,15 +223,15 @@ depends:
 :exclamation: import failed: No module named utils
 
 # nextprev
-## CmdNextPrev
+CmdNextPrev
 
 
 # ola
-## Ola
+Ola
 Fait la ola.
 
 # pendu
-## CmdPendu
+CmdPendu
 Un superbe jeu de pendu
 pendu init : lance une partie avec un mot aléatoire (to be coded...)
 pendu init [word] : lance une partie avec 'word' comme mot à trouver
@@ -240,11 +240,11 @@ pendu try [letter] : propose la lettre 'letter'
 pendu played : affiche la liste des lettres déjà jouées
 
 # pingpong
-## CmdPingPong
+CmdPingPong
 
 
 # pioche
-## CmdPioche
+CmdPioche
 pioche
 Pioche une carte au hasard dans un jeu de 52 cartes
 
@@ -253,7 +253,7 @@ depends:
 * sqlalchemy
 * lib
 
-## CmdRaced
+CmdRaced
 raced pseudo
 Ajoute un point raced à /me envers pseudo
 
@@ -264,20 +264,20 @@ depends:
 :exclamation: import failed: No module named abstract_modules
 
 # roll
-## CmdRoll
+CmdRoll
 Le jugement des dieux !... Enfin de Pipo !
 roll [entier] : renvoie un entier entre 1 et [entier]
 roll [x,y,z] : renvoie un choix aléatoire entre x, y et z
 
 # rps
-## CmdRPS
+CmdRPS
 Rock Paper Scissors:
 rps init <n> : lance une nouvelle partie avec <n> joueurs
 rps bot : pour se mesurer au bot !!!
 rps (Rock|Paper|Scissor) : pour jouer
 
 # rpsls
-## CmdRPSLS
+CmdRPSLS
 Rock Paper Scissors Lizard Spock:
 rpsls init <someone> : Pour défier quelqu'un.
 rpsls accept <someone> : Accèpte le défi de quelqu'un.
@@ -300,7 +300,7 @@ depends:
 :exclamation: import failed: No module named utils
 
 # scores
-## CmdScores
+CmdScores
 score [module] [params]
 Consulte les scores pour le module [module]
 
@@ -314,17 +314,17 @@ depends:
 depends:
 * enchant
 
-## CmdSpell
+CmdSpell
 Correction orthographique
 spell check : vérifie si un mot existe ou pas
 spell suggest : donne les mots approchants
 
 # t2a
-## CmdText2Ascii
+CmdText2Ascii
 !t2a texte : transforme le texte en ascii art
 
 # taggle
-## CmdTaggle
+CmdTaggle
 Ta gueule [nom]
 Dit taggle à nom (valeur par défaut à mettre dans le fichier de configuration)
 
@@ -332,7 +332,7 @@ Dit taggle à nom (valeur par défaut à mettre dans le fichier de configuration
 depends:
 * sqlalchemy
 
-## CmdTodo
+CmdTodo
 Gestion des TODO-lists
 
 |Command|Description|
@@ -345,7 +345,7 @@ todo list [name] : affiche les todo de la liste [name]|
 
 
 # trac
-## CmdTrac
+CmdTrac
 trac [num]
 Liste les tickets trac actifs ou en affiche un en détail
 
@@ -365,7 +365,7 @@ depends:
 
 
 # unicode
-## CmdUnicode
+CmdUnicode
 Unicode caractère
     Affiche des informations sur le caractère unicode « caractère »
 unicode nom
@@ -373,7 +373,7 @@ unicode nom
 
 
 # urbandict
-## UrbanDict
+UrbanDict
 urban [result] [query] : displays the [result]-th response to the [query]
 urban : displays a random urban dictionary entry
 
@@ -397,7 +397,7 @@ depends:
 depends:
 * simplejson
 
-## CmdWordRef
+CmdWordRef
 wr in out expression: traduit [expression] de la langue [in] vers la langue [out]
 
 # xhtml
