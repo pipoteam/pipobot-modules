@@ -107,9 +107,10 @@ date <timezone> : show the actual date and time for <timezone>date <user> : show
 * sqlalchemy
 
 ## CmdDette
+Gestionnaire de dettes
+
 |Command|Description|
 |-------|-----------|
-||Gestionnaire de dettes|
 |list|dette list [name] : Liste les dettes de [name1]|
 |add|dette add [name1] [amount] [name2] [reason] : Ajoute une dette de [amount] que doit payer [name1] à [name2] à cause de [reason]
 dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent tous [amount] à [name3] à cause de [reason]|
@@ -332,9 +333,10 @@ Dit taggle à nom (valeur par défaut à mettre dans le fichier de configuration
 * sqlalchemy
 
 ## CmdTodo
+Gestion des TODO-lists
+
 |Command|Description|
 |-------|-----------|
-||Gestion des TODO-lists|
 |search|todo search [element]: recherche un TODO qui contient [element]|
 |add|todo add [name] [msg] : crée le nouveau todo [msg] dans la liste [name]|
 |list|todo list : affiche la liste des todolist existantes.
