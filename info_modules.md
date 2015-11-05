@@ -4,11 +4,13 @@
 # bashfr
 ## depends:
 * BeautifulSoup
+
 :exclamation: import failed: No module named utils
 
 # bashorg
 ## depends:
 * BeautifulSoup
+
 :exclamation: import failed: No module named utils
 
 # belotebot
@@ -20,11 +22,13 @@ Jeu de belote. Si vous voulez être renseigné,                 allez au bureau 
 # bideetmusique
 ## depends:
 * BeautifulSoup
+
 :exclamation: import failed: No module named utils
 
 # blague
 ## depends:
 * sqlalchemy
+
 
 # botanswers
 :exclamation: import failed: cannot import name utils
@@ -34,6 +38,7 @@ Jeu de belote. Si vous voulez être renseigné,                 allez au bureau 
 * mutagen
 * mpd
 * BeautifulSoup
+
 :exclamation: import failed: No module named exceptions
 
 # bourse
@@ -48,6 +53,7 @@ Valeurs disponibles: JPY, USD, CHF, CAD
 # chiffres_lettres
 ## depends:
 * chiffresc
+
 ## ChiffresCmd
 Le module du jeux des chiffres et des lettres
 chiffres init : génère une nouvelle partie
@@ -58,6 +64,7 @@ chiffres solve : cherche à résoudre le problème
 # chuck
 ## depends:
 * BeautifulSoup
+
 :exclamation: import failed: No module named utils
 
 # cmdalacon
@@ -80,6 +87,7 @@ date : Affiche la date et l'heure actuelle
 ## depends:
 * sqlalchemy
 * pytz
+
 ## CmdDateTimeZone
 date : show the actual date for the server and the sender
 date set <timezone> : set your actual timezone (see http://pastebin.com/XbLSvZhY)
@@ -91,11 +99,13 @@ date <timezone> : show the actual date and time for <timezone>date <user> : show
 * duckduckgo
 * BeautifulSoup
 * simplejson
+
 :exclamation: import failed: No module named utils
 
 # dette
 ## depends:
 * sqlalchemy
+
 ## CmdDette
 |Command|Description|
 |-------|-----------|
@@ -105,6 +115,9 @@ date <timezone> : show the actual date and time for <timezone>date <user> : show
 dette add [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent tous [amount] à [name3] à cause de [reason]|
 |multiple|dette multiple [name1] [name2] [amount] [name3] [reason] : [name1] et [name2] doivent se partager la dette [amount] à payer à [name3] à cause de [reason]|
 |remove|dette remove [id1], [id2], [id3] : Supprime les dettes dont les id sont [id1], [id2], [id3]|
+
+
+# dns
 
 # doge
 ## CmdDoge
@@ -117,6 +130,7 @@ doge <message>: dogifies your <message>
 # exa
 ## depends:
 * BeautifulSoup
+
 ## CmdExa
 exa [mots clefs]
 Effectue une recherche sur le web et affiche les 4 premiers résultats
@@ -124,6 +138,7 @@ Effectue une recherche sur le web et affiche les 4 premiers résultats
 # excuse
 ## depends:
 * BeautifulSoup
+
 :exclamation: import failed: No module named utils
 
 # getjid
@@ -134,11 +149,13 @@ Affiche le jid pour découvrir qui se cache derrière un pseudo
 # google
 ## depends:
 * simplejson
+
 :exclamation: import failed: No module named utils
 
 # gore
 ## depends:
 * sqlalchemy
+
 ## CmdGore
 gore <pseudo>
 Ajoute un point gore à <pseudo> (10 s minimum d'intervalle)
@@ -151,16 +168,19 @@ Les insultes du capitaine haddock :p.
 ## depends:
 * yaml
 * mercurial
+
 :exclamation: import failed: No module named exceptions
 
 # hidden_word
 ## depends:
 * sqlalchemy
+
 :exclamation: import failed: cannot import name utils
 
 # hl
 ## depends:
 * sqlalchemy
+
 ## HighLight
 hl <people>: Highligh <people> (whom can be registerd users, pseudos or list of people)
 hl <people> :<message>: Highligh <people>, and shows <message>
@@ -178,6 +198,7 @@ hl rm|del <list> [<people>]: Remove <list>, or <people> from <list>
 ## depends:
 * requests
 * sqlalchemy
+
 ## CmdKickStarter
 kickstarter : show this help
 kickstarter list: list known projects
@@ -193,9 +214,11 @@ kickstarter <project-name>: show the status of the project
 ## depends:
 * pyinotify
 
+
 # mute
 ## depends:
 * xmpp
+
 :exclamation: import failed: No module named utils
 
 # nextprev
@@ -228,6 +251,7 @@ Pioche une carte au hasard dans un jeu de 52 cartes
 ## depends:
 * sqlalchemy
 * lib
+
 ## CmdRaced
 raced pseudo
 Ajoute un point raced à /me envers pseudo
@@ -235,6 +259,7 @@ Ajoute un point raced à /me envers pseudo
 # reminder
 ## depends:
 * sqlalchemy
+
 :exclamation: import failed: No module named abstract_modules
 
 # roll
@@ -264,11 +289,13 @@ rpsls (Rock|Paper|Scissor|Lizard|Spock) : pour jouer
 * twitter
 * sqlalchemy
 * BeautifulSoup
+
 :exclamation: import failed: No module named abstract_modules
 
 # scmb
 ## depends:
 * BeautifulSoup
+
 :exclamation: import failed: No module named utils
 
 # scores
@@ -279,11 +306,13 @@ Consulte les scores pour le module [module]
 # sos_bides
 ## depends:
 * BeautifulSoup
+
 :exclamation: import failed: No module named utils
 
 # spell
 ## depends:
 * enchant
+
 ## CmdSpell
 Correction orthographique
 spell check : vérifie si un mot existe ou pas
@@ -301,6 +330,7 @@ Dit taggle à nom (valeur par défaut à mettre dans le fichier de configuration
 # todo
 ## depends:
 * sqlalchemy
+
 ## CmdTodo
 |Command|Description|
 |-------|-----------|
@@ -310,6 +340,7 @@ Dit taggle à nom (valeur par défaut à mettre dans le fichier de configuration
 |list|todo list : affiche la liste des todolist existantes.
 todo list [name] : affiche les todo de la liste [name]|
 |remove/delete/rm|todo remove [n,...] : supprime les todos d'id [n,...]|
+
 
 # trac
 ## CmdTrac
@@ -322,12 +353,14 @@ Liste les tickets trac actifs ou en affiche un en détail
 # tv
 ## depends:
 * BeautifulSoup
+
 :exclamation: import failed: No module named utils
 
 # twitter
 ## depends:
 * twython
 * sqlalchemy
+
 
 # unicode
 ## CmdUnicode
@@ -346,11 +379,13 @@ urban : displays a random urban dictionary entry
 ## depends:
 * sqlalchemy
 * hyperlinks_scanner
+
 :exclamation: import failed: No module named utils
 
 # vdm
 ## depends:
 * BeautifulSoup
+
 :exclamation: import failed: No module named utils
 
 # wiki
@@ -359,6 +394,7 @@ urban : displays a random urban dictionary entry
 # wr
 ## depends:
 * simplejson
+
 ## CmdWordRef
 wr in out expression: traduit [expression] de la langue [in] vers la langue [out]
 
