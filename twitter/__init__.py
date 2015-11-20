@@ -4,10 +4,13 @@ from twython import Twython
 
 from .model import LastTweets, Tweets
 
+RT = 'retweeted_status'
+
 
 class Twitter(AsyncModule):
     """A module to follow tweets form some users"""
-    _config = (("users", list, []), ("app_key", str, ""), ("app_secret", str, ""), ("avoid_rt", bool, True))
+    _config = (("users", list, []), ("app_key", str, ""), ("app_secret", str, ""),
+            ("avoid_rt", bool, True), ("shy_start", bool, True))
 
     def __init__(self, bot):
         AsyncModule.__init__(self,
@@ -25,8 +28,10 @@ class Twitter(AsyncModule):
 
         token = Twython(self.app_key, self.app_secret, oauth_version=2).obtain_access_token()
         self.twitter = Twython(self.app_key, access_token=token)
+        if self.shy_start:
+            self.action(say=False)
 
-    def action(self):
+    def action(self, say=True):
         tweets = set()
 
         def already_said(id):
@@ -43,7 +48,7 @@ class Twitter(AsyncModule):
                 for tweet in timeline:
                     if tweet['id'] <= last_tweet.last:
                         break
-                    if not (self.avoid_rt and 'retweeted_status' in tweet and already_said(tweet['retweeted_status']['id'])):
+                    if say and not (self.avoid_rt and RT in tweet and already_said(tweet[RT]['id'])):
                         self.bot.say(u'Tweet de %s: %s' % (user, tweet['text']))
                     tweets.add(tweet['id'])
                 last_tweet.last = timeline[0]['id']
