@@ -1,8 +1,10 @@
 from datetime import datetime
-from sqlalchemy import Integer, Column, String, Text, DateTime, ForeignKey
-from sqlalchemy.orm import relationship, backref
+
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import backref, relationship
 
 from pipobot.lib.bdd import Base
+
 
 def strptime(string, fmt='%Y-%m-%dT%H:%M:%S.%fZ'):
     return datetime.strptime(string, fmt)
@@ -51,14 +53,15 @@ class GitLabIssue(Base):
 
     def update_from_gitlab(self, issue):
         updated = strptime(issue.updated_at)
-        if self.update_at and updated == self.update_at:
+        if self.updated_at and updated == self.updated_at:
             return
         self.id = issue.id
         self.updated_at = updated
         self.created_at = strptime(issue.created_at)
         self.project_id = issue.project_id
         self.author_id = issue.author.id
-        self.assignee_id = issue.assignee
+        if issue.assignee is not None:
+            self.assignee_id = issue.assignee.id
         self.title = issue.title
         self.description = issue.description
         self.state = issue.state
