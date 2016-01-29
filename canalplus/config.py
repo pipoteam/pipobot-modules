@@ -9,6 +9,6 @@ emissions_id = {"lpj": 249,
                 "zapping": 201,
                 }
 
-qualities = ["BAS_DEBIT", "HAUT_DEBIT", "HD"]
-urlXMLEmissions = "http://www.canalplus.fr/rest/bootstrap.php?/bigplayer/getMEAs"
-urlXMLVid = "http://www.canalplus.fr/rest/bootstrap.php?/bigplayer/getVideos"
+qualities = ["HLS"]
+urlXMLEmissions = 'http://service.canal-plus.com/video/rest/getMEAs/cplus'
+urlXMLVid = 'http://service.canal-plus.com/video/rest/getvideos/cplus'
