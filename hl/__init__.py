@@ -1,8 +1,9 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+
+from pipobot.lib.known_users import KnownUser, minpermlvl
+from pipobot.lib.modules import SyncModule, answercmd, defaultcmd
 
 from model import HlList, HlListMembers
-from pipobot.lib.modules import SyncModule, defaultcmd, answercmd
-from pipobot.lib.known_users import KnownUser, minpermlvl
 
 
 class HighLight(SyncModule):
@@ -14,11 +15,11 @@ class HighLight(SyncModule):
         desc += _("\nhl rm|del <list> [<people>]: Remove <list>, or <people> from <list>")
 
         SyncModule.__init__(self,
-                bot,
-                desc=desc,
-                name='hl')
+                            bot,
+                            desc=desc,
+                            name='hl')
 
-    @answercmd(r'^show (?P<plist>\w+)')
+    @answercmd(r'^show (?P<plist>[\w_-]+)')
     def aswer_show(self, sender, plist):
         hllist = self.bot.session.query(HlList).filter(HlList.name == plist).first()
         if not hllist:
@@ -40,7 +41,7 @@ class HighLight(SyncModule):
                 ret += ' %s' % user.user
         return ret
 
-    @answercmd(r'^(set|add) (?P<hllist>\w+) (?P<users>.*)')
+    @answercmd(r'^(set|add) (?P<hllist>[\w_-)+) (?P<users>.*)')
     def answer_set(self, sender, hllist, users):
         ret = ''
         knownusers = []
@@ -80,7 +81,7 @@ class HighLight(SyncModule):
         self.bot.session.commit()
         return ret.strip()
 
-    @answercmd(r'^(rm|del) (?P<plist>\w+) (?P<users>.*)')
+    @answercmd(r'^(rm|del) (?P<plist>[\w_-]+) (?P<users>.*)')
     @minpermlvl(2)
     def answer_rm_users(self, sender, plist, users):
         hllistname = plist
@@ -111,7 +112,7 @@ class HighLight(SyncModule):
         self.bot.session.commit()
         return ret.strip()
 
-    @answercmd(r'^(rm|del) (?P<hllistname>\w+)')
+    @answercmd(r'^(rm|del) (?P<hllistname>[\w_-]+)')
     @minpermlvl(2)
     def answer_rm(self, sender, hllistname):
         hllist = self.bot.session.query(HlList).filter(HlList.name == hllistname).first()
