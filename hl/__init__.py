@@ -41,7 +41,7 @@ class HighLight(SyncModule):
                 ret += ' %s' % user.user
         return ret
 
-    @answercmd(r'^(set|add) (?P<hllist>[\w_-)+) (?P<users>.*)')
+    @answercmd(r'^(set|add) (?P<hllist>[\w_-]+) (?P<users>.*)')
     def answer_set(self, sender, hllist, users):
         ret = ''
         knownusers = []
