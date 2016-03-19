@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import os
 import ConfigParser
+import os
+
 from pipobot.lib.modules import MultiSyncModule, defaultcmd
 from pipobot.lib.utils import check_url
 
@@ -32,6 +33,10 @@ class Link(MultiSyncModule):
 
     @defaultcmd
     def answer(self, cmd, sender, message):
+        url = self.dico[cmd]['url']
         if message:
-            return check_url(self.dico[cmd]['url'].replace('KEYWORDS', message).replace(' ', '+').encode('utf-8'), geturl=True)
-        return "rtfm ;)"
+            if 'KEYWORDS' in url:
+                url = url.replace('KEYWORDS', message).replace(' ', '+')
+            else:
+                return _("This command does not take arguments")
+        return check_url(url.encode('utf-8'), geturl=True)
