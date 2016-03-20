@@ -1,10 +1,10 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """ A module to parse quotes from http://bash.org """
 
-from pipobot.lib.utils import xhtml2text
 from BeautifulSoup import BeautifulSoup
 from pipobot.lib.abstract_modules import FortuneModule
 from pipobot.lib.module_test import ModuleTest
+from pipobot.lib.utils import xhtml2text
 
 
 class CmdBashorg(FortuneModule):
@@ -44,8 +44,8 @@ bashorg [n] : Show the quote [n] from bash.org"""
 class BashfOrgTest(ModuleTest):
     def test_bashorg_ok(self):
         bot_rep = self.bot_answer("!bashorg 1729")
-        expected=(u"bashorg #1729 :\n"
-                  u"<blinkchik> can i become a bot and how??")
+        expected = (u"bashorg #1729 :\n"
+                    u"<blinkchik> can i become a bot and how??")
         self.assertEqual(bot_rep, expected)
 
     def test_bashorg_random(self):

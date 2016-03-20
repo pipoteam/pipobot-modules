@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import BeautifulSoup
-import html2text
-import feedparser
 import hashlib
-import time
 import sys
+import time
+
+import BeautifulSoup
+import feedparser
+import html2text
 
 
 def get_content(entry):

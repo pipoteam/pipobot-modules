@@ -1,7 +1,6 @@
-#!/usr/bin/python
 # -*- coding: UTF-8 -*-
-from sqlalchemy import Column, Integer, String
 from pipobot.lib.bdd import Base
+from sqlalchemy import Column, Integer, String
 
 
 class HiddenBase(Base):
@@ -12,4 +11,3 @@ class HiddenBase(Base):
     def __init__(self, jid, score):
         self.jid = jid
         self.score = score
-

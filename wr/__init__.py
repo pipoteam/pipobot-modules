@@ -1,8 +1,10 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+
+from pipobot.lib.module_test import ModuleTest
+from pipobot.lib.modules import SyncModule, answercmd
 
 import wrapi
-from pipobot.lib.modules import SyncModule, answercmd
-from pipobot.lib.module_test import ModuleTest
+
 
 class CmdWordRef(SyncModule):
     def __init__(self, bot):

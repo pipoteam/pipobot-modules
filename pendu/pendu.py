@@ -2,6 +2,7 @@
 
 import os
 from random import choice
+
 from pendu_ascii import asc_res
 
 

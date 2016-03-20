@@ -1,16 +1,16 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import random
 import threading
 import time
-from pipobot.lib.modules import SyncModule, answercmd, defaultcmd
-from pipobot.lib.module_test import ModuleTest
 
+from pipobot.lib.module_test import ModuleTest
+from pipobot.lib.modules import SyncModule, answercmd, defaultcmd
 
 choices = ["Rock", "Paper", "Scissors", "Lizard", "Spock"]
 delay = 15
 victory = {("Paper", "Rock"): "covers",
            ("Scissors", "Paper"): "cuts",
-           ("Rock", "Lizard"):  "crushes",
+           ("Rock", "Lizard"): "crushes",
            ("Lizard", "Spock"): "poisons",
            ("Spock", "Scissors"): "smashes",
            ("Scissors", "Lizard"): "decapitates",
@@ -129,7 +129,7 @@ rpsls (Rock|Paper|Scissor|Lizard|Spock) : pour jouer"""
         elif self.p2.choice is None:
             return u"%s a oublié de jouer, %s a gagné !" % (self.p2.name, self.p1.name)
 
-        #If we are here: both players have played
+        # If we are here: both players have played
         if self.p1.choice == self.p2.choice:
             return u"%s et %s sont a égalité" % (self.p1.name, self.p2.name)
 

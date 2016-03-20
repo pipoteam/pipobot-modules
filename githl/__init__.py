@@ -1,25 +1,25 @@
+from gitlab import Gitlab
 from pipobot.lib.abstract_modules import NotifyModule
 
-from gitlab import Gitlab
+from .model import GitLabIssue, GitLabProject
 
-from .model import GitLabProject, GitLabIssue
 MSG = {
-        'commit': _('New commit on %s from %s: %s'),
-        'issue': _('New Issue in %s: %s (%s/issues/%i)'),
-        }
+    'commit': _('New commit on %s from %s: %s'),
+    'issue': _('New Issue in %s: %s (%s/issues/%i)'),
+}
 
 
 class GitLabModule(NotifyModule):
     """A module to follow gitlab's projects"""
     _config = (("url", str, ""), ("token", str, ""),
-            ("ssl_verify", bool, True), ("max_commits", int, 10))
+               ("ssl_verify", bool, True), ("max_commits", int, 10))
 
     def __init__(self, bot):
         NotifyModule.__init__(self,
-                             bot,
-                             name="gitlab",
-                             desc="Gitlab Interface",
-                             delay=60)
+                              bot,
+                              name="gitlab",
+                              desc="Gitlab Interface",
+                              delay=60)
         self.gl = Gitlab(self.url, self.token, ssl_verify=self.ssl_verify)
         self.gl.auth()
 

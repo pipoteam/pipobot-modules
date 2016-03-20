@@ -1,7 +1,8 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """ A module to parse quote extracted from http://danstonchat.com/ """
 
 import random
+
 import pipobot.lib.utils
 from BeautifulSoup import BeautifulSoup
 from pipobot.lib.abstract_modules import FortuneModule
@@ -48,9 +49,9 @@ bashfr [n] : Affiche la quote [n] de bashfr"""
 class BashfrTest(ModuleTest):
     def test_bashfr_5(self):
         bot_rep = self.bot_answer("!bashfr 5")
-        expected=(u"bashfr #5 :\n"
-                  u"(swatchtim) mac ? ca existe encore ca ?\n"
-                  u" * kick: (swatchtim) was kicked by (Cafmac) (Ouais. Les cons aussi.)")
+        expected = (u"bashfr #5 :\n"
+                    u"(swatchtim) mac ? ca existe encore ca ?\n"
+                    u" * kick: (swatchtim) was kicked by (Cafmac) (Ouais. Les cons aussi.)")
         self.assertEqual(bot_rep, expected)
 
     def test_bashfr_random(self):

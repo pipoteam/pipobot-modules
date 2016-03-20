@@ -1,6 +1,7 @@
-#-*- coding: utf-8 -*-
-import random
+# -*- coding: utf-8 -*-
 import os
+import random
+
 from pipobot.lib.modules import SyncModule, defaultcmd
 
 

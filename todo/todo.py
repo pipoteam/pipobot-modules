@@ -1,9 +1,10 @@
-#! /usr/bin/python2
 # -*- coding: utf-8 -*-
-import time
 import re
-from pipobot.lib.modules import SyncModule, answercmd
+import time
+
 from pipobot.lib.module_test import ModuleTest, string_gen
+from pipobot.lib.modules import SyncModule, answercmd
+
 from model import Todo
 
 

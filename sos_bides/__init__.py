@@ -1,7 +1,8 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
-import urllib
 import re
+import urllib
+
 from BeautifulSoup import BeautifulSoup
 from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.utils import xhtml2text
@@ -26,4 +27,3 @@ class CmdSosBides(SyncModule):
         res = re.sub(u"<br />\r\n", u"\n", res)
         res = re.sub(u"<[^>]*>", "", res)
         return res.strip()
-

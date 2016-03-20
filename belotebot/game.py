@@ -1,9 +1,11 @@
 #! /usr/bin/env python
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """ Define belote game"""
 
 import random
-from cards import Deck, Card
+
+from cards import Card, Deck
+
 
 class Belote(object) :
     """" Defines a belote game, as a state machine """
@@ -100,7 +102,7 @@ class Belote(object) :
 
     def wait_choice(self) :
         """ Wait for player choice, do nothing, all work will be done with choice """
-        
+
         if self.player_idx == 4:
             # All players said no, second turn
             self.player_idx = 0
@@ -121,7 +123,7 @@ class Belote(object) :
 
     def init_game(self) :
         """ Distribute the rest of cards, assume self.bidder and self.trump_suit defined """
-        
+
         self.notify(u"%s a pris, atout %s" % (self.bidder, self.trump_suit))
         # Set trump flag on cards
         for suit in self.deck.suits :
@@ -133,7 +135,7 @@ class Belote(object) :
         for j in self.players :
             for _ in range(2 if j == self.bidder else 3) :
                 j.cards.append(self.deck.cards.pop())
-        
+
         self.player_idx = 0 # First player plays first
 
         self.set_state('init_trick')
@@ -164,7 +166,7 @@ class Belote(object) :
 
         self.trick_winner = self.players_ord[self.trick.index(max(self.trick))]
         self.trick_winner.team.score += sum([card.get_points() for card in self.trick])
-        
+
         self.player_idx = self.trick_winner.id
 
         self.notify("%s remporte le pli" % self.trick_winner)
@@ -172,12 +174,12 @@ class Belote(object) :
             self.set_state('init_trick')
         else :
             self.set_state('end_game')
-    
+
     def end_game(self) :
         """ End of game, final score and stuff """
 
         self.trick_winner.team.score += 10
-        
+
         loosers, winners = sorted(self.teams, key=lambda x: x.score)
 
         if winners.score == loosers.score :
@@ -198,7 +200,7 @@ class Belote(object) :
         self.notify(u"Scores : ")
         for team in self.teams :
             self.notify(u"%s : %d" % (team, team.score))
-         
+
         self.notify(u"Vainqueurs : %s" % winners)
         self.set_state('init_choice')
 
@@ -264,7 +266,7 @@ class Belote(object) :
 
     def play(self, player_s, card) :
         """ External action when a player plays a card """
-        
+
         player = self.find_player(player_s)
 
         if self.state != 'wait_play' :
@@ -278,7 +280,7 @@ class Belote(object) :
         if card not in player.cards :
             self.notify(u"Ben t'as pas cette carte -_-")
             return False
-        
+
         if self.trick == [] :
             # First card of the trick, its suit becomes dominant
             self.dominant = card.suit
@@ -310,7 +312,7 @@ class Belote(object) :
         self.notify(u"%s joue @" % player, (card,))
         self.trick.append(card)
         player.cards.remove(card)
-        
+
         #Belote, Rebelote ?
         if card.suit.trump and  (\
             ( card.val == "Dame" and Card("Roi",card.suit) in player.cards) \

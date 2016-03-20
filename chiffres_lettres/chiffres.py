@@ -1,11 +1,11 @@
 #-*- coding: utf8 -*-
 """ Module to define the 'countdown' game """
 import ast
+import logging
 import operator as op
 import random
 from collections import namedtuple
 
-import logging
 logger = logging.getLogger("pipobot.chiffres_lettres.chiffres")
 
 try :

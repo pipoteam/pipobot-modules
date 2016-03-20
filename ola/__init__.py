@@ -1,13 +1,15 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import random
-from pipobot.lib.modules import SyncModule, defaultcmd
+
 from pipobot.lib.module_test import ModuleTest
+from pipobot.lib.modules import SyncModule, defaultcmd
 
 FAIL_MSG = u"On veut un entier quand même…"
 OLA = ["\o/ .o. .o. .o.", ".o. \o/ .o. .o.",
        ".o. .o. \o/ .o.", ".o. .o. .o. \o/"]
 OLA_REV = list(OLA)
 OLA_REV.reverse()
+
 
 class Ola(SyncModule):
     def __init__(self, bot):

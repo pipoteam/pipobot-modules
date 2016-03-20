@@ -1,11 +1,12 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import os
 import string
-from pipobot.lib.modules import SyncModule, answercmd
+
 from pipobot.lib.module_test import ModuleTest
+from pipobot.lib.modules import SyncModule, answercmd
+
 from pendu import Pendu
 from pendu_ascii import asc_res
-
 
 VALID_CAR = string.ascii_lowercase + "-'"
 
@@ -37,7 +38,8 @@ pendu played : affiche la liste des lettres déjà jouées"""
             word = word.strip().lower()
             if all([letter in VALID_CAR for letter in word]):
                 self.pendu.word = word
-                self.bot.say(u"Et c'est parti pour un pendu ! On cherche un mot de %s caractères" % len(self.pendu.word))
+                say = u"Et c'est parti pour un pendu ! On cherche un mot de %i caractères"
+                self.bot.say(say % len(self.pendu.word))
             else:
                 return u"Le mot choisi n'est pas valide ! (caractères acceptés : %s)" % VALID_CAR
 
@@ -71,7 +73,7 @@ class PenduTest(ModuleTest):
         self.assertEqual(self.bot_answer("!pendu played"),
                          u"Euh, il faudrait lancer une partie…")
 
-        bot_rep = self.bot_answer("!pendu init pipoteam")
+        self.bot_answer("!pendu init pipoteam")
         ok_tests = [("p", "p_p_____"), ("i", "pip_____"), ("e", "pip__e__")]
         for letter, state in ok_tests:
             bot_rep = self.bot_answer("!pendu try %s" % letter)
@@ -92,13 +94,13 @@ class PenduTest(ModuleTest):
             bot_rep = self.bot_answer("!pendu try %s" % letter)
             self.assertEqual(bot_rep, u"Bien vu ! Mot actuel: %s" % state)
 
-        bot_rep = self.bot_answer("!pendu try m")
+        self.bot_answer("!pendu try m")
         self.assertEqual(bot_rep, u"Bien vu !\nEt oui, le mot à trouver était bien pipoteam !")
 
     def try_8_wrong(self):
         self.assertEqual(self.bot_answer("!pendu reset"),
                          u"Reset effectué, plus qu'à utiliser init pour lancer une nouvelle partie")
-        bot_rep = self.bot_answer("!pendu init pipoteam")
+        self.bot_answer("!pendu init pipoteam")
         for (index, letter) in enumerate("zryuqsdf"):
             expected = u"%s\nMot actuel : %s" % (asc_res[index], "________")
             self.assertEqual(self.bot_answer("!pendu try %s" % letter),

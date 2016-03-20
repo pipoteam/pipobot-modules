@@ -1,11 +1,12 @@
-#! /usr/bin/python
 # -*- coding: utf-8 -*-
 
 import time
-from model import GoreBase
+
 from pipobot.lib.modules import SyncModule, defaultcmd
 from sqlalchemy import func
 from sqlalchemy.sql.expression import desc
+
+from model import GoreBase
 
 
 class CmdGore(SyncModule):
@@ -46,7 +47,8 @@ class CmdGore(SyncModule):
                 gore.score += 1
                 date_bl = time.strftime("le %d/%m/%Y a %H:%M",
                                         time.localtime(float(gore.submission)))
-                send = u"Nouveau score - %s : %d\n%d secondes depuis ton dernier point gore (%s)" % (message, gore.score, ecart, date_bl)
+                send = u"Nouveau score - %s : %d\n%d secondes depuis ton dernier point gore (%s)"
+                send %= (message, gore.score, ecart, date_bl)
                 gore.submission = temps
         self.bot.session.commit()
         return send
@@ -73,4 +75,3 @@ class CmdGore(SyncModule):
             return {"text": sc, "monospace": True}
         else:
             return "Aucun point gore..."
-

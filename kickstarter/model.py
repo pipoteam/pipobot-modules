@@ -1,10 +1,8 @@
-#!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-from sqlalchemy import Column, Integer, String
 import requests
-
 from pipobot.lib.bdd import Base
+from sqlalchemy import Column, Integer, String
 
 
 class KickStart(Base):

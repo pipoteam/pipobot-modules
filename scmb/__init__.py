@@ -1,12 +1,12 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 import random
 import urllib
+
 import pipobot.lib.utils
 from BeautifulSoup import BeautifulSoup
 from pipobot.lib.abstract_modules import FortuneModule
 from pipobot.lib.module_test import ModuleTest
-
 
 SITE = "http://secouchermoinsbete.fr"
 

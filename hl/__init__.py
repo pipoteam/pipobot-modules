@@ -70,7 +70,8 @@ class HighLight(SyncModule):
             ret += _('\nlist "%s" added' % hllist)
 
         for user in knownusers:
-            hllistmember = self.bot.session.query(HlListMembers).filter(HlListMembers.hlid == hllistentry.hlid).filter(HlListMembers.kuid == user.kuid).first()
+            hllistmember = self.bot.session.query(HlListMembers).filter(HlListMembers.hlid == hllistentry.hlid)
+            hllistmember = hllistmember.filter(HlListMembers.kuid == user.kuid).first()
             if hllistmember:
                 ret += _('\n"%s" is already in list "%s"' % (user, hllistentry))
             else:
@@ -97,7 +98,8 @@ class HighLight(SyncModule):
                 if not knownuser:
                     ret += _('user "%s" is not even registered…\n' % user)
                     continue
-                hllistmember = self.bot.session.query(HlListMembers).filter(HlListMembers.hlid == hllist.hlid).filter(HlListMembers.kuid == knownuser.kuid).first()
+                hllistmember = self.bot.session.query(HlListMembers).filter(HlListMembers.hlid == hllist.hlid)
+                hllistmember = hllistmember.filter(HlListMembers.kuid == knownuser.kuid).first()
                 if not hllistmember:
                     ret += _('user "%s" is not a member of this list\n' % knownuser)
                     continue

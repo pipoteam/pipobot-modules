@@ -1,9 +1,10 @@
-#! /usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 import time
+
 from pipobot.lib.abstract_modules import NotifyModule
 from pipobot.lib.modules import answercmd
+
 from manager import Manager
 from model import Feed
 
@@ -58,8 +59,8 @@ class RSSNotifier(NotifyModule):
         else:
             return u"Erreur lors de l'ajout du flux twitter %s" % entry
 
-
-    @answercmd(r"add (?P<entry>[^ ]+) (?P<url>http[s]?://(?:[a-zA-Z]|[0-9]|[$-/_=?:;]|[!*\(\),~@]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)")
+    @answercmd(r"add (?P<entry>[^ ]+) "
+               r"(?P<url>http[s]?://(?:[a-zA-Z]|[0-9]|[$-/_=?:;]|[!*\(\),~@]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)")
     def add(self, sender, entry, url):
         if self.manager.add_feed(url, entry):
             return u"Flux ajouté avec succès"

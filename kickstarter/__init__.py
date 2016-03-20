@@ -1,8 +1,7 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 import requests
-
-from pipobot.lib.modules import SyncModule, defaultcmd, answercmd
+from pipobot.lib.modules import SyncModule, answercmd, defaultcmd
 
 from .model import KickStart
 

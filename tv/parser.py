@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 import urllib
+
 from BeautifulSoup import BeautifulSoup
 from pipobot.lib.utils import xhtml2text
 
 
-class requete:
+class Requete:
     SOIREE = ("contenu grille grilleprimes grillehome", "http://www.programme-tv.net")
     TNT = ("contenu grille grilleprimes", "http://www.programme-tv.net/programme/programme-tnt.html")
 #    SOIREE = ("contenu grille grilleprimes grillehome","/home/seb/Downloads/soiree.html")
 #    TNT = ("contenu grille grilleprimes","/home/seb/Downloads/TNT.html")
 
 
-def extract(divclasse, LOCAL=False):
-    if LOCAL:
+def extract(divclasse, local=False):
+    if local:
         f = open(divclasse[1])
     else:
         f = urllib.urlopen(divclasse[1])
@@ -44,5 +45,5 @@ def extract(divclasse, LOCAL=False):
     return res
 
 if __name__ == "__main__":
-    print extract(requete.SOIREE, False)
-    print extract(requete.TNT, False)
+    print extract(Requete.SOIREE, False)
+    print extract(Requete.TNT, False)

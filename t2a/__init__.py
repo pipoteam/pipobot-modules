@@ -1,7 +1,10 @@
-#-*- coding: utf8 -*-
-import urllib
+# -*- coding: utf8 -*-
 import re
+import urllib
+
 from pipobot.lib.modules import SyncModule, defaultcmd
+
+URL = 'http://www.network-science.de/ascii/ascii.php?TEXT=%s&x=32&y=13&FONT=ogre&RICH=no&FORM=left&STRE=no&WIDT=80'
 
 
 class CmdText2Ascii(SyncModule):
@@ -17,8 +20,7 @@ class CmdText2Ascii(SyncModule):
         if message == '':
             return self.desc
         else:
-            text = self.replace_accent(message)
-            url = 'http://www.network-science.de/ascii/ascii.php?TEXT=%s&x=32&y=13&FONT=ogre&RICH=no&FORM=left&STRE=no&WIDT=80' % text
+            url = URL % self.replace_accent(message)
             f = urllib.urlopen(url)
             content = f.read()
             f.close()
@@ -33,21 +35,21 @@ class CmdText2Ascii(SyncModule):
                 return {"text": asc, "monospace": True}
 
     def replace_accent(self, text):
-        to_replace = { 'a': ['à', 'â', 'ä'],
-                    'e': ['é', 'è', 'ê', 'ë'],
-                    'i': ['î', 'ï'],
-                    'u': ['ù', 'ü', 'û'],
-                    'o': ['ô', 'ö'],
-                    'c': ['ç'],
-                    'ae': ['æ'],
-                    'A': ['Â', 'Ä', 'À'],
-                    'E': ['Ê', 'Ë', 'É', 'È'],
-                    'I': ['Ï', 'Î'],
-                    'U': ['Û', 'Ü', 'Ù'],
-                    'O': ['Ô', 'Ö'],
-                    'C': ['Ç'],
-                    'AE': ['Æ'],
-                    ' ': ['\'']}
+        to_replace = {'a': ['à', 'â', 'ä'],
+                      'e': ['é', 'è', 'ê', 'ë'],
+                      'i': ['î', 'ï'],
+                      'u': ['ù', 'ü', 'û'],
+                      'o': ['ô', 'ö'],
+                      'c': ['ç'],
+                      'ae': ['æ'],
+                      'A': ['Â', 'Ä', 'À'],
+                      'E': ['Ê', 'Ë', 'É', 'È'],
+                      'I': ['Ï', 'Î'],
+                      'U': ['Û', 'Ü', 'Ù'],
+                      'O': ['Ô', 'Ö'],
+                      'C': ['Ç'],
+                      'AE': ['Æ'],
+                      ' ': ['\'']}
         for (ch, wrong_ch) in to_replace.iteritems():
             for w_ch in wrong_ch:
                 text = text.replace(w_ch, ch)

@@ -1,10 +1,11 @@
-#!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
 import logging
+
+from pipobot.lib.modules import AsyncModule
+
 import mbox
 import mdir
-from pipobot.lib.modules import AsyncModule
 
 logger = logging.getLogger("mail")
 

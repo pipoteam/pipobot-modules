@@ -1,7 +1,6 @@
-#!/usr/bin/python
 # -*- coding: UTF-8 -*-
-from sqlalchemy import Column, Integer, String
 from pipobot.lib.bdd import Base
+from sqlalchemy import Column, Integer, String
 
 
 class Racer(Base):

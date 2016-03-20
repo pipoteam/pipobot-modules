@@ -1,7 +1,6 @@
-#!/usr/bin/python
 # -*- coding: UTF-8 -*-
-from sqlalchemy import Column, Integer, String
 from pipobot.lib.bdd import Base
+from sqlalchemy import Column, Integer, String
 
 
 class GoreBase(Base):
@@ -14,4 +13,3 @@ class GoreBase(Base):
         self.jid = jid
         self.score = score
         self.submission = submission
-

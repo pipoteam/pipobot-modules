@@ -1,9 +1,10 @@
 #!/usr/bin/env python
-#-*- coding: utf8 -*-
-import BeautifulSoup
+# -*- coding: utf8 -*-
 import urllib
-import simplejson
+
+import BeautifulSoup
 import duckduckgo
+import simplejson
 from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.utils import xhtml2text
 
@@ -50,6 +51,7 @@ def html_request(msg):
         results += "%s - %s\n" % (title.strip(), url)
 
     return results.strip()
+
 
 class CmdDDG(SyncModule):
     def __init__(self, bot):

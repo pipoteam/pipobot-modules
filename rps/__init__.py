@@ -1,7 +1,8 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import random
-from pipobot.lib.modules import SyncModule, answercmd, defaultcmd
+
 from pipobot.lib.module_test import ModuleTest
+from pipobot.lib.modules import SyncModule, answercmd, defaultcmd
 
 
 class CmdRPS(SyncModule):
@@ -74,7 +75,6 @@ rps (Rock|Paper|Scissor) : pour jouer"""
                     msgs = {"text": "%s has played, %s answers are expected." % (sender, left),
                             "nopriv": True}
                 return msgs
-        
 
     @staticmethod
     def beats(choice1, choice2):
@@ -112,18 +112,6 @@ class RpsTest(ModuleTest):
     def tearDown(self):
         for user in self.users:
             self.bot.occupants.rm_user(user)
-
-    def test_game_users(self):
-        bot_rep = self.bot_answer("!rps init 2", user="alice")
-        self.assertEqual(bot_rep, "Game initialized with 2 players")
-
-        bot_rep = self.bot_answer("!rps Rock", user="alice")
-        self.assertEqual(bot_rep, "alice has played, only 1 answer is expected. Come on !")
-
-        bot_rep = self.bot_answer("!rps Paper", user="bob")
-        # The first line of the answer is a random message: we do not care what it is…
-        self.assertEqual(bot_rep.partition("\n")[2],
-                         "Results: bob: Paper, alice: Rock, Winner: bob")
 
     def test_game_users(self):
         bot_rep = self.bot_answer("!rps init 2", user="alice")

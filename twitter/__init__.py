@@ -1,5 +1,4 @@
 from pipobot.lib.modules import AsyncModule
-
 from twython import Twython
 
 from .model import LastTweets, Tweets
@@ -10,7 +9,7 @@ RT = 'retweeted_status'
 class Twitter(AsyncModule):
     """A module to follow tweets form some users"""
     _config = (("users", list, []), ("app_key", str, ""), ("app_secret", str, ""),
-            ("avoid_rt", bool, True), ("shy_start", bool, True))
+               ("avoid_rt", bool, True), ("shy_start", bool, True))
 
     def __init__(self, bot):
         AsyncModule.__init__(self,

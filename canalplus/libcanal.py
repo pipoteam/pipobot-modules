@@ -1,7 +1,6 @@
-#!/usr/bin/python
 # -*- coding: UTF-8 -*-
-import urllib
 import config
+import urllib
 from xml.dom import minidom
 
 
@@ -54,7 +53,7 @@ class Video:
             try:
                 self.links[quality] = video.getElementsByTagName(quality)[0].childNodes[0].nodeValue
             except KeyError:
-                #This quality does not exist for this show
+                # This quality does not exist for this show
                 pass
 
     def get_url(self, quality):

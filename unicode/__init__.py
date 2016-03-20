@@ -1,14 +1,14 @@
-#-*- coding: utf-8 -*-
-
-#Maximum de réponse :
-MAX = 5
-#On charge en RAM le fichier Unicode
-#Récupéré de http://unicode.org/Public/UNIDATA/UnicodeData.txt
-#with open('UnicodeDataLower.txt') as unicode_file: => Pas de python >2.5 sur vega
-#    unicodes = [l.split(";")[0:2] for l in unicode_file]
-
+# -*- coding: utf-8 -*-
 import os
+
 from pipobot.lib.modules import SyncModule, defaultcmd
+
+# Maximum de réponse :
+MAX = 5
+# On charge en RAM le fichier Unicode
+# Récupéré de http://unicode.org/Public/UNIDATA/UnicodeData.txt
+# with open('UnicodeDataLower.txt') as unicode_file: => Pas de python >2.5 sur vega
+#     unicodes = [l.split(";")[0:2] for l in unicode_file]
 
 
 class CmdUnicode(SyncModule):
@@ -20,7 +20,7 @@ unicode nom
 """
         unicode_file = open(os.path.join(os.path.dirname(__file__), 'UnicodeDataLower.txt'))
 
-        #unicode_file = open(os.path.join(config_dir, 'UnicodeDataLower.txt'))
+        # unicode_file = open(os.path.join(config_dir, 'UnicodeDataLower.txt'))
         self.unicodes = [l.split(";")[0:2] for l in unicode_file]
         unicode_file.close()
 

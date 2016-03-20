@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import re
+
 import sqlalchemy.exc
+from pipobot.lib.known_users import KnownUser
 from pipobot.lib.modules import ListenModule
 from pipobot.lib.utils import check_url
-from pipobot.lib.known_users import KnownUser
+
 from model import RepostUrl
 
 try:
@@ -55,7 +57,8 @@ class CmdUrl(ListenModule):
                         if res.count == 1:
                             send.append(u'Ce lien a déjà été posté %s par %s sur %s…' % (first_date, first, res.chan))
                         else:
-                            send.append(u'Ce lien a déjà été posté %s fois depuis que %s l’a découvert, %s, sur %s…' % (res.count, first, first_date, res.chan))
+                            ret = u'Ce lien a déjà été posté %s fois depuis que %s l’a découvert, %s, sur %s…'
+                            send.append(ret % (res.count, first, first_date, res.chan))
                         res.count += 1
                     else:
                         u = RepostUrl(url,

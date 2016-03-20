@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import simplejson
 import urllib
+
+import simplejson
 
 # This key has been generated with the registration form of wordreference
 # http://www.wordreference.com/docs/APIregistration.aspx
@@ -9,6 +10,7 @@ import urllib
 
 API_KEY = "2ed3e"
 LANGS = ["ar", "zh", "cz", "en", "fr", "gr", "it", "ja", "ko", "pl", "pt", "ro", "es", "tr"]
+
 
 class NoTranslation(Exception):
     def __init__(self, msg):
@@ -33,13 +35,14 @@ class InternalError(Exception):
     def __str__(self):
         return self.msg
 
+
 class LangError(Exception):
     def __init__(self, msg):
         self.msg = msg
 
     def __str__(self):
         return self.msg
-    
+
 
 class WordRef(object):
     __slots__ = ('base_url')
@@ -63,10 +66,11 @@ class WordRef(object):
             raise NoTranslation(json["Note"])
 
         return json
-        
+
     def translate(self, frm_lang, out_lang, request):
         if not (frm_lang in LANGS and out_lang in LANGS and (frm_lang == "en" or out_lang == "en")):
-            raise LangError("You can translate from or to english only, and with these languages : %s" % ", ".join(LANGS))
+            error = "You can translate from or to english only, and with these languages : %s"
+            raise LangError(error % ", ".join(LANGS))
 
         request = urllib.quote(request.encode("utf-8"))
         url = "%s/%s%s/%s" % (self.base_url, frm_lang, out_lang, request)
@@ -103,7 +107,7 @@ class Result(object):
         if "OtherSideEntries" in json["term0"]:
             for id, translation in json["term0"]["OtherSideEntries"].iteritems():
                 self.principal.append(Translation(translation))
-            
+
 
 class Translation(object):
     __slots__ = ("original", "translations")
@@ -126,7 +130,6 @@ class Translation(object):
 
     def __unicode__(self):
         return u"%s → %s" % (self.original, ", ".join(unicode(elt) for elt in self.translations))
-        
 
     def __repr__(self):
         return str(self)

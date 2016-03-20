@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """ Some functions used to parse content from www.bide-et-musique.com/ """
 import urllib
-from BeautifulSoup import BeautifulSoup
 from datetime import date
+
+from BeautifulSoup import BeautifulSoup
 from pipobot.lib.utils import xhtml2text
 
 
@@ -11,7 +12,7 @@ class AppURLopener(urllib.FancyURLopener):
         User-Agent """
     pass
 
-#CONSTS
+# CONSTS
 
 PLAYLIST = 'http://www.bide-et-musique.com/playlist.rss'
 PROGS = "http://www.bide-et-musique.com/programme-webradio.html"
@@ -154,7 +155,7 @@ def lyrics():
 ##########################################################
 
 if __name__ == "__main__":
-#    print get_next(5)
-#    print get_prev(4)
+    # print get_next(5)
+    # print get_prev(4)
     print get_shows(2)
-#    print current()
+    # print current()

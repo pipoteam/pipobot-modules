@@ -1,9 +1,10 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 import json
 import urllib
-from pipobot.lib.modules import SyncModule, defaultcmd
+
 from pipobot.lib.module_test import ModuleTest
+from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.utils import xhtml2text
 
 NOT_FOUND = u"Rien de trouvé :'("
@@ -19,15 +20,14 @@ class CmdWiki(SyncModule):
 
     @defaultcmd
     def answer(self, sender, message):
-        url = "http://fr.wiktionary.org/w/api.php?action=query&list=search&format=json&srsearch=%s&srlimit=10" % message
-        page = urllib.urlopen(url)
+        url = "http://fr.wiktionary.org/w/api.php?action=query&list=search&format=json&srsearch=%s&srlimit=10"
+        page = urllib.urlopen(url % message)
         content = page.read()
         page.close()
         js = json.loads(content)
         try:
             snippet = xhtml2text(js["query"]["search"][0]["snippet"])
-            #Removing prononciation
-            splitted = snippet
+            # Removing prononciation
             clean = snippet.replace("  ", " ")
             return clean if clean != "" else NOT_FOUND
         except (KeyError, IndexError):

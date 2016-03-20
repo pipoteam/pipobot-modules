@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
-from os.path import join, dirname
-from random import choice
 import re
+from datetime import datetime
+from os.path import dirname, join
+from random import choice
 
 from pipobot.lib.modules import ListenModule
 from pipobot.lib.utils import ListConfigParser
@@ -25,6 +25,6 @@ class Troll(ListenModule):
 
     def answer(self, sender, message):
         if any(w.lower() in self.words for w in re.findall(r'[a-zA-Z]+', message)):
-            if datetime.now().weekday() == 4: # Friday
+            if datetime.now().weekday() == 4:  # Friday
                 return choice(self.friday)
             return choice(self.others)

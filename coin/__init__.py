@@ -1,7 +1,7 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
-from pipobot.lib.modules import ListenModule
 from pipobot.lib.module_test import ModuleTest
+from pipobot.lib.modules import ListenModule
 
 orig_ducks = [u"\_°<", u">°_/"]
 

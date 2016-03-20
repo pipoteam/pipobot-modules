@@ -1,9 +1,10 @@
-#-*- coding: utf8 -*-
+# -*- coding: utf8 -*-
 import urllib
-import simplejson
+
 import pipobot.lib.utils
-from pipobot.lib.modules import SyncModule, defaultcmd
+import simplejson
 from pipobot.lib.module_test import ModuleTest
+from pipobot.lib.modules import SyncModule, defaultcmd
 
 
 class CmdGoogle(SyncModule):

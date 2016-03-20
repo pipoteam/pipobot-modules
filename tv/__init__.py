@@ -1,7 +1,7 @@
-#! /usr/bin/python
 # -*- coding: utf-8 -*-
-from parser import extract, requete
-from pipobot.lib.modules import SyncModule, defaultcmd, answercmd
+from parser import Requete, extract
+
+from pipobot.lib.modules import SyncModule, answercmd, defaultcmd
 
 
 class CmdTv(SyncModule):
@@ -9,7 +9,7 @@ class CmdTv(SyncModule):
         desc = u"""tv
 Donne les programmes tv de la soirée
 Les chaînes disponibles sont les suivantes :
-%s""" % (", ".join(sorted(extract(requete.TNT).keys())))
+%s""" % (", ".join(sorted(extract(Requete.TNT).keys())))
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
@@ -17,17 +17,17 @@ Les chaînes disponibles sont les suivantes :
 
     @answercmd("channels")
     def channels(self, sender):
-        return u"Les chaînes valides sont les suivantes :\n%s" % (", ".join(sorted(extract(requete.TNT).keys())))
+        return u"Les chaînes valides sont les suivantes :\n%s" % (", ".join(sorted(extract(Requete.TNT).keys())))
 
     @defaultcmd
     def answer(self, sender, message):
         args = message.strip()
         if args == "":
             channels = ["tf1", "france 2", "france 3", "canal+", "arte", "m6"]
-            res = extract(requete.SOIREE)
+            res = extract(Requete.SOIREE)
             return u"\n".join("%s : %s" % (key, res[key]) for key in channels)
         else:
-            res = extract(requete.TNT)
+            res = extract(Requete.TNT)
             try:
                 return u"%s : %s" % (args, res[args.lower()])
             except KeyError:

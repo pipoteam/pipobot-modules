@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 import pipobot.lib.utils
 from pipobot.lib.modules import SyncModule, defaultcmd

@@ -1,4 +1,3 @@
-#! /usr/bin/python
 # -*- coding: utf-8 -*-
 
 from pipobot.lib.modules import SyncModule, defaultcmd
@@ -24,7 +23,7 @@ class CmdScores(SyncModule):
 
     @defaultcmd
     def answer(self, sender, message):
-        #Can't be done in init : we have to be sure that all modules have been loaded…
+        # Can't be done in init : we have to be sure that all modules have been loaded…
         self.init_mods()
         args = message.split()
         if args == []:

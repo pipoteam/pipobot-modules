@@ -1,14 +1,16 @@
-#!/usr/bin/python
 # -*- coding: UTF-8 -*-
-import libcanal
+import config
 import logging
 import traceback
-import config
-from pipobot.lib.modules import defaultcmd
+
 from pipobot.lib.abstract_modules import NotifyModule
+from pipobot.lib.modules import defaultcmd
+
+import libcanal
 
 DEFAULT_TIMER = 60
 logger = logging.getLogger("Canalplus module")
+
 
 class CmdCanalPlus(NotifyModule):
     _config = (("timer", int, DEFAULT_TIMER), ("notify", list, []))
@@ -62,10 +64,9 @@ class CmdCanalPlus(NotifyModule):
                 return u"%s - %s\n%s : %s" % (vid.title, vid.subtitle, quality, url)
             except libcanal.QualityException:
                 return u"La vidéo %s n'existe pas avec cette qualité (%s)" % (name, quality)
-        res = {}
         vid = show.last_vid
         vid_data = u"%s - %s" % (vid.title, vid.subtitle)
-        return "\n".join([vid_data] + ["%s : %s" % (quality, link) for quality, link in vid.links.iteritems()])
+        return "\n".join([vid_data] + ["%s : %s" % (qual, link) for qual, link in vid.links.iteritems()])
 
     def do_action(self):
         for show in [elt for elt in self.shows.values() if elt.notif]:
@@ -78,4 +79,4 @@ class CmdCanalPlus(NotifyModule):
 
     def update(self, silent=False):
         for show in self.shows.values():
-            updated = show.update()
+            show.update()

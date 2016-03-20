@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import time
-from sqlalchemy import Column, String, Integer, Boolean, ForeignKey
+
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from metadata import Base

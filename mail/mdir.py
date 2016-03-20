@@ -6,10 +6,11 @@ Mail notifier for Linux systems using Maildir mailboxes
 
 import os
 import pwd
-import pyinotify
 import time
 from email.parser import Parser
 from os.path import isdir, isfile, join
+
+import pyinotify
 
 from tools import decode
 
@@ -29,7 +30,6 @@ class MdirNotify(pyinotify.ProcessEvent):
         pw_dir = path
         if path == "":
             pw_dir = pwd.getpwuid(os.getuid()).pw_dir
-
 
         path = join(pw_dir, "Maildir", bot.chatname.split('@')[0], "new")
         self.destpath = join(pw_dir, "Maildir", bot.chatname.split('@')[0], "cur")

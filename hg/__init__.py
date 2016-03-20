@@ -1,11 +1,12 @@
-#! /usr/bin/python
 # -*- coding: utf-8 -*-
 import os
-import yaml
-import hglib
+
 import mercurial
-from pipobot.lib.modules import SyncModule, answercmd
+import yaml
 from pipobot.lib.exceptions import ConfigException
+from pipobot.lib.modules import SyncModule, answercmd
+
+import hglib
 
 
 class CmdHg(SyncModule):
@@ -36,7 +37,7 @@ hg [repo] [rev] : affiche la révision [rev] du repo [repo]""" % (self.default)
         return self.get_log(repo, int(rev))
 
     def get_log(self, repo, rev):
-        if not repo in self.repos:
+        if repo not in self.repos:
             return "Le repo %s n'existe pas" % repo
         try:
             return hglib.log(self.repos[repo], int(rev))

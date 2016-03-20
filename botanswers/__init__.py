@@ -1,9 +1,11 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import random
-import repartie
 import re
-from pipobot.lib.modules import ListenModule
+
 from pipobot.lib import utils
+from pipobot.lib.modules import ListenModule
+
+import repartie
 
 
 class CmdBot(ListenModule):

@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import json
 import urllib
-from pipobot.lib.modules import SyncModule, answercmd
 from collections import deque
 
+from pipobot.lib.modules import SyncModule, answercmd
+
 BASE_URL = "http://www.urbandictionary.com/iphone/search/define"
-MAX_CACHE = 10 
+MAX_CACHE = 10
 
 
 class UrbanDict(SyncModule):
@@ -34,11 +35,11 @@ class UrbanDict(SyncModule):
         page = urllib.urlopen(url)
         content = page.read()
         page.close()
-        # The random page is a redirection like this : 
-        # <html><body>You are being <a href="http://www.urbandictionary.com/define.php?term=RTM">redirected</a>.</body></html>
+        # The random page is a redirection like this :
+        # <html><body>You are being
+        # <a href="http://www.urbandictionary.com/define.php?term=RTM">redirected</a>.</body></html>
         words = content.partition("define.php?term=")[2].partition('"')[0]
         return self.urbandict(sender, req=words, select=0)
-
 
     @answercmd("(?P<select>\d+)?(?P<req>.+)")
     def urbandict(self, sender, req=None, select=None):
@@ -52,7 +53,7 @@ class UrbanDict(SyncModule):
 
         defs = self.get_cache(req)
         if defs is None:
-            params = urllib.urlencode({"term" : req})
+            params = urllib.urlencode({"term": req})
             page = urllib.urlopen("%s?%s" % (BASE_URL, params))
             content = page.read()
             page.close()

@@ -1,9 +1,9 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 from urllib import urlencode
 from xmlrpclib import ServerProxy
 
-from pipobot.lib.modules import SyncModule, defaultcmd, answercmd
+from pipobot.lib.modules import SyncModule, answercmd, defaultcmd
 
 
 class CmdDok(SyncModule):
@@ -13,7 +13,8 @@ class CmdDok(SyncModule):
 
     def __init__(self, bot):
         desc = _("dok <query>: Search for <query> on the dokuwiki")
-        self.server_proxy = ServerProxy(self.url + '/lib/exe/xmlrpc.php?' + urlencode({'u': self.user, 'p': self.password}))
+        req_args = {'u': self.user, 'p': self.password}
+        self.server_proxy = ServerProxy('%s/lib/exe/xmlrpc.php?%s' % (self.url, urlencode(req_args)))
 
         SyncModule.__init__(self,
                             bot,

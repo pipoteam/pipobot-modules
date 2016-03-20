@@ -1,7 +1,6 @@
-#!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-#CONSTANTS
+# CONSTANTS
 emissions_id = {"lpj": 249,
                 "bref": 627,
                 "guignols": 48,

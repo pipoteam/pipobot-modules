@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import logging
-import threading
-import string
 import ast
+import logging
 import operator as op
-from pipobot.lib.modules import SyncModule, answercmd
+import string
+import threading
+
 from pipobot.lib.module_test import ModuleTest
+from pipobot.lib.modules import SyncModule, answercmd
+
+from chiffres import CalcError, Chiffres
 from lettres import Lettres
-from chiffres import Chiffres, CalcError
 
 logger = logging.getLogger("pipobot.chiffres_lettres")
 
@@ -72,10 +74,8 @@ class ChiffresCmd(SyncModule):
                     self.timer.cancel()
                     return u"%s : Le compte est bon !!" % sender
                 else:
-                    return u"%s : Les calculs sont bons, tu trouves %s au lieu de %s, soit une erreur de %s" % (sender,
-                                                                                    verdict,
-                                                                                    self.game.total,
-                                                                                    abs(verdict - self.game.total))
+                    ret = u"%s : Les calculs sont bons, tu trouves %s au lieu de %s, soit une erreur de %s"
+                    return ret % (sender, verdict, self.game.total, abs(verdict - self.game.total))
             else:
                 return u"%s : Désolé mais tu ne sais pas compter" % sender
 
@@ -116,8 +116,8 @@ class ChiffresCmd(SyncModule):
             elif isinstance(astree.left, ast.Num):
                 before, bres = inside(astree.right)
                 res = ChiffresCmd.opast[astree.op](astree.left.n, bres)
-                return (before + \
-                        u"Et après ? Et ben on prend le %d calculé et le %d du tirage, un coup de %s et hop, %d\n" % \
+                return (before +
+                        u"Et après ? Et ben on prend le %d calculé et le %d du tirage, un coup de %s et hop, %d\n" %
                                     (bres, astree.left.n, ChiffresCmd.opstr[astree.op], res),
                         res)
             elif isinstance(astree.right, ast.Num):
@@ -229,7 +229,7 @@ class ChiffresTest(ModuleTest):
         expected=(u"Nouvelle partie lancée\nTotal à trouver : (\d+)\n"
                   u"Nombres fournis : [(\d+),]*(\d+)")
         self.assertRegexpMatches(self.bot_answer("!chiffres init"), expected)
-                         
+
     def test_solve(self):
         expected=[u"J'ai trouvé une solution exacte(.*)",
                   u"Pas de solution exacte…(.*)"]

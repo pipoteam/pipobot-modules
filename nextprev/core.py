@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
+import datetime
 import re
 import urllib
-import datetime
 
 alias = {'himym': 'how i met your mother',
          'got': 'game of thrones'}
@@ -15,7 +15,7 @@ def convert_episode(raw):
         res["date"] = datetime.datetime.strptime(res["date"], "%b/%d/%Y")
         res["date"] = res["date"].strftime("%d/%m/%y")
     except ValueError:
-        #If we can't convert the date, we keep it as it was
+        # If we can't convert the date, we keep it as it was
         pass
     return "%(season)sx%(episode)s: %(title)s le %(date)s" % res
 

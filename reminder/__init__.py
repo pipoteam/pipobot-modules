@@ -1,11 +1,12 @@
-#! /usr/bin/python2
 # -*- coding: utf-8 -*-
 
 import time
-from model import Remind
-from pipobot.lib.modules import answercmd
+
 from pipobot.lib.abstract_modules import NotifyModule
+from pipobot.lib.modules import answercmd
 from pipobot.lib.parsedates import parseall
+
+from model import Remind
 
 
 class CmdReminder(NotifyModule):
@@ -13,7 +14,8 @@ class CmdReminder(NotifyModule):
         desc = {"": u"Un module pour se souvenir de choses",
                 "list": u""" remind list [name] : affiche la liste des alertes pour [name]
 remind list all : affiche toutes les alertes""",
-                "add": u"remind add [owner] [date] [desc] : crée une alerte pour [owner] à la date au format [01/01/01,01h01] décrite par [desc]",
+                "add": u"remind add [owner] [date] [desc] : crée une alerte pour [owner] à la date au format "
+                u"[01/01/01,01h01] décrite par [desc]",
                 "remove": u"remind delete/remove [n,...] : supprime les alertes d'id [n,...] ",
                 }
         NotifyModule.__init__(self, bot,
@@ -25,7 +27,7 @@ remind list all : affiche toutes les alertes""",
 
     @answercmd("list")
     def list(self, sender):
-        owners = self.bot.session.query(Remind.owner).filter(Remind.room==self.bot.chatname)
+        owners = self.bot.session.query(Remind.owner).filter(Remind.room == self.bot.chatname)
         owners = owners.group_by(Remind.owner).order_by(Remind.owner).all()
         # owners is like [(u'owner1',), (u'owner2',)]
         if owners == []:
@@ -37,17 +39,17 @@ remind list all : affiche toutes les alertes""",
     @answercmd("list (?P<who>\S+)")
     def list_someone(self, sender, who):
         if who == "all":
-            res = self.bot.session.query(Remind).filter(Remind.room==self.bot.chatname).order_by(Remind.owner).all()
+            res = self.bot.session.query(Remind).filter(Remind.room == self.bot.chatname).order_by(Remind.owner).all()
             error_msg = u"Aucun remind dans la base"
         else:
-            res = self.bot.session.query(Remind).filter(Remind.room==self.bot.chatname, Remind.owner == who).all()
+            res = self.bot.session.query(Remind).filter(Remind.room == self.bot.chatname, Remind.owner == who).all()
             error_msg = u"Rien de prévu pour %s" % who
         send = u"\n".join([unicode(elt) for elt in res]) if res != [] else error_msg
         return send
 
     @answercmd("add (?P<owner>\S+) (?P<date>\S+) (?P<msg>.*)")
     def add(self, sender, owner, date, msg):
-        #!remind add [owner] [date] [desc] : crée une alerte pour [owner] à la date [date] décrite par [desc]
+        """ !remind add [owner] [date] [desc] : crée une alerte pour [owner] à la date [date] décrite par [desc] """
         try:
             datestruct = parseall(date)
             date = time.mktime(datestruct)
@@ -60,8 +62,7 @@ remind list all : affiche toutes les alertes""",
             r = Remind(owner, msg, date, sender, self.bot.chatname)
             self.bot.session.add(r)
             self.bot.session.commit()
-            send = u"Event ajouté pour le %s" % (time.strftime("%d/%m/%y,%Hh%M",
-                                                 time.localtime(date)))
+            send = u"Event ajouté pour le %s" % (time.strftime("%d/%m/%y,%Hh%M", time.localtime(date)))
         return send
 
     @answercmd("(remove|delete) (?P<ids>(\d+,?)+)")

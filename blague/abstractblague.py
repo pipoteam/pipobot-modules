@@ -1,9 +1,10 @@
-#! /usr/bin/python
 # -*- coding: utf-8 -*-
 
 import time
-from model import Blagueur
+
 from pipobot.lib.modules import SyncModule, defaultcmd
+
+from model import Blagueur
 
 
 class AbstractBlague(SyncModule):
@@ -49,7 +50,8 @@ class AbstractBlague(SyncModule):
                                         time.localtime(float(blag.submission)))
                 date_bl = date_bl.decode("utf-8")
                 blag.score = self.operation(blag.score, 1)
-                send = u"Nouveau score - %s : %d\n%d secondes depuis ta dernière blague (%s)" % (message, blag.score, ecart, date_bl)
+                send = u"Nouveau score - %s : %d\n%d secondes depuis ta dernière blague (%s)"
+                send %= (message, blag.score, ecart, date_bl)
                 blag.submission = temps
             else:
                 send = "Ta dernière blague date de moins de %s secondes !" % min_delay

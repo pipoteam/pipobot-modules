@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import os
 import random
 import re
@@ -11,15 +11,15 @@ from pipobot.lib.utils import ListConfigParser
 DEFAULT_CONFIG = os.path.join(os.path.dirname(__file__), "cmdlist.cfg")
 
 
-def multiwordReplace(text, wordDic):
+def multiword_replace(text, word_dict):
     """
     take a text and replace words that match a key in a dictionary with
     the associated value, return the changed text
     """
-    rc = re.compile('|'.join(map(re.escape, wordDic)))
+    rc = re.compile('|'.join(map(re.escape, word_dict)))
 
     def translate(match):
-        return wordDic[match.group(0)]
+        return word_dict[match.group(0)]
     return rc.sub(translate, text)
 
 
@@ -42,9 +42,9 @@ class CmdAlacon(MultiSyncModule):
         self.dico[cmd.decode("utf-8")][value] = v
 
     def readconf(self, bot):
-        #name, description and actions associated to each command
+        # name, description and actions associated to each command
         self.dico = {}
-        #To initialize MultiSyncModule
+        # To initialize MultiSyncModule
         names = {}
 
         config = ListConfigParser()
@@ -54,7 +54,10 @@ class CmdAlacon(MultiSyncModule):
             self.dico[command_name] = {}
             self.dico[command_name]['desc'] = config.get(c, 'desc')
             names[command_name] = self.dico[command_name]['desc']
-            self.dico[command_name]['toNobody'] = config.get(c, 'toNobody') if type(config.get(c, 'toNobody')) == list else [config.get(c, 'toNobody')]
+            if type(config.get(c, 'toNobody')) == list:
+                self.dico[command_name]['toNobody'] = config.get(c, 'toNobody')
+            else:
+                self.dico[command_name]['toNobody'] = [config.get(c, 'toNobody')]
             self.extract_to(config, c, "toSender", "toNobody")
             self.extract_to(config, c, "toBot", "toNobody")
             self.extract_to(config, c, "toSomebody", "toNobody")
@@ -72,4 +75,4 @@ class CmdAlacon(MultiSyncModule):
             key = "toBot"
         else:
             key = "toSomebody"
-        return multiwordReplace(multiwordReplace(random.choice(self.dico[cmd][key]), replacement), replacement)
+        return multiword_replace(multiword_replace(random.choice(self.dico[cmd][key]), replacement), replacement)

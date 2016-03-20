@@ -1,13 +1,14 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 import time
+
 from pipobot.lib.modules import MultiSyncModule, defaultcmd
 
 
 class CmdPingPong(MultiSyncModule):
     def __init__(self, bot):
         names = {"ping": "ping [pseudo]\nPing quelqu'un qui est sur le salon",
-                    "pong": "pong [pseudo]\nRépond au ping de [pseudo]"}
+                 "pong": "pong [pseudo]\nRépond au ping de [pseudo]"}
         MultiSyncModule.__init__(self, bot, names=names)
         self.known_ping = {}
 
@@ -26,7 +27,7 @@ class CmdPingPong(MultiSyncModule):
             if list_intersect:
                 ret = []
                 for ping_name in list_intersect:
-                    if self.known_ping.has_key(ping_name + "_" + sender):
+                    if (ping_name + "_" + sender) in self.known_ping:
                         time_ping = self.known_ping.pop(ping_name + "_" + sender)
                         t = time.time() - time_ping
                         ret.append("Tu as mis %s secondes pour répondre au ping de %s." % (str(int(t)), ping_name))

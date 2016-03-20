@@ -1,5 +1,6 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import random
+
 import pipobot.lib.utils
 from pipobot.lib.modules import SyncModule, defaultcmd
 
@@ -29,11 +30,11 @@ class CmdKick(SyncModule):
         rapport = []
         for kicked in lst:
             authorised = False
-            orNot = False
+            or_not = False
             if kicked == self.bot.name:
                 rapport.append(u"Je vais pas me virer moi-même oO")
-                toKick = sender
-                orNot = True
+                to_kick = sender
+                or_not = True
                 authorised = True
             jidkicked = self.bot.occupants.pseudo_to_jid(kicked)
             if jidkicked == "":
@@ -45,26 +46,27 @@ class CmdKick(SyncModule):
                     rapport.append(u"Tu veux te virer toi-même ?")
                 else:
                     authorised = True
-                    toKick = kicked
-                    rapport.append(u"J'ai viré %s à la demande de %s car il semblerait que ce soit un imposteur" % (kicked, sender))
+                    to_kick = kicked
+                    ret = u"J'ai viré %s à la demande de %s car il semblerait que ce soit un imposteur"
+                    rapport.append(ret % (kicked, sender))
             elif role_sender != "moderator":
-                orNot = True
+                or_not = True
                 authorised = True
-                toKick = sender
+                to_kick = sender
                 rapport.append(u"%s n'a pas le droit de virer %s" % (sender, kicked))
             else:
                 authorised = True
-                toKick = kicked
+                to_kick = kicked
                 rapport.append(u"J'ai viré %s pour toi !" % kicked)
 
             if authorised:
-                if self.bot.occupants.pseudo_to_role(toKick) == "moderator":
+                if self.bot.occupants.pseudo_to_role(to_kick) == "moderator":
                     rapport.append(u"On ne peut pas kicker quelqu'un ayant des droits aussi élevés")
                 else:
-                    if orNot:
-                        pipobot.lib.utils.kick(toKick,
-                                               random.choice(reasonfail) % toKick, self.bot)
+                    if or_not:
+                        pipobot.lib.utils.kick(to_kick,
+                                               random.choice(reasonfail) % to_kick, self.bot)
                     else:
-                        pipobot.lib.utils.kick(toKick,
-                                               random.choice(reasonkick) % toKick, self.bot)
+                        pipobot.lib.utils.kick(to_kick,
+                                               random.choice(reasonkick) % to_kick, self.bot)
         return "\n".join(rapport)

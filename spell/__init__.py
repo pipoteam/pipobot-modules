@@ -1,8 +1,7 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import enchant
-from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.module_test import ModuleTest
-
+from pipobot.lib.modules import SyncModule, defaultcmd
 
 
 class CmdSpell(SyncModule):
@@ -38,4 +37,4 @@ spell suggest : donne les mots approchants"""
 class SpellTest(ModuleTest):
     def test_spell(self):
         self.assertRegexpMatches(self.bot_answer("!spell pipo"),
-                         r"Suggestions possibles pour pipo :( \w+;?)")
+                                 r"Suggestions possibles pour pipo :( \w+;?)")

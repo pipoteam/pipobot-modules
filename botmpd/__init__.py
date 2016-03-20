@@ -1,13 +1,13 @@
-#! /usr/bin/python2
 # -*- coding: utf-8 -*-
 
 import logging
-from mpd import ConnectionError
-import pipobot.lib.exceptions
-from pipobot.lib.modules import defaultcmd, answercmd
-from pipobot.lib.abstract_modules import NotifyModule
-from libmpd.BotMPD import BotMPD
 
+import pipobot.lib.exceptions
+from pipobot.lib.abstract_modules import NotifyModule
+from pipobot.lib.modules import answercmd, defaultcmd
+
+from libmpd.BotMPD import BotMPD
+from mpd import ConnectionError
 
 logger = logging.getLogger("pipobot.botmpd")
 
@@ -26,9 +26,12 @@ class CmdMpd(NotifyModule):
                 "shuffle": "mpd shuffle : fait un shuffle sur la playlist",
                 "list": "mpd list [n] : liste les [n] chansons suivantes",
                 "clear": "mpd clear : vide la playlist (ou pas)",
-                "search": "mpd search (Artist|Title) requete : cherche toutes les pistes d'Artiste/Titre correspondant à la requête",
-                "setnext": "mpd setnext [i] : place la chanson à la position [i] dans la playlist après la chanson courante (enfin elle court pas vraiment)",
-                "nightmare": "mpd nightmare [i] : les [i] prochaines chansons vont vous faire souffrir (plus que le reste)",
+                "search": "mpd search (Artist|Title) requete : cherche toutes les pistes d'Artiste/Titre correspondant"
+                " à la requête",
+                "setnext": "mpd setnext [i] : place la chanson à la position [i] dans la playlist après la chanson "
+                "courante (enfin elle court pas vraiment)",
+                "nightmare": "mpd nightmare [i] : les [i] prochaines chansons vont vous faire souffrir (plus que le "
+                "reste)",
                 "clean": "mpd clean : pour retarder l'inévitable...",
                 "settag": "mpd settag [artist|title]=Nouvelle valeur",
                 "lyrics": "mpd lyrics: permet de retrouver les paroles de la chanson courante",
@@ -79,17 +82,17 @@ class CmdMpd(NotifyModule):
             self.delay = 0
             self.mpd_listen.send_idle()
             r = self.mpd_listen.fetch_idle()
-            repDict = {"The Who - Baba O`riley": "La musique des experts !!!",
-                       "The Who - Won't Get Fooled Again": "La musique des experts !!!",
-                       "Oledaf et Monsieur D - Le café": "Coffee time !",
-                       "Popcorn": "Moi aussi j'aime bien le popcorn",
-                       "popcorn": "Moi aussi j'aime bien le popcorn",
-                       "Ping Pong": "IPQ charlie est mauvais en ping pong :p",
-                       "Daddy DJ": "<xouillet> on écoutait ca comme des dingues à La Souterraine en Creuse \o/ </xouillet>",
-                       "Goldman": "JJG !!!",
-#                       "Clapton": "<xouillet> owi c'est Joe !!! </xouillet>",
-                       "Les 4 barbus - La pince a linge": "LA PINCE A LINGE !!!"}
-            repDict["Les 4 barbus - La pince a linge"] = """
+            rep_dict = {"The Who - Baba O`riley": "La musique des experts !!!",
+                        "The Who - Won't Get Fooled Again": "La musique des experts !!!",
+                        "Oledaf et Monsieur D - Le café": "Coffee time !",
+                        "Popcorn": "Moi aussi j'aime bien le popcorn",
+                        "popcorn": "Moi aussi j'aime bien le popcorn",
+                        "Ping Pong": "IPQ charlie est mauvais en ping pong :p",
+                        "Daddy DJ": "<xouillet> on écoutait ca comme des dingues à La Souterraine en Creuse \o/",
+                        "Goldman": "JJG !!!",
+                        "Clapton": "<xouillet> owi c'est Joe !!! </xouillet>",
+                        "Les 4 barbus - La pince a linge": "LA PINCE A LINGE !!!"}
+            rep_dict["Les 4 barbus - La pince a linge"] = """
 |\    /|
 | \  / |
 |  \/  |
@@ -103,15 +106,15 @@ class CmdMpd(NotifyModule):
             if r is not None and 'player' in r and not self._mute:
                 title = self.mpd_listen.currentsongf()
                 self.bot.say("Nouvelle chanson : %s" % title)
-                for c in repDict:
+                for c in rep_dict:
                     if c in title:
-                        self.bot.say(repDict[c])
+                        self.bot.say(rep_dict[c])
             self.mpd_listen.disconnect()
         except ConnectionError:
             if not self.error_notified:
                 logger.error(_("Can't connect to server %s:%s") % (self.host, self.port))
                 self.error_notified = True
-                #The module will check again in `self.delay` seconds
+                # The module will check again in `self.delay` seconds
                 self.delay = 10
         except NameError:
             self.delay = 60
@@ -154,7 +157,7 @@ class CmdMpd(NotifyModule):
                     tag.replaceWith(tag.renderContents())
                 for tag in text.findAll("b"):
                     tag.replaceWith(tag.renderContents())
-                comments = text.findAll(text=lambda text:isinstance(text, BeautifulSoup.Comment))
+                comments = text.findAll(text=lambda text: isinstance(text, BeautifulSoup.Comment))
                 [c.extract() for c in comments]
                 t = "".join([str(i) for i in text.contents])
                 ret2 = str(BeautifulSoup.BeautifulSoup(t, convertEntities=BeautifulSoup.BeautifulSoup.HTML_ENTITIES))
@@ -187,7 +190,7 @@ class CmdMpd(NotifyModule):
         return self.do_command_mpd(self.mpd.settag, [artist, title])
 
     @answercmd("shuffle")
-    def current(self, sender):
+    def shuffle(self, sender):
         self.do_command_mpd(self.mpd.shuffle, ())
         return "Et on mélange le tout !"
 
@@ -226,7 +229,7 @@ class CmdMpd(NotifyModule):
         pos = int(position)
         return self.do_command_mpd(self.mpd.goto, [pos])
 
-    @answercmd("search title (?P<title>.*)", "search artist (?P<artist>.*)", "search (?P<search>.*)") 
+    @answercmd("search title (?P<title>.*)", "search artist (?P<artist>.*)", "search (?P<search>.*)")
     def search(self, sender, search=None, title=None, artist=None):
         return self.do_command_mpd(self.mpd.search, [search, title, artist])
 
@@ -235,4 +238,3 @@ class CmdMpd(NotifyModule):
         ret = fct(*args)
         self.mpd.disconnect()
         return ret
-

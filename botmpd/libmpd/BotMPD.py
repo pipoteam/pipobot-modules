@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
 import random
-from mpd import MPDClient, ConnectionError, CommandError
+import threading
+
+import utils
+from mpd import CommandError, ConnectionError, MPDClient
 from mutagen.easyid3 import EasyID3
 from mutagen.mp3 import MP3
-import utils
-import threading
 
 
 class BotMPD(MPDClient):

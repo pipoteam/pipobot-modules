@@ -1,11 +1,13 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import os
 import time
 from random import choice
-from sqlalchemy.sql.expression import desc
-from model import HiddenBase
-from pipobot.lib.modules import ListenModule, defaultcmd
+
 from pipobot.lib import utils
+from pipobot.lib.modules import ListenModule, defaultcmd
+from sqlalchemy.sql.expression import desc
+
+from model import HiddenBase
 
 
 class CmdHiddenWord(ListenModule):
@@ -17,7 +19,7 @@ class CmdHiddenWord(ListenModule):
     @defaultcmd
     def answer(self, sender, message):
         if self.word in message.lower():
-            msg = u"Bravo %s, tu as trouvé le mot caché qui était %s. Tu peux te reposer maintenant." % (sender, self.word)
+            msg = u"Bravo %s, tu as trouvé le mot caché qui était %s. Tu peux te reposer maintenant."
             self.word = self.get_word()
 
             jid = self.bot.occupants.pseudo_to_jid(sender.strip())
@@ -29,7 +31,7 @@ class CmdHiddenWord(ListenModule):
                 hid = res[0]
                 hid.score += 1
             self.bot.session.commit()
-            return msg
+            return msg % (sender, self.word)
 
     def get_word(self):
         path = os.path.join(os.path.dirname(__file__), 'list.txt')

@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: UTF-8 -*-
 direct = u"""Tu me veux quoi ?
 C'est quoi ton problème ?

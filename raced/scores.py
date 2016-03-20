@@ -1,10 +1,11 @@
-#! /usr/bin/python
 # -*- coding: utf-8 -*-
 import time
-from model import Racer
-from sqlalchemy.sql.expression import desc
+
 from sqlalchemy import func
+from sqlalchemy.sql.expression import desc
+
 from lib.modules import SyncModule, defaultcmd
+from model import Racer
 
 
 class CmdRacedScores(SyncModule):

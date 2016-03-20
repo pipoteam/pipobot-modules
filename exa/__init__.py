@@ -1,9 +1,10 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
-import BeautifulSoup
+import re
 import urllib
 import urllib2
-import re
+
+import BeautifulSoup
 from pipobot.lib.modules import SyncModule, defaultcmd
 
 
@@ -48,7 +49,8 @@ class CmdExa(SyncModule):
             redir_xhtml = u""
             for i in range(min([nbre_results, limite])):
                 redir += "\n " + results[i]['href'] + u" --- " + results[i]['title']
-                redir_xhtml += u"\n<br/> <a href=\"" + results[i]['href'] + u"\" alt=\"" + results[i]['href'] + u"\">" + results[i]['title'] + u"</a>"
+                redir_xhtml += u"\n<br/> <a href=\"" + results[i]['href'] + u"\" alt=\"" + results[i]['href'] + u"\">"
+                redir_xhtml += results[i]['title'] + u"</a>"
         else:
             redir = u"Pas de résultat"
             redir_xhtml = ""

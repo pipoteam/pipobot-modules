@@ -1,9 +1,8 @@
 from datetime import datetime
 
+from pipobot.lib.bdd import Base
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import backref, relationship
-
-from pipobot.lib.bdd import Base
 
 
 def strptime(string, fmt='%Y-%m-%dT%H:%M:%S.%fZ'):

@@ -1,8 +1,9 @@
-#! /usr/bin/python
 # -*- coding: utf-8 -*-
 
 import operator
+
 from pipobot.lib.modules import SyncModule
+
 from abstractblague import AbstractBlague
 from model import Blagueur
 
@@ -15,6 +16,7 @@ class CmdBlame(AbstractBlague):
                                 bot,
                                 desc=desc,
                                 name="blame",
-                                autocongratulation="Oui, c’est bien de reconnaitre ses erreurs. Mais tu ferais mieux de juste de taire ;)",
+                                autocongratulation="Oui, c’est bien de reconnaitre ses erreurs. "
+                                                   "Mais tu ferais mieux de juste de taire ;)",
                                 premier=u"Ah, ben bravo %s, tu commences fort…",
                                 operation=operator.sub)

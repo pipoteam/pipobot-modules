@@ -1,6 +1,5 @@
-from sqlalchemy import BigInteger, Column, String
-
 from pipobot.lib.bdd import Base
+from sqlalchemy import BigInteger, Column, String
 
 
 class LastTweets(Base):

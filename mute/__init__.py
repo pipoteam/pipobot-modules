@@ -1,9 +1,11 @@
-#-*- coding: utf-8 -*-
-import xmpp
+# -*- coding: utf-8 -*-
 import random
-import pipobot.lib.utils
 from threading import Timer
+
+import pipobot.lib.utils
 from pipobot.lib.modules import SyncModule, defaultcmd
+
+import xmpp
 
 
 class CmdMute(SyncModule):
@@ -39,7 +41,7 @@ class CmdMute(SyncModule):
 
         for muted in lst:
             authorised = False
-            orNot = False
+            or_not = False
             if muted == self.bot.name:
                 rapport += u"Je vais pas me virer moi-même oO\n"
                 continue
@@ -52,27 +54,27 @@ class CmdMute(SyncModule):
                 if muted == sender:
                     rapport += u"Tu veux te muter toi-même ?\n"
             elif role_sender != "moderator":
-                orNot = True
+                or_not = True
                 authorised = True
-                toMute = sender
+                to_mute = sender
                 rapport += u"%s n'a pas le droit de muter %s\n" % (sender, muted)
             else:
                 authorised = True
-                toMute = muted
+                to_mute = muted
                 rapport += u"J'ai muté %s pour toi !\n" % muted
 
             if authorised:
-                if self.bot.occupants.pseudo_to_role(toMute) == "moderator":
+                if self.bot.occupants.pseudo_to_role(to_mute) == "moderator":
                     rapport = u"On ne peut pas muter quelqu'un ayant des droits aussi élevés\n"
                 else:
-                    t = Timer(30.0, lambda name=toMute: self.restore(name))
+                    t = Timer(30.0, lambda name=to_mute: self.restore(name))
                     t.start()
-                    if orNot:
-                        pipobot.lib.utils.mute(toMute,
-                                               random.choice(reasonfail) % toMute,
+                    if or_not:
+                        pipobot.lib.utils.mute(to_mute,
+                                               random.choice(reasonfail) % to_mute,
                                                self.bot)
                     else:
-                        pipobot.lib.utils.mute(toMute,
-                                               random.choice(reasonkick) % toMute,
+                        pipobot.lib.utils.mute(to_mute,
+                                               random.choice(reasonkick) % to_mute,
                                                self.bot)
         return rapport.rstrip()

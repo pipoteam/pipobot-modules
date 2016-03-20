@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 import time
-from mercurial import ui, hg
+
+from mercurial import hg, ui
 
 
 def log(repodir, rev=-1):

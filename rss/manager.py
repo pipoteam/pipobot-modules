@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
+from parser import get_id, get_time
+
 import feedparser
 import twitter
-from parser import get_id, get_time
 from sqlalchemy import create_engine
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.exc import FlushError
-from sqlalchemy.exc import IntegrityError
 
-from model import Feed, Entry
 from metadata import Base
+from model import Entry, Feed
 
 
 class Manager(object):
@@ -22,7 +23,6 @@ class Manager(object):
                                                       bind=engine))
         Base.query = self.db_session.query_property()
         Base.metadata.create_all(bind=engine)
-
 
     def add_feed(self, url, name, twitter=False):
         if twitter:

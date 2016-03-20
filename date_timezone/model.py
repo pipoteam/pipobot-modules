@@ -1,10 +1,8 @@
-#!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-from sqlalchemy import Column, String, Integer, ForeignKey
-from sqlalchemy.orm import relationship, backref
-
 from pipobot.lib.bdd import Base
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.orm import backref, relationship
 
 
 class KnownUserTimeZone(Base):

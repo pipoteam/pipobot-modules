@@ -1,7 +1,7 @@
-#!/usr/bin/python
 # -*- coding: UTF-8 -*-
-import pipobot.lib.bdd
 import time
+
+import pipobot.lib.bdd
 from sqlalchemy import Column, Integer, String
 
 

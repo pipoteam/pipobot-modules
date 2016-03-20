@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """ Tools to start and resolve 'le mot le plus long' game """
+import logging
 import os
 import random
-import logging
 
 logger = logging.getLogger("pipobot.lettres")
 

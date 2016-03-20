@@ -1,10 +1,11 @@
-#! /usr/bin/python
 # -*- coding: utf-8 -*-
 
-import time
 import operator
-from pipobot.lib.modules import SyncModule
+import time
+
 from pipobot.lib.known_users import KnownUser
+from pipobot.lib.modules import SyncModule
+
 from abstractblague import AbstractBlague
 from model import Blagueur
 
@@ -48,17 +49,17 @@ class CmdBlague(AbstractBlague):
         result = {}
         for blag in classement:
             known = KnownUser.get(blag.pseudo, self.bot)
-            #if the jid in the database is a known user
+            # if the jid in the database is a known user
             if known:
                 # if we already have an entry for him with a different jid
                 if known.get_pseudo() in result:
                     result[known.get_pseudo()] = (result[known.get_pseudo()][0] + blag.score,
-                                            max(blag.submission, result[known.get_pseudo()][1]))
+                                                  max(blag.submission, result[known.get_pseudo()][1]))
                 else:
-                    #else we create it
+                    # else we create it
                     result[known.get_pseudo()] = (blag.score, blag.submission)
             else:
-                #We do not know him : we use his jid
+                # We do not know him : we use his jid
                 result[blag.pseudo] = (blag.score, blag.submission)
         result = sorted(result.iteritems(),
                         key=operator.itemgetter(1), reverse=True)

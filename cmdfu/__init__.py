@@ -1,7 +1,8 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import urllib
-from pipobot.lib.modules import SyncModule, defaultcmd
+
 from pipobot.lib.module_test import ModuleTest
+from pipobot.lib.modules import SyncModule, defaultcmd
 
 
 class CmdCmdFu(SyncModule):

@@ -1,8 +1,9 @@
-#-*- coding: utf-8 -*-
-import sys
-import time
-import threading
+# -*- coding: utf-8 -*-
 import random
+import sys
+import threading
+import time
+
 from pipobot.lib.modules import SyncModule, defaultcmd
 
 
