@@ -1,5 +1,5 @@
 from pipobot.lib.modules import AsyncModule, Pasteque
-from twython import Twython, TwythonError, html_for_tweet
+from twython import Twython, TwythonError
 
 from .model import LastTweets, Tweets
 
@@ -60,7 +60,7 @@ class Twitter(AsyncModule):
                     if say and not (self.avoid_rt and RT in tweet and already_said(tweet[RT]['id'])):
                         fmt = u'Tweet de %s: %s'
                         text = fmt % (user, unescape(tweet['text']))
-                        xhtml = fmt % (user, html_for_tweet(tweet))
+                        xhtml = fmt % (user, Twython.html_for_tweet(tweet))
                         self.bot.say({'text': text, 'xhtml': xhtml})
                     tweets.add(tweet['id'])
                 last_tweet.last = timeline[0]['id']
