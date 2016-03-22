@@ -1,7 +1,14 @@
 from pipobot.lib.modules import AsyncModule, Pasteque
-from twython import Twython, TwythonError
+from twython import Twython, TwythonError, html_for_tweet
 
 from .model import LastTweets, Tweets
+
+try:
+    from html import unescape
+except:
+    def unescape(x):
+        return x
+
 
 RT = 'retweeted_status'
 
@@ -51,7 +58,10 @@ class Twitter(AsyncModule):
                     if tweet['id'] <= last_tweet.last:
                         break
                     if say and not (self.avoid_rt and RT in tweet and already_said(tweet[RT]['id'])):
-                        self.bot.say(u'Tweet de %s: %s' % (user, tweet['text']))
+                        fmt = u'Tweet de %s: %s'
+                        text = fmt % (user, unescape(tweet['text']))
+                        xhtml = fmt % (user, html_for_tweet(tweet))
+                        self.bot.say({'text': text, 'xhtml': xhtml})
                     tweets.add(tweet['id'])
                 last_tweet.last = timeline[0]['id']
         for tweet in tweets - set(t[0] for t in self.bot.session.query(LastTweets.last).all()):
