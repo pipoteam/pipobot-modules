@@ -1,5 +1,5 @@
-from pipobot.lib.modules import AsyncModule
-from twython import Twython
+from pipobot.lib.modules import AsyncModule, Pasteque
+from twython import Twython, TwythonError
 
 from .model import LastTweets, Tweets
 
@@ -42,7 +42,10 @@ class Twitter(AsyncModule):
 
         for user in self.users:
             last_tweet = self.bot.session.query(LastTweets).filter(LastTweets.user == user).first()
-            timeline = self.twitter.get_user_timeline(screen_name=user)
+            try:
+                timeline = self.twitter.get_user_timeline(screen_name=user)
+            except TwythonError as err:
+                raise Pasteque("TWITTER IS DOWN OMG OMG OMG\n%s" % err)
             if timeline[0]['id'] > last_tweet.last:
                 for tweet in timeline:
                     if tweet['id'] <= last_tweet.last:
