@@ -1,14 +1,8 @@
 from pipobot.lib.modules import AsyncModule, Pasteque
+from pipobot.lib.utils import unescape
 from twython import Twython, TwythonError
 
 from .model import LastTweets, Tweets
-
-try:
-    from html import unescape
-except:
-    def unescape(x):
-        return x
-
 
 RT = 'retweeted_status'
 
