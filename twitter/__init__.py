@@ -58,6 +58,6 @@ class Twitter(AsyncModule):
                         self.bot.say({'text': text, 'xhtml': xhtml})
                     tweets.add(tweet['id'])
                 last_tweet.last = timeline[0]['id']
-        for tweet in tweets - set(t[0] for t in self.bot.session.query(LastTweets.last).all()):
-            self.bot.session.add(Tweets(id=tweet))
+        for tweet in tweets:
+            self.bot.session.merge(Tweets(id=tweet))
         self.bot.session.commit()
