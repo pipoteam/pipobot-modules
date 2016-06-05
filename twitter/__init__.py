@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from pipobot.lib.modules import AsyncModule, Pasteque
 from pipobot.lib.utils import unescape
 from twython import Twython, TwythonError
