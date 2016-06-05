@@ -28,6 +28,7 @@ class Twitter(AsyncModule):
 
         token = Twython(self.app_key, self.app_secret, oauth_version=2).obtain_access_token()
         self.twitter = Twython(self.app_key, access_token=token)
+        self.err = False
         if self.shy_start:
             self.action(say=False)
 
@@ -46,7 +47,11 @@ class Twitter(AsyncModule):
             try:
                 timeline = self.twitter.get_user_timeline(screen_name=user)
             except TwythonError as err:
-                raise Pasteque("TWITTER IS DOWN OMG OMG OMG\n%s" % err)
+                if self.err:
+                    raise Pasteque("TWITTER IS DOWN OMG OMG OMG\n%s" % err)
+                self.err = True
+                return
+            self.err = False
             if timeline[0]['id'] > last_tweet.last:
                 for tweet in timeline:
                     if tweet['id'] <= last_tweet.last:
