@@ -52,19 +52,18 @@ class Twitter(AsyncModule):
                 self.err = True
                 return
             self.err = False
-            if timeline[0]['id'] > last_tweet.last:
-                for tweet in timeline:
-                    if tweet['id'] <= last_tweet.last:
-                        break
-                    if say and not (self.avoid_rt and RT in tweet and already_said(tweet[RT]['id'])):
-                        if RT in tweet:
-                            fmt = u'Tweet de %s retweeté par %s: %s' % (tweet[RT][u'user'][u'screen_name'], user)
-                        else:
-                            fmt = u'Tweet de %s: ' % user
-                        self.bot.say({'text': fmt + unescape(tweet['text']),
-                                      'xhtml': fmt + Twython.html_for_tweet(tweet)})
-                    tweets.add(tweet['id'])
-                last_tweet.last = timeline[0]['id']
+            for tweet in timeline:
+                if tweet['id'] <= last_tweet.last:
+                    break
+                if say and not (self.avoid_rt and RT in tweet and already_said(tweet[RT]['id'])):
+                    if RT in tweet:
+                        fmt = u'Tweet de %s retweeté par %s: %s' % (tweet[RT][u'user'][u'screen_name'], user)
+                    else:
+                        fmt = u'Tweet de %s: ' % user
+                    self.bot.say({'text': fmt + unescape(tweet['text']),
+                                  'xhtml': fmt + Twython.html_for_tweet(tweet)})
+                tweets.add(tweet['id'])
+            last_tweet.last = timeline[0]['id']
         for tweet in tweets:
             self.bot.session.merge(Tweets(id=tweet))
         self.bot.session.commit()
