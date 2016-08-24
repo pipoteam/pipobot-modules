@@ -12,7 +12,8 @@ class SModule(SyncModule):
 
     @defaultcmd
     def answer_help(self, sender, message):
-        return self.desc
+        if message:
+            return self.desc
 
     @answercmd(r'^/(?P<before>.*)/(?P<after>.*)/(?P<guy>.*)$')
     def answer_with_guy(self, sender, before, after, guy):
