@@ -21,7 +21,7 @@ class CmdSosBides(SyncModule):
         html = soup.find("div", {"class": "blague"}).findAll("div")
         res = ""
         for div in html:
-            res += "\n" + div.renderContents()
+            res += "\n" + div.renderContents().decode("utf-8")
         res = re.sub("<br />\r\n", "\n", res)
         res = re.sub("<[^>]*>", "", res)
         return res.strip()
