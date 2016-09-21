@@ -7,6 +7,8 @@ from twython import Twython, TwythonError
 from .model import LastTweets, Tweets
 
 RT = 'retweeted_status'
+REPLY_NAME = 'in_reply_to_screen_name'
+REPLY_TWEET = 'in_reply_to_status_id_str'
 
 
 class Twitter(AsyncModule):
@@ -60,6 +62,9 @@ class Twitter(AsyncModule):
                 if say and not (self.avoid_rt and RT in tweet and already_said(tweet[RT]['id'])):
                     if RT in tweet:
                         fmt = u'Tweet de %s retweeté par %s: ' % (tweet[RT][u'user'][u'screen_name'], user)
+                    elif REPLY_NAME in tweet and tweet[REPLY_NAME] is not None:
+                        fmt = u'Tweet de %s en réponse à https://twitter.com/%s/status/%s: '
+                        fmt %= (user, tweet[REPLY_NAME], tweet[REPLY_TWEET])
                     else:
                         fmt = u'Tweet de %s: ' % user
                     self.bot.say({'text': fmt + unescape(tweet['text']),
