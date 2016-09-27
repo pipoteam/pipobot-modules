@@ -65,7 +65,7 @@ class Twitter(AsyncModule):
                         fmt = u'Tweet de %s retweeté par %s: ' % (tweet[RT][u'user'][u'screen_name'], user)
                         text = tweet[RT]['text']
                     elif REPLY_NAME in tweet and tweet[REPLY_NAME] is not None:
-                        fmt = u'Tweet de %s en réponse à https://twitter.com/%s/status/%s: '
+                        fmt = u'Tweet de %s en réponse à https://twitter.com/%s/status/%s : '
                         fmt %= (user, tweet[REPLY_NAME], tweet[REPLY_TWEET])
                     else:
                         fmt = u'Tweet de %s: ' % user
