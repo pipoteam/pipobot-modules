@@ -60,14 +60,16 @@ class Twitter(AsyncModule):
                 if tweet['id'] <= last_tweet.last:
                     break
                 if say and not (self.avoid_rt and RT in tweet and already_said(tweet[RT]['id'])):
+                    text = tweet['text']
                     if RT in tweet:
                         fmt = u'Tweet de %s retweeté par %s: ' % (tweet[RT][u'user'][u'screen_name'], user)
+                        text = tweet[RT]['text']
                     elif REPLY_NAME in tweet and tweet[REPLY_NAME] is not None:
                         fmt = u'Tweet de %s en réponse à https://twitter.com/%s/status/%s: '
                         fmt %= (user, tweet[REPLY_NAME], tweet[REPLY_TWEET])
                     else:
                         fmt = u'Tweet de %s: ' % user
-                    self.bot.say({'text': fmt + unescape(tweet['text']),
+                    self.bot.say({'text': fmt + unescape(text),
                                   'xhtml': fmt + Twython.html_for_tweet(tweet)})
                 tweets.add(tweet['id'])
             last_tweet.last = timeline[0]['id']
