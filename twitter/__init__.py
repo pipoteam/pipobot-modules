@@ -11,6 +11,10 @@ REPLY_NAME = 'in_reply_to_screen_name'
 REPLY_TWEET = 'in_reply_to_status_id_str'
 
 
+def user_url(user):
+    return '<a href="https://twitter.com/%s">%s</a>' % (user, user)
+
+
 class Twitter(AsyncModule):
     """A module to follow tweets form some users"""
     _config = (("users", list, []), ("app_key", str, ""), ("app_secret", str, ""),
@@ -62,15 +66,23 @@ class Twitter(AsyncModule):
                 if say and not (self.avoid_rt and RT in tweet and already_said(tweet[RT]['id'])):
                     text = tweet['text']
                     if RT in tweet:
-                        fmt = u'Tweet de %s retweeté par %s: ' % (tweet[RT][u'user'][u'screen_name'], user)
+                        fmt = u'Tweet de %s retweeté par %s : '
+                        initial = tweet[RT][u'user'][u'screen_name']
+                        fmt_text = fmt % (initial, user)
+                        fmt_html = fmt % (user_url(initial), user_url(user))
                         text = tweet[RT]['text']
                     elif REPLY_NAME in tweet and tweet[REPLY_NAME] is not None:
-                        fmt = u'Tweet de %s en réponse à https://twitter.com/%s/status/%s : '
-                        fmt %= (user, tweet[REPLY_NAME], tweet[REPLY_TWEET])
+                        fmt = u'Tweet de %s en réponse à %s : '
+                        url_text = '%s/status/%s' % (user_url(tweet[REPLY_NAME]), tweet[REPLY_TWEET])
+                        url_html = '<a href="%s">%s</a>' % (url_text, tweet[REPLY_NAME])
+                        fmt_text = fmt % (user, url_text)
+                        fmt_html = fmt % (user_url(user), url_html)
                     else:
-                        fmt = u'Tweet de %s: ' % user
-                    self.bot.say({'text': fmt + unescape(text),
-                                  'xhtml': fmt + Twython.html_for_tweet(tweet)})
+                        fmt = fmt_html = u'Tweet de %s : ' % user
+                        fmt_text = fmt % user
+                        fmt_html = fmt % user_url(user)
+                    self.bot.say({'text': fmt_text + unescape(text),
+                                  'xhtml': fmt_html + Twython.html_for_tweet(tweet)})
                 tweets.add(tweet['id'])
             if timeline:
                 last_tweet.last = timeline[0]['id']
