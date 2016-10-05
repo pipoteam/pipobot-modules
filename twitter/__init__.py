@@ -72,7 +72,8 @@ class Twitter(AsyncModule):
                     self.bot.say({'text': fmt + unescape(text),
                                   'xhtml': fmt + Twython.html_for_tweet(tweet)})
                 tweets.add(tweet['id'])
-            last_tweet.last = timeline[0]['id']
+            if timeline:
+                last_tweet.last = timeline[0]['id']
         for tweet in tweets:
             self.bot.session.merge(Tweets(id=tweet))
         self.bot.session.commit()
