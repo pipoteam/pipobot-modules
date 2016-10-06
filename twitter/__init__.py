@@ -78,7 +78,7 @@ class Twitter(AsyncModule):
                         fmt_text = fmt % (user, url_text)
                         fmt_html = fmt % (user_url(user), url_html)
                     else:
-                        fmt = fmt_html = u'Tweet de %s : ' % user
+                        fmt = u'Tweet de %s : '
                         fmt_text = fmt % user
                         fmt_html = fmt % user_url(user)
                     self.bot.say({'text': fmt_text + unescape(text),
