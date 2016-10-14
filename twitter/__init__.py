@@ -6,13 +6,14 @@ from twython import Twython, TwythonError
 
 from .model import LastTweets, Tweets
 
+URL = 'https://twitter.com'
 RT = 'retweeted_status'
 REPLY_NAME = 'in_reply_to_screen_name'
 REPLY_TWEET = 'in_reply_to_status_id_str'
 
 
 def user_url(user):
-    return '<a href="https://twitter.com/%s">%s</a>' % (user, user)
+    return '<a href="%s/%s">%s</a>' % (URL, user, user)
 
 
 class Twitter(AsyncModule):
@@ -73,7 +74,7 @@ class Twitter(AsyncModule):
                         text = tweet[RT]['text']
                     elif REPLY_NAME in tweet and tweet[REPLY_NAME] is not None:
                         fmt = u'Tweet de %s en réponse à %s : '
-                        url_text = '%s/status/%s' % (tweet[REPLY_NAME], tweet[REPLY_TWEET])
+                        url_text = '%s/%s/status/%s' % (URL, tweet[REPLY_NAME], tweet[REPLY_TWEET])
                         url_html = '<a href="%s">%s</a>' % (url_text, tweet[REPLY_NAME])
                         fmt_text = fmt % (user, url_text)
                         fmt_html = fmt % (user_url(user), url_html)
