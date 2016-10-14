@@ -81,8 +81,12 @@ class Twitter(AsyncModule):
                         fmt = u'Tweet de %s : '
                         fmt_text = fmt % user
                         fmt_html = fmt % user_url(user)
-                    self.bot.say({'text': fmt_text + unescape(text),
-                                  'xhtml': fmt_html + Twython.html_for_tweet(tweet)})
+                    try:
+                        self.bot.say({'text': fmt_text + unescape(text),
+                                      'xhtml': fmt_html + Twython.html_for_tweet(tweet)})
+                    except:
+                        self.bot.say("il y a probablement un XML mal formé pour ce tweet: text: %s%s, html: %s%s" % (
+                            fmt_text, unescape(text), fmt_html, Twython.html_for_tweet(tweet)))
                 tweets.add(tweet['id'])
             if timeline:
                 last_tweet.last = timeline[0]['id']
