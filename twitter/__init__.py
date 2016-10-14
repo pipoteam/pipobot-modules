@@ -73,7 +73,7 @@ class Twitter(AsyncModule):
                         text = tweet[RT]['text']
                     elif REPLY_NAME in tweet and tweet[REPLY_NAME] is not None:
                         fmt = u'Tweet de %s en réponse à %s : '
-                        url_text = '%s/status/%s' % (user_url(tweet[REPLY_NAME]), tweet[REPLY_TWEET])
+                        url_text = '%s/status/%s' % (tweet[REPLY_NAME], tweet[REPLY_TWEET])
                         url_html = '<a href="%s">%s</a>' % (url_text, tweet[REPLY_NAME])
                         fmt_text = fmt % (user, url_text)
                         fmt_html = fmt % (user_url(user), url_html)
@@ -81,12 +81,8 @@ class Twitter(AsyncModule):
                         fmt = u'Tweet de %s : '
                         fmt_text = fmt % user
                         fmt_html = fmt % user_url(user)
-                    try:
-                        self.bot.say({'text': fmt_text + unescape(text),
-                                      'xhtml': fmt_html + Twython.html_for_tweet(tweet)})
-                    except:
-                        self.bot.say("il y a probablement un XML mal formé pour ce tweet: text: %s%s, html: %s%s" % (
-                            fmt_text, unescape(text), fmt_html, Twython.html_for_tweet(tweet)))
+                    self.bot.say({'text': fmt_text + unescape(text),
+                                  'xhtml': fmt_html + Twython.html_for_tweet(tweet)})
                 tweets.add(tweet['id'])
             if timeline:
                 last_tweet.last = timeline[0]['id']
