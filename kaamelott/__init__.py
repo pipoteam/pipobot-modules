@@ -21,11 +21,12 @@ class Kaamelott(MultiSyncModule):
         config.read(config_file)
         self.genericCmd = config.sections()
         for c in self.genericCmd:
-            self.dico[c] = {}
-            self.dico[c]['desc'] = config.get(c, 'desc')
+            command_name = c.decode("utf-8")
+            self.dico[command_name] = {}
+            self.dico[command_name]['desc'] = config.get(c, 'desc')
             quote = config.get(c, 'citation')
-            self.dico[c]['citation'] = quote if type(quote) is list else [config.get(c, 'citation')]
-            names[c] = self.dico[c]['desc']
+            self.dico[command_name]['citation'] = quote if type(quote) is list else [config.get(c, 'citation')]
+            names[command_name] = self.dico[command_name]['desc']
         return names
 
     @defaultcmd
