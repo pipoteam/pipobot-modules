@@ -72,7 +72,7 @@ class Twitter(AsyncModule):
                         fmt_text = fmt % (initial, user)
                         fmt_html = fmt % (user_url(initial), user_url(user))
                         text = tweet[RT]['text']
-                    elif REPLY_NAME in tweet and tweet[REPLY_NAME] is not None:
+                    elif REPLY_NAME in tweet and tweet[REPLY_NAME] is not None and tweet[REPLY_TWEET] is not None:
                         fmt = u'Tweet de %s en réponse à %s : '
                         url_text = '%s/%s/status/%s' % (URL, tweet[REPLY_NAME], tweet[REPLY_TWEET])
                         url_html = '<a href="%s">%s</a>' % (url_text, tweet[REPLY_NAME])
