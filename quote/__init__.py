@@ -25,3 +25,5 @@ class QuoteTest(ModuleTest):
         self.assertEqual(rep[:77], 'De tout. Al Qaeda, les furets, les édulcorants artificiels, les distributeurs')
         rep = self.bot_answer('!quote furet')
         self.assertEqual(rep[:73], 'Des manipulations quotidiennes pendant ce stade critique du développement')
+        rep = self.bot_answer('!quote chargé')
+        self.assertEqual(rep[:71], u'Plus pr\xe9cis\xe9ment, le porteur charg\xe9 positivement est un polypeptide cha')
