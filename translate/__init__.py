@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from pipobot.lib.modules import SyncModule, defaultcmd, answercmd
+from pipobot.lib.module_test import ModuleTest
 
 from translate.translate import translate
 
@@ -26,5 +27,17 @@ class CmdTranslate(SyncModule):
         return str(tr)
 
     @defaultcmd
-    def answer(self, sender, message):
+    def desc(self, sender, message):
         return self.desc
+
+
+class TranslateTest(ModuleTest):
+    def test_translate(self):
+        rep = self.bot_answer('!translate fr en furet mort')
+        self.assertEqual(bot_rep[:58], "[('mort', 'out'), ('furets', 'ferrets'), ('mort', 'dead'),")
+        rep = self.bot_answer('!translate fr es furet mort')
+        self.assertEqual(bot_rep[:62], "[('mort', 'muerte'), ('furet', 'hurones'), ('furet', 'hurón'),")
+
+    def test_desc(self):
+        rep = self.bot_answer('!translate pipo')
+        self.assertEqual(bot_rep, CmdTranslate.desc)

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from pipobot.lib.modules import SyncModule, defaultcmd
+from pipobot.lib.module_test import ModuleTest
 
 from quote.quote import quote
 
@@ -16,3 +17,11 @@ class CmdQuote(SyncModule):
     @defaultcmd
     def answer(self, sender, message):
         return quote(message)
+
+
+class QuoteTest(ModuleTest):
+    def test_quote(self):
+        rep = self.bot_answer('!quote furet mort')
+        self.assertEqual(bot_rep[:77], 'De tout. Al Qaeda, les furets, les édulcorants artificiels, les distributeurs')
+        rep = self.bot_answer('!quote furet')
+        self.assertEqual(bot_rep[:73], 'Des manipulations quotidiennes pendant ce stade critique du développement')
