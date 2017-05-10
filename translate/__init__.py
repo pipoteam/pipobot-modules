@@ -34,10 +34,10 @@ class CmdTranslate(SyncModule):
 class TranslateTest(ModuleTest):
     def test_translate(self):
         rep = self.bot_answer('!translate fr en furet mort')
-        self.assertEqual(bot_rep[:58], "[('mort', 'out'), ('furets', 'ferrets'), ('mort', 'dead'),")
+        self.assertEqual(rep[:58], "[('mort', 'out'), ('furets', 'ferrets'), ('mort', 'dead'),")
         rep = self.bot_answer('!translate fr es furet mort')
-        self.assertEqual(bot_rep[:62], "[('mort', 'muerte'), ('furet', 'hurones'), ('furet', 'hurón'),")
+        self.assertEqual(rep[:62], "[('mort', 'muerte'), ('furet', 'hurones'), ('furet', 'hurón'),")
 
     def test_desc(self):
         rep = self.bot_answer('!translate pipo')
-        self.assertEqual(bot_rep, CmdTranslate.desc)
+        self.assertEqual(rep, CmdTranslate.desc)

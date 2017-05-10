@@ -22,6 +22,6 @@ class CmdQuote(SyncModule):
 class QuoteTest(ModuleTest):
     def test_quote(self):
         rep = self.bot_answer('!quote furet mort')
-        self.assertEqual(bot_rep[:77], 'De tout. Al Qaeda, les furets, les édulcorants artificiels, les distributeurs')
+        self.assertEqual(rep[:77], 'De tout. Al Qaeda, les furets, les édulcorants artificiels, les distributeurs')
         rep = self.bot_answer('!quote furet')
-        self.assertEqual(bot_rep[:73], 'Des manipulations quotidiennes pendant ce stade critique du développement')
+        self.assertEqual(rep[:73], 'Des manipulations quotidiennes pendant ce stade critique du développement')

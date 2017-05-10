@@ -4,18 +4,18 @@
 # Des manipulations quotidiennes pendant ce stade critique du développement sont indispensables au comportement social du furet adulte.
 
 import requests
-import sys
 import re
 
 headers = {
-'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Encoding': 'gzip, deflate',
-'Accept-Language': 'en-US,en;q=0.5',
-'Connection': 'keep-alive',
-'Host': 'context.reverso.net',
-'Upgrade-Insecure-Requests': '1',
-'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:55.0) Gecko/20100101 Firefox/55.0'}
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Encoding': 'gzip, deflate',
+    'Accept-Language': 'en-US,en;q=0.5',
+    'Connection': 'keep-alive',
+    'Host': 'context.reverso.net',
+    'Upgrade-Insecure-Requests': '1',
+    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:55.0) Gecko/20100101 Firefox/55.0'}
 api = 'http://context.reverso.net/bst-query-service?source_text={txt}&source_lang={src}&target_lang={dst}&npage=1&json=1&nrows=20'
+
 
 def quote(txt):
     query = {'txt': txt, 'src': 'fr', 'dst': 'en'}
@@ -35,5 +35,3 @@ def quote(txt):
 
     results.sort(key=lambda val: len(val))
     return results[-1].replace('<em>', '').replace('</em>', '')
-
-print(quote(' '.join(sys.argv[1:])))
