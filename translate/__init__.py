@@ -44,6 +44,8 @@ class TranslateTest(ModuleTest):
         self.assertIn('furets mort: lemming death panels', rep)
         rep = self.bot_answer('!translate fr es furet mort')
         self.assertIn('furets: hurones', rep)
+        rep = self.bot_answer(u'!translate fr en chargé')
+        self.assertEqual(rep, u'chargé: loaded, responsible for, charged')
 
     def test_desc(self):
         rep = self.bot_answer('!translate pipo')

@@ -28,7 +28,7 @@ api = 'http://context.reverso.net/bst-query-service?source_text={txt}&source_lan
 def translate(txt, src, dst):
     query = {'txt': txt, 'src': src, 'dst': dst}
     for key, item in query.items():
-        query[key] = requests.utils.quote(item)
+        query[key] = requests.utils.quote(item.encode('utf-8'))
 
     r = requests.get(api.format(**query), headers=headers)
     if r.status_code != 200:
