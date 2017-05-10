@@ -2,15 +2,17 @@
 
 from pipobot.lib.module_test import ModuleTest
 from pipobot.lib.modules import SyncModule, answercmd, defaultcmd
-from translate.translate import translate
+
+from .translate import translate
 
 
 class CmdTranslate(SyncModule):
+    desc = _('translate <src> <dst> <txt>: ask reverso.net to translate <txt> from <src> to <dst>')
+
     def __init__(self, bot):
-        desc = _('translate <src> <dst> <txt>: ask reverso.net to translate <txt> from <src> to <dst>')
         SyncModule.__init__(self,
                             bot,
-                            desc=desc,
+                            desc=self.desc,
                             name='translate')
 
     @answercmd(r'(?P<src>[^ ]+) (?P<dst>[^ ]+) (?P<txt>.*)')
@@ -21,21 +23,27 @@ class CmdTranslate(SyncModule):
             tr += translate(word, src, dst)
         if len(words) > 1:
             tr += translate(' '.join(words), src, dst)
-        tr = list(set(tr))
 
-        return str(tr)
+        ret = {}
+        for key, value in tr:
+            if key in ret:
+                ret[key].append(value)
+            else:
+                ret[key] = [value]
+
+        return ['%s: %s' % (key, ', '.join(values)) for key, values in ret.items()]
 
     @defaultcmd
-    def desc(self, sender, message):
+    def answer_desc(self, sender, message):
         return self.desc
 
 
 class TranslateTest(ModuleTest):
     def test_translate(self):
         rep = self.bot_answer('!translate fr en furet mort')
-        self.assertEqual(rep[:58], "[('mort', 'out'), ('furets', 'ferrets'), ('mort', 'dead'),")
+        self.assertIn('furets mort: lemming death panels', rep)
         rep = self.bot_answer('!translate fr es furet mort')
-        self.assertEqual(rep[:62], "[('mort', 'muerte'), ('furet', 'hurones'), ('furet', 'hurón'),")
+        self.assertIn('furets: hurones', rep)
 
     def test_desc(self):
         rep = self.bot_answer('!translate pipo')

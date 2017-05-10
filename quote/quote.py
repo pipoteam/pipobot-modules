@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # $ python3 quote.py furet mort
 # De tout. Al Qaeda, les furets, les édulcorants artificiels, les distributeurs de bonbons PEZ avec leurs yeux de mort.
 # $ python3 quote.py furet
@@ -29,10 +31,10 @@ def quote(txt):
 
     em = re.compile(r'.*<em>.*</em>.*')
     results = r.text.split('"')
-    results = [r for r in results if em.match(r)]
+    results = [res for res in results if em.match(res)]
 
-    best = max([r.count('<') for r in results])
-    results = [r for r in results if r.count('<') == best]
+    best = max([res.count('<') for res in results])
+    results = [res for res in results if res.count('<') == best]
 
     results.sort(key=lambda val: len(val))
     return results[-1].replace('<em>', '').replace('</em>', '')

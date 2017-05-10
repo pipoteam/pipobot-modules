@@ -2,7 +2,8 @@
 
 from pipobot.lib.module_test import ModuleTest
 from pipobot.lib.modules import SyncModule, defaultcmd
-from quote.quote import quote
+
+from .quote import quote
 
 
 class CmdQuote(SyncModule):

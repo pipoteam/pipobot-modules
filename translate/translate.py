@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # $ python3 translate.py fr en furet mort
 # [('mort', 'out'), ('furets', 'ferrets'), ('mort', 'dead'), ('furet', 'ferret'), ('mort', 'died'), ('furets mort', 'lemming death panels'), ('mort', 'death')]
 # $ python3 translate.py fr es furet mort
