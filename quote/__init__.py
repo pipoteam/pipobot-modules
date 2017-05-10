@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from pipobot.lib.modules import SyncModule, defaultcmd
 from pipobot.lib.module_test import ModuleTest
-
+from pipobot.lib.modules import SyncModule, defaultcmd
 from quote.quote import quote
 
 

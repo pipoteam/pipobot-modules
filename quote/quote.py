@@ -3,8 +3,9 @@
 # $ python3 quote.py furet
 # Des manipulations quotidiennes pendant ce stade critique du développement sont indispensables au comportement social du furet adulte.
 
-import requests
 import re
+
+import requests
 
 headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',

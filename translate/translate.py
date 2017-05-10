@@ -3,9 +3,10 @@
 # $ python3 translate.py fr es furet mort
 # [('mort', 'muerte'), ('furet', 'hurones'), ('furet', 'hurón'), ('mort', 'murió'), ('furet', 'hurón tiene'), ('mort', 'muertos'), ('mort', 'irse'), ('mort', 'muerto')]
 
-import requests
-import sys
 import re
+import sys
+
+import requests
 
 src = sys.argv[1]
 dst = sys.argv[2]
