@@ -7,8 +7,15 @@ from .fact import fact
 
 
 class CmdQuote(SyncModule):
+
+    lang = 'fr'
+    last = 'Bonjour'
+    fall = 'Bonjour'
+    buff = []
+    size = 256
+
     def __init__(self, bot):
-        desc = _('fact <txt>: find a fact with <txt> on reverso.net')
+        desc = _('fact <txt> [-<lang>]: find a fact with <txt> in <lang> on reverso.net')
         SyncModule.__init__(self,
                             bot,
                             desc=desc,
@@ -16,7 +23,7 @@ class CmdQuote(SyncModule):
 
     @defaultcmd
     def answer(self, sender, message):
-        return fact(message)
+        return fact(self, message)
 
 
 class QuoteTest(ModuleTest):
