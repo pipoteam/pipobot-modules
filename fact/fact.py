@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# $ python3 quote.py furet mort
+# $ python3 fact.py furet mort
 # De tout. Al Qaeda, les furets, les édulcorants artificiels, les distributeurs de bonbons PEZ avec leurs yeux de mort.
-# $ python3 quote.py furet
+# $ python3 fact.py furet
 # Des manipulations quotidiennes pendant ce stade critique du développement sont indispensables au comportement social du furet adulte.
 
 import re
@@ -20,7 +20,7 @@ headers = {
 api = 'http://context.reverso.net/bst-query-service?source_text={txt}&source_lang={src}&target_lang={dst}&npage=1&json=1&nrows=20'
 
 
-def quote(txt):
+def fact(txt):
     query = {'txt': txt, 'src': 'fr', 'dst': 'en'}
     for key, item in query.items():
         query[key] = requests.utils.quote(item.encode('utf-8'))
