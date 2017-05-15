@@ -5,14 +5,14 @@ from pipobot.lib.modules import SyncModule, defaultcmd
 
 from .fact import fact
 
-
 class CmdQuote(SyncModule):
+    '''Retrieve a sentence from reverso.net, matching keywords and a language.
 
-    lang = 'fr'
-    last = 'Bonjour'
-    fall = 'Bonjour'
-    buff = []
-    size = 256
+    Configuration keys:
+        - lang: Define the default language used to retrieve the "quotes"/"facts".
+        - size: Define the history size (the bot tries to doesn't repeat itself).
+        - fall: Define the fallback keyword used when no history is available.'''
+    _config = (("lang", str, "fr"), ("size", int, 256), ("fall", str, "fr"))
 
     def __init__(self, bot):
         desc = _('fact <txt> [-<lang>]: find a fact with <txt> in <lang> on reverso.net')
@@ -20,11 +20,13 @@ class CmdQuote(SyncModule):
                             bot,
                             desc=desc,
                             name='fact')
+        # config: lang, size, fall
+        self.last = self.fall
+        self.buff = []
 
     @defaultcmd
     def answer(self, sender, message):
         return fact(self, message)
-
 
 class QuoteTest(ModuleTest):
     def test_fact(self):
