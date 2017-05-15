@@ -19,7 +19,7 @@ def user_url(user):
 class Twitter(AsyncModule):
     """A module to follow tweets form some users"""
     _config = (("users", list, []), ("app_key", str, ""), ("app_secret", str, ""),
-               ("avoid_rt", bool, True), ("shy_start", bool, True))
+               ("avoid_rt", bool, True), ("shy_start", bool, True), ("max_errors", int, 3))
 
     def __init__(self, bot):
         AsyncModule.__init__(self,
@@ -37,7 +37,7 @@ class Twitter(AsyncModule):
 
         token = Twython(self.app_key, self.app_secret, oauth_version=2).obtain_access_token()
         self.twitter = Twython(self.app_key, access_token=token)
-        self.err = False
+        self.err = 0
         if self.shy_start:
             self.action(say=False)
 
@@ -56,11 +56,11 @@ class Twitter(AsyncModule):
             try:
                 timeline = self.twitter.get_user_timeline(screen_name=user)
             except TwythonError as err:
-                if self.err:
+                if self.err >= self.max_errors:
                     raise Pasteque("TWITTER IS DOWN OMG OMG OMG\n%s" % err)
-                self.err = True
+                self.err += 1
                 return
-            self.err = False
+            self.err = 0
             for tweet in timeline:
                 if tweet['id'] <= last_tweet.last:
                     break
