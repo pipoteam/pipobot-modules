@@ -1,55 +1,46 @@
 # -*- coding: UTF-8 -*-
-import re
-import urllib.request, urllib.parse, urllib.error
-import datetime
+import pytvmaze
+from time import strptime, strftime
 
 alias = {'himym': 'how i met your mother',
-         'got': 'game of thrones'}
+         'got': 'game of thrones',
+         'tbbt': 'the big bang theory'}
 baseurl = "http://services.tvrage.com/tools/quickinfo.php?show=%s"
 
 
-def convert_episode(raw):
-    match = re.match("(?P<season>\d+)x(?P<episode>\d+)\^(?P<title>[^\^]*)\^(?P<date>.*)", raw)
-    res = match.groupdict()
-    try:
-        res["date"] = datetime.datetime.strptime(res["date"], "%b/%d/%Y")
-        res["date"] = res["date"].strftime("%d/%m/%y")
-    except ValueError:
-        #If we can't convert the date, we keep it as it was
-        pass
-    return "%(season)sx%(episode)s: %(title)s le %(date)s" % res
+def convert_episode(ep):
+    airdate = strptime(ep.airdate, "%Y-%m-%d")
+    airdate = strftime("%d/%m/%Y", airdate)
+    return "%sx%s: %s le %s" % (ep.season_number, ep.episode_number, ep.title, airdate)
 
 
 def getdata(message, isnext):
     if message == "":
         return "Avec un nom de série ça serait mieux !!"
+
+    maze = pytvmaze.TVMaze()
+
     message = alias.get(message, message)
-    show_url = baseurl % (message.replace(" ", "%20"))
-    response = urllib.request.urlopen(show_url)
-    content = response.readlines()
-    response.close()
-    data = {}
 
-    if content:
-        res = content[0].decode("utf-8")
-        if res.startswith("No Show"):
-            return "Je n'ai aucune information sur la série %s" % message
+    try:
+        show = maze.get_show(show_name=message)
+    except pytvmaze.exceptions.ShowNotFound:
+        return "Je n'ai aucune information sur la série %s" % message
 
-    for line in content:
-        key, value = line.decode("utf-8").split("@", 1)
-        data[key] = value.strip()
 
     if isnext:
-        if data["Status"] in ("Canceled", "Ended"):
-            return "Désolé mais la série %s est terminée." % (data["Show Name"])
-        if "Next Episode" in data:
-            data_episode = convert_episode(data["Next Episode"])
-            return "Prochain épisode de %s: %s." % (data["Show Name"], data_episode)
-        else:
+        next_ep = show.next_episode
+
+        if show.status == "Ended":
+            return "Désolé mais la série %s est terminée." % show.name
+
+        if not next_ep:
             return "Aucune date pour un prochain épisode :s."
+
+        return "Prochain épisode de %s: %s." % (show.name, convert_episode(next_ep))
     else:
-        if "Latest Episode" in data:
-            data_episode = convert_episode(data["Latest Episode"])
-            return "Précédent épisode de %s: %s." % (data["Show Name"], data_episode)
-        else:
+        prev_ep = show.previous_episode
+        if not prev_ep:
             return "Aucune info disponible."
+
+        return "Précédent épisode de %s: %s." % (show.name, convert_episode(prev_ep))
