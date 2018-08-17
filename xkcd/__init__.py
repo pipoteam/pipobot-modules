@@ -23,10 +23,12 @@ class CmdXKCD(FortuneModule):
     def extract_data(self, html_content):
         data = loads(html_content)
         ret = u"Mandatory XKCD: {title} -- https://xkcd.com/{num}/ ({day}/{month}/{year})".format(**data)
-        return {
-            'text': ret,
-            'xhtml': u'<a href="https://xkcd.com/%i"><img alt="%s" src="%s" /></a>' % (data['num'], ret, data['img']),
-        }
+        # TODO : TypeError: 'unicode' object does not support item assignment
+        # return {
+        #     'text': ret,
+        #     'xhtml': u'<a href="https://xkcd.com/%i"><img alt="%s" src="%s" /></a>' % (data['num'], ret, data['img'])
+        # }
+        return ret
 
 
 class XKCDTest(ModuleTest):
