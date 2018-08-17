@@ -16,7 +16,7 @@ class CmdXKCD(FortuneModule):
                                desc=desc,
                                name="xkcd",
                                url_random="https://xkcd.com/221/info.0.json",
-                               url_indexed="https://xkcd.com/%i/info.0.json",
+                               url_indexed="https://xkcd.com/%s/info.0.json",
                                lock_time=2,
                                )
 
