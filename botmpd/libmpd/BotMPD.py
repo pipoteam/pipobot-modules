@@ -2,8 +2,8 @@
 import os
 import random
 from mpd import MPDClient, ConnectionError, CommandError
-from mutagenx.easyid3 import EasyID3
-from mutagenx.mp3 import MP3
+from mutagen.easyid3 import EasyID3
+from mutagen.mp3 import MP3
 from . import utils
 import threading
 
