@@ -38,7 +38,7 @@ class CmdMpd(NotifyModule):
         NotifyModule.__init__(self,
                               bot,
                               desc=desc,
-                              pm_allowed=False,
+                              pm_allowed=True,
                               name="mpd",
                               delay=0)
 
